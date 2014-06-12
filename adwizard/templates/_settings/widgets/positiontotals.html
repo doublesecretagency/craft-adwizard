@@ -1,0 +1,17 @@
+{% import "_includes/forms" as forms %}
+
+{% set positionInput %}
+	<div class="select">
+		<select id="position" name="position">
+			{% for position in craft.adWizard.allPositions %}
+				<option value="{{ position.handle }}"{% if position.handle == settings.position %} selected{% endif %}>{{ position.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+{% endset %}
+
+{{ forms.field({
+	label: "Position"|t,
+	instructions: "Display the view/click totals of each ad in the specified position."|t,
+	id: 'position',
+}, positionInput) }}

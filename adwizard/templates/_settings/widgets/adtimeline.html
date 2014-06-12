@@ -1,0 +1,33 @@
+{% import "_includes/forms" as forms %}
+
+{% set positionInput %}
+	<div class="select">
+		<select id="position" name="position">
+			{% for position in craft.adWizard.allPositions %}
+				<option value="{{ position.handle }}"{% if position.handle == settings.position %} selected{% endif %}>{{ position.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+{% endset %}
+
+{{ forms.field({
+	label: "Position"|t,
+	instructions: "Which position is the ad in?"|t,
+	id: 'position',
+}, positionInput) }}
+
+{% set adIdInput %}
+	<div class="select">
+		<select id="adId" name="adId">
+			{% for ad in craft.adWizard.allAds %}
+				<option value="{{ ad.id }}"{% if ad.id == settings.adId %} selected{% endif %}>{{ ad.title }}</option>
+			{% endfor %}
+		</select>
+	</div>
+{% endset %}
+
+{{ forms.field({
+	label: "Select Ad"|t,
+	instructions: "Show view/click timeline of specified ad."|t,
+	id: 'adId',
+}, adIdInput) }}

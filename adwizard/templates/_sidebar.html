@@ -1,0 +1,31 @@
+
+{{ forms.lightswitchField({
+    label: "Enabled"|t,
+    name: 'enabled',
+    on: ad.enabled,
+}) }}
+
+{{ forms.dateTimeField({
+    label: "Beginning of Run"|t,
+    id: 'startDate',
+    name: 'startDate',
+    value: (ad.startDate ? ad.startDate : null),
+    errors: ad.getErrors('startDate')
+}) }}
+{{ forms.dateTimeField({
+    label: "End of Run"|t,
+    id: 'endDate',
+    name: 'endDate',
+    value: (ad.endDate ? ad.endDate : null),
+    errors: ad.getErrors('endDate')
+}) }}
+
+{{ forms.textField({
+    label: "Maximum Impressions Allowed"|t,
+    instructions: 'Set to "0" for unlimited views.'|t,
+    id: 'maxViews',
+    name: 'maxViews',
+    value: ad.maxViews,
+    errors: ad.getErrors('maxViews'),
+    size: 3,
+}) }}
