@@ -11,7 +11,7 @@ class AdWizardPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.8.4';
+        return '0.9.6';
     }
 
     public function getDeveloper()
