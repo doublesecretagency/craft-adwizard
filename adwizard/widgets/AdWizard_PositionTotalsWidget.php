@@ -7,7 +7,7 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
     public function getName()
     {
-        return Craft::t('Ad Wizard - Totals');
+        return Craft::t('Ad Wizard - Position Totals');
     }
 
     public function getBodyHtml()

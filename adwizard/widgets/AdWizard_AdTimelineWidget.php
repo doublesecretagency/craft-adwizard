@@ -7,7 +7,7 @@ class AdWizard_AdTimelineWidget extends BaseWidget
 
     public function getName()
     {
-        return Craft::t('Ad Wizard - Timeline');
+        return Craft::t('Ad Wizard - Ad Timeline');
     }
 
     public function getBodyHtml()
