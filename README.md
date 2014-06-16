@@ -31,8 +31,6 @@ Both methods can display an ad until:
  - The ad reaches the maximum allowed impressions, or
  - The ad is manually disabled.
 
-![](adwizard/resources/images/example-charts.png)
-
 ## Seeing your ad statistics
 
 From the control panel Dashboard, click the settings icon. You can click the "New Widget" button to add a new widget to your dashboard.
@@ -40,6 +38,8 @@ From the control panel Dashboard, click the settings icon. You can click the "Ne
 Two new widget types will be available to you:
  - **Ad Timeline** - A line chart showing the view/click trends of a single ad over time.
  - **Position Totals** - A bar chart showing the total views/clicks for each ad in a specified position.
+
+![](adwizard/resources/images/example-charts.png)
 
 ***
 
