@@ -30,6 +30,16 @@ class AdWizard_AdElementType extends BaseElementType
     }
 
     /**
+     * Returns whether this element type can have statuses.
+     *
+     * @return bool
+     */
+    public function hasStatuses()
+    {
+        return true;
+    }
+
+    /**
      * Returns this element type's sources.
      *
      * @param string|null $context
@@ -95,7 +105,32 @@ class AdWizard_AdElementType extends BaseElementType
 
             case 'url':
             {
-                return $element->$attribute;
+                $url = $element->$attribute;
+
+                if ($url)
+                {
+                    $value = $url;
+
+                    // Add some <wbr> tags in there so it doesn't all have to be on one line
+                    $find = array('/');
+                    $replace = array('/<wbr>');
+
+                    $wordSeparator = craft()->config->get('slugWordSeparator');
+
+                    if ($wordSeparator)
+                    {
+                        $find[] = $wordSeparator;
+                        $replace[] = $wordSeparator.'<wbr>';
+                    }
+
+                    $value = str_replace($find, $replace, $value);
+
+                    return '<a href="'.$url.'" target="_blank" class="go"><span dir="ltr">'.$value.'</span></a>';
+                }
+                else
+                {
+                    return '';
+                }
             }
 
             case 'startDate':

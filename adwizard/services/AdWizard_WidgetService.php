@@ -8,22 +8,20 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 {
 
     // 
-    public function positionBarChart($position = null)
+    public function positionBarChart($positionId = null)
     {
 
-        if (!$position) {
+        if (!$positionId) {
             return 'No ad position specified.';
         }
 
-        $positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
-            'handle' => $position,
-        ));
+        $positionRecord = AdWizard_PositionRecord::model()->findByPk($positionId);
         if (!$positionRecord) {
-            return 'Ad position "'.$position.'" does not exist.';
+            return 'Specified ad position does not exist.';
         }
 
         $adRecords = AdWizard_AdRecord::model()->findAllByAttributes(array(
-            'positionId'   => $positionRecord->id,
+            'positionId' => $positionRecord->id,
             //'startDate' => '',
             //'endDate'   => '',
             //'maxViews'  => '',
@@ -74,7 +72,12 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 
         for ($i = 1; $i <= 31; $i++) {
             $day = 'day'.$i;
-            $data[] = array(date('F').' '.$i, (int) $views->$day, (int) $clicks->$day);
+            $dayOfMonth = date('F').' '.$i;
+            if (date('j') < $i) {
+                $data[] = array($dayOfMonth, null, null);
+            } else {
+                $data[] = array($dayOfMonth, (int) $views->$day, (int) $clicks->$day);
+            }
         }
 
         $options = $this->_optionsLineChart($ad);

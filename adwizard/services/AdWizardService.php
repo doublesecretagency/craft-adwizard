@@ -245,6 +245,8 @@ class AdWizardService extends BaseApplicationComponent
             throw $e;
         }
     }
+    
+    // ============================================================== //
 
     // Ads
 
@@ -401,16 +403,6 @@ class AdWizardService extends BaseApplicationComponent
     }
     
     // ============================================================== //
-
-    // Get parent position of ad
-    public function parentPositionOfAd($adId)
-    {
-        if (!$adId) {return null;}
-        $ad = $this->getAdById($adId);
-        $positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
-            'id' => $ad->positionId,
-        ));
-    }
 
     // Display ad
     public function renderAd($id)

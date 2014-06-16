@@ -12,14 +12,14 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
     public function getBodyHtml()
     {
-        $position = $this->getSettings()->position;
-        return craft()->adWizard_widget->positionBarChart($position);
+        $positionId = $this->getSettings()->positionId;
+        return craft()->adWizard_widget->positionBarChart($positionId);
     }
 
     protected function defineSettings()
     {
         return array(
-           'position' => array(AttributeType::String),
+           'positionId' => array(AttributeType::Number),
         );
     }
 

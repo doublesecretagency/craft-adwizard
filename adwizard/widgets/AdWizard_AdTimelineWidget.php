@@ -19,16 +19,15 @@ class AdWizard_AdTimelineWidget extends BaseWidget
     protected function defineSettings()
     {
         return array(
-           'adId' => array(AttributeType::Number),
+           'positionId' => array(AttributeType::Number),
+           'adId'       => array(AttributeType::Number),
         );
     }
 
     public function getSettingsHtml()
     {
-        $adId = $this->getSettings()->adId;
         return craft()->templates->render('adwizard/_settings/widgets/adtimeline', array(
            'settings' => $this->getSettings(),
-           'position' => craft()->adWizard->parentPositionOfAd($adId),
         ));
     }
 }
