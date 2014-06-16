@@ -39,7 +39,7 @@ From the control panel Dashboard, click the settings icon. You can click the "Ne
 
 Two new widget types will be available to you:
  - **Ad Timeline** - A line chart showing the view/click trends of a single ad over time.
- - **Position Totals** - A bar chart showing the cumulative totals of all views/clicks for each ad in a specified position.
+ - **Position Totals** - A bar chart showing the total views/clicks for each ad in a specified position.
 
 ***
 
