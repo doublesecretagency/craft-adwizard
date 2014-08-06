@@ -11,7 +11,7 @@ class AdWizardPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.9.6';
+        return '1.0.1';
     }
 
     public function getDeveloper()
@@ -21,7 +21,7 @@ class AdWizardPlugin extends BasePlugin
 
     public function getDeveloperUrl()
     {
-        return 'https://github.com/lindseydiloreto/craft-adwizard';
+        return 'https://craftpl.us/plugins/ad-wizard';
         //return 'http://doublesecretagency.com';
     }
 
@@ -40,6 +40,12 @@ class AdWizardPlugin extends BasePlugin
             'adwizard/(?P<positionHandle>{handle})/new'           => array('action' => 'adWizard/editAd'),
             'adwizard/(?P<positionHandle>{handle})/(?P<adId>\d+)' => array('action' => 'adWizard/editAd'),
         );
+    }
+
+    public function onAfterInstall()
+    {
+        // @TODO: Change to "Introduction" page
+        craft()->request->redirect(UrlHelper::getCpUrl('adwizard/thanks'));
     }
 
     /*

@@ -1,0 +1,15 @@
+{% extends "_layouts/cp" %}
+{% set title = 'Welcome to Ad Wizard' %}
+
+{% includeCssResource "adwizard/css/adwizard.css" %}
+{% includeJsResource "adwizard/js/admin.js" %}
+{% includeJsResource "adwizard/js/track.js" %}
+
+{% set content %}
+    <div class="center" style="margin:0 auto;">
+        <p>Thanks for downloading Ad Wizard! Feel free to contact us with any feature requests, bug reports, or suggestions.</p>
+        <a href="{{ url('adwizard/positions') }}"><button class="btn submit">Get Started</button></a>
+        <p><a href="http://craftpl.us/plugins/ad-wizard/docs" target="_blank">View documentation</a> | <a href="mailto:support@doublesecretagency.com?subject=Ad+Wizard+~+Fresh+Installation" target="_blank">Contact Us</a></p>
+    </div>
+    {% include "adwizard/snappy.html" %}
+{% endset %}

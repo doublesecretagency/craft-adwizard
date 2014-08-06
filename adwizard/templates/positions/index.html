@@ -11,7 +11,8 @@
 
 {% set content %}
     <div id="no-positions"{% if positions %} class="hidden"{% endif %}>
-        <p>{{ "No positions exist yet."|t }}</p>
+        <p>Your ads will be divided into groups, based on where they appear on the front-end. Every <strong>Ad</strong> you create will exist in a specific <strong>Position</strong>.</p>
+        <p>No positions exist yet, please <a href="{{ url('adwizard/positions/new') }}">create one</a> to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
     </div>
 
     {% if positions|length %}

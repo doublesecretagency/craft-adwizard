@@ -14,7 +14,7 @@ class AdWizard_AdRecord extends BaseRecord
         $now = new DateTime;
         return array(
             'url'         => array(AttributeType::Url,      'default' => ''),
-            'details'     => array(AttributeType::String,   'default' => '', 'column' => ColumnType::Text),
+            'details'     => array(AttributeType::String,   'column' => ColumnType::Text),
             'startDate'   => array(AttributeType::DateTime, 'default' => $now),
             'endDate'     => array(AttributeType::DateTime, 'default' => $now),
             'maxViews'    => array(AttributeType::Number,   'default' => 0),
