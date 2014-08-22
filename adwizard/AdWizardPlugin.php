@@ -11,7 +11,7 @@ class AdWizardPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '1.0.1';
+        return '1.0.2';
     }
 
     public function getDeveloper()
@@ -47,23 +47,5 @@ class AdWizardPlugin extends BasePlugin
         // @TODO: Change to "Introduction" page
         craft()->request->redirect(UrlHelper::getCpUrl('adwizard/thanks'));
     }
-
-    /*
-    public function getSettingsHtml()
-    {
-        return craft()->templates->render('adwizard/_settings', array(
-            'settings' => $this->getSettings()
-        ));
-    }
-    */
-
-    /*
-    protected function defineSettings()
-    {
-        return array(
-            'assetSourceId' => array(AttributeType::Number, 'label' => 'Ad Wizard Assets Source'),
-        );
-    }
-    */
     
 }

@@ -30,7 +30,11 @@
                 id: 'assetId',
                 name: 'assetId',
                 elementType: elementType,
-                criteria: {"kind":[],"localeEnabled":null,"locale":"en_us"},
+                criteria: {
+                    'kind': [],
+                    'localeEnabled': null,
+                    'locale': craft.locale,
+                },
                 sourceElementId: assetId,
                 jsClass: 'Craft.AssetSelectInput',
                 addButtonLabel: 'Select Ad Graphic',
