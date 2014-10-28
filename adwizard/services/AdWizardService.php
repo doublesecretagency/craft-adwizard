@@ -501,9 +501,20 @@ class AdWizardService extends BaseApplicationComponent
                 .'style="cursor:pointer" '
                 .'/>';
 
-        craft()->templates->includeJsFile('//code.jquery.com/jquery-1.11.1.min.js');
+        craft()->templates->includeJsResource('adwizard/js/superagent.js');
         craft()->templates->includeJsResource('adwizard/js/adwizard.js');
-        craft()->templates->includeCssResource('adwizard/css/adwizard.css');
+
+        // CSRF
+        if (craft()->config->get('enableCsrfProtection') === true) {
+            if (!craft()->upvote->csrfIncluded) {
+                $csrf = '
+window.csrfTokenName = "'.craft()->config->get('csrfTokenName').'";
+window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
+';
+                craft()->templates->includeJs($csrf);
+                craft()->upvote->csrfIncluded = true;
+            }
+        }
     }
     
     // ============================================================== //

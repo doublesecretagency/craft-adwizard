@@ -12,8 +12,14 @@ class AdWizardController extends BaseController
     {
         $this->requireAjaxRequest();
         $id = craft()->request->getPost('id');
-        $response = craft()->adWizard->trackClick($id);
-        $this->returnJson($response);
+        $success = craft()->adWizard->trackClick($id);
+        if ($success) {
+            $ad = craft()->adWizard->getAdById($id);
+            $response = 'Clicked: '.$ad->title;
+        } else {
+            $response = 'Click tracking failed.';
+        }
+        $this->returnJson('[Ad Wizard] '.$response);
     }
     
     // Positions

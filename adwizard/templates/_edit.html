@@ -15,6 +15,7 @@
 
 {% block main %}
     <form id="ad-form" method="post" accept-charset="UTF-8" data-saveshortcut="1" data-saveshortcut-redirect="{{ continueEditingUrl }}">
+        {{ getCsrfInput() }}
         <input type="hidden" name="action" value="adWizard/saveAd">
         <input type="hidden" name="redirect" value="adwizard">
         <input type="hidden" name="positionId" value="{{ position.id }}">

@@ -4,6 +4,7 @@
 
 {% block content %}
     <form method="post" accept-charset="UTF-8" data-saveshortcut="1">
+        {{ getCsrfInput() }}
         <input type="hidden" name="action" value="adWizard/savePosition">
         <input type="hidden" name="redirect" value="adwizard/positions">
         {% if position.id %}<input type="hidden" name="positionId" value="{{ position.id }}">{% endif %}
