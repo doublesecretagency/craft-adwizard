@@ -9,6 +9,7 @@ class AdWizardService extends BaseApplicationComponent
     private $_allPositionIds;
     private $_positionsById;
     private $_fetchedAllPositions = false;
+    private $_errorPrefix = '[Ad Wizard] ';
 
     // Positions
 
@@ -410,8 +411,9 @@ class AdWizardService extends BaseApplicationComponent
         $ad = $this->_getAdById($id);
         if (!$ad) {return false;}
         if (is_string($ad)) {return $ad;}
-        $this->_displayAd($ad);
-        $this->trackView($ad->id);
+        if ($this->_displayAd($ad)) {
+            $this->trackView($ad->id);
+        }
         return TemplateHelper::getRaw($ad->html);
     }
 
@@ -421,8 +423,9 @@ class AdWizardService extends BaseApplicationComponent
         $ad = $this->_getAdByPosition($position);
         if (!$ad) {return false;}
         if (is_string($ad)) {return $ad;}
-        $this->_displayAd($ad);
-        $this->trackView($ad->id);
+        if ($this->_displayAd($ad)) {
+            $this->trackView($ad->id);
+        }
         return TemplateHelper::getRaw($ad->html);
     }
     
@@ -439,17 +442,15 @@ class AdWizardService extends BaseApplicationComponent
     // Get individual ad via position
     private function _getAdByPosition($positionHandle)
     {
-        $errorPrefix = '[Ad Wizard] ';
-        
         if (!$positionHandle) {
-            return $errorPrefix.'Please specify an ad position.';
+            return $this->_errorPrefix.'Please specify an ad position.';
         }
         
         $positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
             'handle' => $positionHandle,
         ));
         if (!$positionRecord) {
-            return $errorPrefix.'Invalid position handle.';
+            return $this->_errorPrefix.'Invalid position handle.';
         }
 
         $fields = array(
@@ -471,7 +472,7 @@ class AdWizardService extends BaseApplicationComponent
         if ($result) {
             return AdWizard_AdModel::populateModel($result);
         } else {
-            return $errorPrefix.'No ads available in this position.';
+            return $this->_errorPrefix.'No ads available in this position.';
         }
         
     }
@@ -482,7 +483,18 @@ class AdWizardService extends BaseApplicationComponent
     {
 
         $asset = craft()->assets->getFileById($ad->assetId);
+
+        if (!$asset) {
+            $ad->html = $this->_errorPrefix.'No image specified for ad "'.$ad->title.'".';
+            return false;
+        }
+
         $url = craft()->assets->getUrlForFile($asset);
+
+        if (!$ad->url) {
+            $ad->html = $this->_errorPrefix.'No URL specified for ad "'.$ad->title.'".';
+            return false;
+        }
 
         // =================== //
         // Info should be included in AdWizard_AdModel
@@ -515,6 +527,8 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
                 craft()->upvote->csrfIncluded = true;
             }
         }
+
+        return true;
     }
     
     // ============================================================== //

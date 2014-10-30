@@ -188,6 +188,9 @@ class AdWizardController extends BaseController
 
         // Set asset elements
         if ($variables['assetId']) {
+            if (is_array($variables['assetId'])) {
+                $variables['assetId'] = $variables['assetId'][0];
+            }
             $asset = craft()->elements->getElementById($variables['assetId']);
             $variables['elements'] = array($asset);
         } else {
