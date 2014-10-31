@@ -329,8 +329,21 @@ class AdWizardService extends BaseApplicationComponent
         $adRecord->endDate    = $ad->endDate;
         $adRecord->maxViews   = (int) $ad->maxViews;
 
-        $adRecord->validate();
-        $ad->addErrors($adRecord->getErrors());
+        if (!$adRecord->validate())
+        {
+            // Copy the record's errors over to the ad model
+            $ad->addErrors($adRecord->getErrors());
+
+            // Might as well validate the content as well,
+            // so we get a complete list of validation errors
+            if (!craft()->content->validateContent($ad))
+            {
+                // Copy the content model's errors over to the ad model
+                $ad->addErrors($ad->getContent()->getErrors());
+            }
+
+            return false;
+        }
 
         if (!$ad->hasErrors())
         {
@@ -409,18 +422,19 @@ class AdWizardService extends BaseApplicationComponent
     public function renderAd($id)
     {
         $ad = $this->_getAdById($id);
-        if (!$ad) {return false;}
-        if (is_string($ad)) {return $ad;}
-        if ($this->_displayAd($ad)) {
-            $this->trackView($ad->id);
-        }
-        return TemplateHelper::getRaw($ad->html);
+        return $this->_renderIndividualAd($ad);
     }
 
     // Display random ad from position
     public function renderAdFromPosition($position)
     {
         $ad = $this->_getAdByPosition($position);
+        return $this->_renderIndividualAd($ad);
+    }
+
+    // Render an individual ad
+    private function _renderIndividualAd($ad)
+    {
         if (!$ad) {return false;}
         if (is_string($ad)) {return $ad;}
         if ($this->_displayAd($ad)) {
@@ -463,6 +477,7 @@ class AdWizardService extends BaseApplicationComponent
             ->join('elements elements', 'adwizard_ads.id=elements.id')
             ->where('enabled = 1')
             ->andWhere('positionId = :positionId', array(':positionId' => $positionRecord->id))
+            ->andWhere('assetId IS NOT NULL')
             ->andWhere('(startDate  <= NOW()   ) OR (startDate IS NULL)')
             ->andWhere('(endDate    >= NOW()   ) OR (endDate   IS NULL)')
             ->andWhere('(totalViews <  maxViews) OR (maxViews  =  0)   ')
