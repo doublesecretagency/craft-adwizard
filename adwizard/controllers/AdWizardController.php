@@ -7,6 +7,8 @@ namespace Craft;
 class AdWizardController extends BaseController
 {
 
+    protected $allowAnonymous = array('actionClick');
+
     // Track click of ad
     public function actionClick()
     {
