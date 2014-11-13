@@ -11,6 +11,8 @@ class AdWizardService extends BaseApplicationComponent
     private $_fetchedAllPositions = false;
     private $_errorPrefix = '[Ad Wizard] ';
 
+    private $_csrfIncluded = false;
+
     // Positions
 
     /**
@@ -533,13 +535,12 @@ class AdWizardService extends BaseApplicationComponent
 
         // CSRF
         if (craft()->config->get('enableCsrfProtection') === true) {
-            if (!craft()->upvote->csrfIncluded) {
-                $csrf = '
+            if (!$this->_csrfIncluded) {
+                craft()->templates->includeJs('
 window.csrfTokenName = "'.craft()->config->get('csrfTokenName').'";
 window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
-';
-                craft()->templates->includeJs($csrf);
-                craft()->upvote->csrfIncluded = true;
+');
+                $this->_csrfIncluded = true;
             }
         }
 
