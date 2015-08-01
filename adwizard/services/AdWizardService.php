@@ -421,25 +421,25 @@ class AdWizardService extends BaseApplicationComponent
 	// ============================================================== //
 
 	// Display ad
-	public function renderAd($id)
+	public function renderAd($id, $transform = null)
 	{
 		$ad = $this->_getAdById($id);
-		return $this->_renderIndividualAd($ad);
+		return $this->_renderIndividualAd($ad, $transform);
 	}
 
 	// Display random ad from position
-	public function renderAdFromPosition($position)
+	public function renderAdFromPosition($position, $transform = null)
 	{
 		$ad = $this->_getAdByPosition($position);
-		return $this->_renderIndividualAd($ad);
+		return $this->_renderIndividualAd($ad, $transform);
 	}
 
 	// Render an individual ad
-	private function _renderIndividualAd($ad)
+	private function _renderIndividualAd($ad, $transform = null)
 	{
 		if (!$ad) {return false;}
 		if (is_string($ad)) {return $ad;}
-		if ($this->_displayAd($ad)) {
+		if ($this->_displayAd($ad, $transform)) {
 			$this->trackView($ad->id);
 		}
 		return TemplateHelper::getRaw($ad->html);
@@ -496,7 +496,7 @@ class AdWizardService extends BaseApplicationComponent
 	
 
 	// Renders HTML of ad
-	private function _displayAd(AdWizard_AdModel $ad)
+	private function _displayAd(AdWizard_AdModel $ad, $transform = null)
 	{
 
 		$asset = craft()->assets->getFileById($ad->assetId);
@@ -506,28 +506,21 @@ class AdWizardService extends BaseApplicationComponent
 			return false;
 		}
 
-		$url = craft()->assets->getUrlForFile($asset);
-
 		if (!$ad->url) {
 			$ad->html = $this->_errorPrefix.'No URL specified for ad "'.$ad->title.'".';
 			return false;
 		}
 
-		// =================== //
-		// Info should be included in AdWizard_AdModel
-		// $ad->width = 200;
-		// $ad->height = 200;
-		// $ad->filepath = '/example.jpg';
-		// =================== //
 		$onclick = "adWizard.click({$ad->id}, '{$ad->url}')";
+
 		$ad->html = PHP_EOL
-				.'<img '
-				.'width="'.$asset->width.'" '
-				.'height="'.$asset->height.'" '
-				.'src="'.$url.'" '
-				.'class="adWizard-ad" '
-				.'onclick="'.$onclick.'" '
-				.'style="cursor:pointer" '
+				.'<img'
+				.' src="'.$asset->getUrl($transform).'"'
+				.' width="'.$asset->getWidth($transform).'"'
+				.' height="'.$asset->getHeight($transform).'"'
+				.' class="adWizard-ad"'
+				.' style="cursor:pointer"'
+				.' onclick="'.$onclick.'"'
 				.'/>';
 
 		craft()->templates->includeJsResource('adwizard/js/superagent.js');

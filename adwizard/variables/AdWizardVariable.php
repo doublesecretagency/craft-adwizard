@@ -5,15 +5,15 @@ class AdWizardVariable
 {
 
     // Display specified ad
-    public function ad($id)
+    public function ad($id, $transform = null)
     {
-        return craft()->adWizard->renderAd($id);
+        return craft()->adWizard->renderAd($id, $transform);
     }
 
     // Display random ad from specified position
-    public function position($position)
+    public function position($position, $transform = null)
     {
-        return craft()->adWizard->renderAdFromPosition($position);
+        return craft()->adWizard->renderAdFromPosition($position, $transform);
     }
     
     // ============================================================== //
