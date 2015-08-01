@@ -3,31 +3,33 @@ namespace Craft;
 
 class AdWizard_AdTimelineWidget extends BaseWidget
 {
-    protected $colspan = 2;
 
-    public function getName()
-    {
-        return Craft::t('Ad Wizard - Ad Timeline');
-    }
+	protected $colspan = 2;
 
-    public function getBodyHtml()
-    {
-        $adId = $this->getSettings()->adId;
-        return craft()->adWizard_widget->adLineChart($adId);
-    }
+	public function getName()
+	{
+		return Craft::t('Ad Timeline');
+	}
 
-    protected function defineSettings()
-    {
-        return array(
-           'positionId' => array(AttributeType::Number),
-           'adId'       => array(AttributeType::Number),
-        );
-    }
+	public function getBodyHtml()
+	{
+		$adId = $this->getSettings()->adId;
+		return craft()->adWizard_widget->adLineChart($adId);
+	}
 
-    public function getSettingsHtml()
-    {
-        return craft()->templates->render('adwizard/_settings/widgets/adtimeline', array(
-           'settings' => $this->getSettings(),
-        ));
-    }
+	protected function defineSettings()
+	{
+		return array(
+			'positionId' => array(AttributeType::Number),
+			'adId'       => array(AttributeType::Number),
+		);
+	}
+
+	public function getSettingsHtml()
+	{
+		return craft()->templates->render('adwizard/_settings/widgets/adtimeline', array(
+		   'settings' => $this->getSettings(),
+		));
+	}
+
 }

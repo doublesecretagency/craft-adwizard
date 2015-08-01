@@ -1,56 +1,56 @@
 
 {{ forms.textField({
-    label: "Title"|t,
-    id: 'title',
-    name: 'title',
-    value: ad.title,
-    errors: ad.getErrors('title'),
-    first: true,
-    autofocus: true,
-    required: true,
+	label: "Title"|t,
+	id: 'title',
+	name: 'title',
+	value: ad.title,
+	errors: ad.getErrors('title'),
+	first: true,
+	autofocus: true,
+	required: true,
 }) }}
 
 {{ forms.textField({
-    label: "URL"|t,
-    id: 'url',
-    name: 'url',
-    value: ad.url,
-    errors: ad.getErrors('url'),
-    required: true,
+	label: "URL"|t,
+	id: 'url',
+	name: 'url',
+	value: ad.url,
+	errors: ad.getErrors('url'),
+	required: true,
 }) }}
 
 <div class="field" id="assetId-field">
-    <div class="heading">
-        <label for="assetId">Image</label>
-        <div class="instructions"><p>If no graphic is associated, ad will not be displayed.</p></div>
-    </div>
-    <div class="input">
-        {% if assetsSourceExists %}
-            {{ forms.elementSelect({
-                elements: elements,
-                id: 'assetId',
-                name: 'assetId',
-                elementType: elementType,
-                criteria: {
-                    'kind': [],
-                    'localeEnabled': null,
-                    'locale': craft.locale,
-                },
-                sourceElementId: assetId,
-                jsClass: 'Craft.AssetSelectInput',
-                addButtonLabel: 'Select Ad Graphic',
-                limit: 1,
-            }) }}
-        {% else %}
-            <p class="error">No assets sources currently exist. <a href="{{ newAssetsSourceUrl }}">Create one now...</a></p>
-        {% endif %}
-    </div>
+	<div class="heading">
+		<label for="assetId">Image</label>
+		<div class="instructions"><p>If no graphic is associated, ad will not be displayed.</p></div>
+	</div>
+	<div class="input">
+		{% if assetsSourceExists %}
+			{{ forms.elementSelect({
+				elements: elements,
+				id: 'assetId',
+				name: 'assetId',
+				elementType: elementType,
+				criteria: {
+					'kind': [],
+					'localeEnabled': null,
+					'locale': craft.locale,
+				},
+				sourceElementId: assetId,
+				jsClass: 'Craft.AssetSelectInput',
+				addButtonLabel: 'Select Ad Graphic',
+				limit: 1,
+			}) }}
+		{% else %}
+			<p class="error">No assets sources currently exist. <a href="{{ newAssetsSourceUrl }}">Create one now...</a></p>
+		{% endif %}
+	</div>
 </div>
 
 {{ forms.textareaField({
-    label: "Details"|t,
-    id: 'details',
-    name: 'details',
-    value: ad.details,
-    rows: 6,
+	label: "Details"|t,
+	id: 'details',
+	name: 'details',
+	value: ad.details,
+	rows: 6,
 }) }}

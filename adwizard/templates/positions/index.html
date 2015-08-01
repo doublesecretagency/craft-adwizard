@@ -1,52 +1,51 @@
-{% extends "_layouts/cp" %}
+{% extends '_layouts/cp' %}
 {% set title = "Positions"|t %}
 
 {% set tabs = {
-    ads:       { label: "Ads"|t,       url: url('adwizard') },
-    positions: { label: "Positions"|t, url: url('adwizard/positions') }
+	ads:       { label: "Ads"|t,       url: url('adwizard') },
+	positions: { label: "Positions"|t, url: url('adwizard/positions') }
 } %}
 
 {% set selectedTab = 'positions' %}
 
-
 {% set content %}
-    <div id="no-positions"{% if positions %} class="hidden"{% endif %}>
-        <p>Your ads will be divided into groups, based on where they appear on the front-end. Every <strong>Ad</strong> you create will exist in a specific <strong>Position</strong>.</p>
-        <p>No positions exist yet, please <a href="{{ url('adwizard/positions/new') }}">create one</a> to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
-    </div>
+	<div id="no-positions"{% if positions %} class="hidden"{% endif %}>
+		<p>Your ads will be divided into groups, based on where they appear on the front-end. Every <strong>Ad</strong> you create will exist in a specific <strong>Position</strong>.</p>
+		<p>No positions exist yet, please create one to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
+	</div>
 
-    {% if positions|length %}
-        <table id="positions" class="data fullwidth collapsible">
-            <thead>
-                <th scope="col">{{ "Name"|t }}</th>
-                <th scope="col">{{ "Handle"|t }}</th>
-                <td class="thin"></td>
-            </thead>
-            <tbody>
-                {% for position in positions %}
-                    <tr data-id="{{ position.id }}" data-name="{{ position.name|t }}">
-                        <th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('adwizard/positions/' ~ position.id) }}">{{ position.name|t }}</a></th>
-                        <td data-title="{{ 'Handle'|t }}"><code>{{ position.handle }}</code></td>
-                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+	{% if positions|length %}
+		<table id="positions" class="data fullwidth collapsible">
+			<thead>
+				<th scope="col">{{ "Name"|t }}</th>
+				<th scope="col">{{ "Handle"|t }}</th>
+				<td class="thin"></td>
+			</thead>
+			<tbody>
+				{% for position in positions %}
+					<tr data-id="{{ position.id }}" data-name="{{ position.name|t }}">
+						<th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('adwizard/positions/' ~ position.id) }}">{{ position.name|t }}</a></th>
+						<td data-title="{{ 'Handle'|t }}"><code>{{ position.handle }}</code></td>
+						<td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
 
-    <div id="new-position-container" class="buttons">
-        <a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Position"|t }}</a>
-    </div>
+	<div id="new-position-container" class="buttons">
+		<a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Position"|t }}</a>
+	</div>
 {% endset %}
 
 
 {% set js %}
-    var adminTable = new Craft.AdminTable({
-        tableSelector: '#positions',
-        noObjectsSelector: '#no-positions',
-        newObjectBtnSelector: '#new-position-container',
-        deleteAction: 'adWizard/deletePosition',
-        confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}” and all its ads?"|t }}'
-    });
+	var adminTable = new Craft.AdminTable({
+		tableSelector: '#positions',
+		noObjectsSelector: '#no-positions',
+		newObjectBtnSelector: '#new-position-container',
+		deleteAction: 'adWizard/deletePosition',
+		confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}” and all its ads?"|t }}'
+	});
 {% endset %}
 {% includeJs js %}
