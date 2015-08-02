@@ -5,7 +5,7 @@
 {% set positionInput %}
 	<div class="select">
 		<select id="positionId" name="positionId">
-			{% for position in craft.adWizard.allPositions %}
+			{% for position in craft.adWizard.getAllPositions %}
 				{% set allPositions = allPositions|merge([position.id]) %}
 				<option value="{{ position.id }}"{% if position.id == settings.positionId %} selected{% endif %}>{{ position.name }}</option>
 			{% endfor %}
@@ -22,7 +22,7 @@
 {% set adIdInput %}
 	<div class="select">
 		<select id="adId" name="adId">
-			{% for ad in craft.adWizard.allAds %}
+			{% for ad in craft.adWizard.getAllAds %}
 				<option
 					value="{{ ad.id }}"
 					class="position-{{ ad.positionId }}"

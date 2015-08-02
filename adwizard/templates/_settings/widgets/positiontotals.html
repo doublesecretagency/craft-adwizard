@@ -3,7 +3,7 @@
 {% set positionInput %}
 	<div class="select">
 		<select id="positionId" name="positionId">
-			{% for position in craft.adWizard.allPositions %}
+			{% for position in craft.adWizard.getAllPositions %}
 				<option value="{{ position.id }}"{% if position.id == settings.positionId %} selected{% endif %}>{{ position.name }}</option>
 			{% endfor %}
 		</select>

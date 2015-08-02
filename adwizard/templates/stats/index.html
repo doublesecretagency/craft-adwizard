@@ -1,0 +1,51 @@
+{% extends '_layouts/cp' %}
+{% set title = "Stats"|t %}
+
+{% set tabs = {
+	ads:       { label: "Ads"|t,       url: url('adwizard') },
+	positions: { label: "Positions"|t, url: url('adwizard/positions') },
+	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
+} %}
+
+{% set selectedTab = 'stats' %}
+
+{% set content %}
+	<table class="data fullwidth collapsible">
+		<tr>
+			<thead>
+				<th>Title</th>
+				<th>Position</th>
+				<th colspan="2">Lifetime Total</th>
+				<th colspan="2">This Month (August)</th>
+				<th colspan="2">Last Month (July)</th>
+			</thead>
+		</tr>
+		<tr>
+			<thead>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th>View</th>
+				<th>Click</th>
+				<th>View</th>
+				<th>Click</th>
+				<th>View</th>
+				<th>Click</th>
+			</thead>
+		</tr>
+		{% for ad in craft.adWizard.getAllAds %}
+			{% set position = craft.adWizard.getPositionById(ad.positionId) %}
+			<tr>
+				<tbody>
+					<td><a href="{{ url('adwizard/' ~ position.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
+					<td>{{ position.name }}</td>
+					<td>{{ ad.totalViews }}</td>
+					<td>{{ ad.totalClicks }}</td>
+					<td>2</td>
+					<td>1</td>
+					<td>31</td>
+					<td>28</td>
+				</tbody>
+			</tr>
+		{% endfor %}
+	</table>
+{% endset %}

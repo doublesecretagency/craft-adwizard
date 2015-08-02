@@ -4,13 +4,22 @@
 
 {% set tabs = {
 	ads:       { label: "Ads"|t,       url: url('adwizard') },
-	positions: { label: "Positions"|t, url: url('adwizard/positions') }
+	positions: { label: "Positions"|t, url: url('adwizard/positions') },
+	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
 } %}
 
 {% block sidebar %}
 
 	{% if positions|length %}
 		<div class="buttons">
+
+			{#
+			<div class="btngroup submit">
+				<a class="btn submit add icon" href="http://local.2x.sandbox/admin/entries/loremIpsums/new">{{ "New Ad"|t }}</a>
+				<div class="btn submit menubtn"></div>
+			</div>
+			#}
+
 			{% if positions|length > 1 %}
 				<div class="btn submit menubtn add icon">{{ "New Ad"|t }}</div>
 				<div class="menu">

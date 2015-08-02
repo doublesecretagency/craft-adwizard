@@ -11,8 +11,9 @@
 
 		{{ forms.textField({
 			first: true,
-			label: "Name"|t,
-			instructions: "What this position will be called in the CP. (ie: \"Header Banner\" or \"Right Sidebar\")"|t,
+			label: "Position Name"|t,
+			instructions: "Define a group of ads."|t,
+			placeholder: "ie: \"Header Banner\" or \"Right Sidebar\""|t,
 			id: 'name',
 			name: 'name',
 			value: position.name,
@@ -24,7 +25,6 @@
 
 		{{ forms.textField({
 			label: "Handle"|t,
-			instructions: "How you’ll refer to this position in the templates."|t,
 			id: 'handle',
 			class: 'code',
 			name: 'handle',
@@ -41,7 +41,8 @@
 	</form>
 {% endblock %}
 
-{% set js %}
-	{% if not position.handle %}new Craft.HandleGenerator('#name', '#handle');{% endif %}
-{% endset %}
-{% includeJs js %}
+{% if not position.handle %}
+	{%- includejs -%}
+		new Craft.HandleGenerator('#name', '#handle');
+	{%- endincludejs -%}
+{% endif %}

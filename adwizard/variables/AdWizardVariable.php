@@ -18,16 +18,22 @@ class AdWizardVariable
     
     // ============================================================== //
 
-    // List all ads
-    public function allAds()
+    // Get all ads
+    public function getAllAds()
     {
         return craft()->adWizard->getAllAds();
     }
 
-    // List all positions
-    public function allPositions()
+    // Get all positions
+    public function getAllPositions()
     {
         return craft()->adWizard->getAllPositions();
+    }
+
+    // Get position by id
+    public function getPositionById($positionId)
+    {
+        return craft()->adWizard->getPositionById($positionId);
     }
     
 }
