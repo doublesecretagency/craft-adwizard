@@ -658,6 +658,44 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 	
 	// ============================================================== //
 
+	// Stats
+
+	// Total views in specified month
+	public function monthTotalViews($id, $year, $month)
+	{
+		return $this->_getMonthTotal($id, 'AdWizard_ViewRecord', $year, $month);
+	}
+
+	// Total clicks in specified month
+	public function monthTotalClicks($id, $year, $month)
+	{
+		return $this->_getMonthTotal($id, 'AdWizard_ClickRecord', $year, $month);
+	}
+
+	/**
+	 * Get total number of views/clicks per month
+	 *
+	 * @return int
+	 */
+	public function _getMonthTotal($id, $recordName, $year, $month)
+	{
+		$record = __NAMESPACE__.'\\'.$recordName;
+		// Get existing
+		$tracking = $record::model()->findByAttributes(array(
+			'adId'  => $id,
+			'year'  => $year,
+			'month' => $month,
+		));
+		// If tracking exists
+		if ($tracking) {
+			return $tracking->total;
+		} else {
+			return 0;
+		}
+	}
+	
+	// ============================================================== //
+
 	/*
 	// Check active status of ad
 	private function _adStatus($ad)

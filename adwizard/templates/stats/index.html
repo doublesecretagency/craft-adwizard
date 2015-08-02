@@ -1,6 +1,8 @@
 {% extends '_layouts/cp' %}
 {% set title = "Stats"|t %}
 
+{% includeCssResource 'adwizard/css/admin.css' %}
+
 {% set tabs = {
 	ads:       { label: "Ads"|t,       url: url('adwizard') },
 	positions: { label: "Positions"|t, url: url('adwizard/positions') },
@@ -9,43 +11,59 @@
 
 {% set selectedTab = 'stats' %}
 
+{% set month = [null,
+	'January', 'February', 'March',
+	'April',   'May',      'June',
+	'July',    'August',   'September',
+	'October', 'November', 'December',
+] %}
+
+{% set thisMonth = now|date('n') %}
+{% set thisYear  = now|date('Y') %}
+
+{% if thisMonth > 1 %}
+	{% set lastMonth = thisMonth - 1 %}
+	{% set lastYear  = thisYear %}
+{% else %}
+	{% set lastMonth = 12 %}
+	{% set lastYear  = thisYear - 1 %}
+{% endif %}
+
 {% set content %}
 	<table class="data fullwidth collapsible">
-		<tr>
-			<thead>
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th colspan="2">Lifetime Total</th>
+				<th colspan="2">This Month ({{ month[thisMonth] }})</th>
+				<th colspan="2">Last Month ({{ month[lastMonth] }})</th>
+			</tr>
+			<tr>
 				<th>Title</th>
 				<th>Position</th>
-				<th colspan="2">Lifetime Total</th>
-				<th colspan="2">This Month (August)</th>
-				<th colspan="2">Last Month (July)</th>
-			</thead>
-		</tr>
-		<tr>
-			<thead>
-				<th>&nbsp;</th>
-				<th>&nbsp;</th>
-				<th>View</th>
-				<th>Click</th>
-				<th>View</th>
-				<th>Click</th>
-				<th>View</th>
-				<th>Click</th>
-			</thead>
-		</tr>
-		{% for ad in craft.adWizard.getAllAds %}
-			{% set position = craft.adWizard.getPositionById(ad.positionId) %}
-			<tr>
-				<tbody>
+				<th>Views</th>
+				<th>Clicks</th>
+				<th>Views</th>
+				<th>Clicks</th>
+				<th>Views</th>
+				<th>Clicks</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ad in craft.adWizard.getAllAds %}
+				{% set position = craft.adWizard.getPositionById(ad.positionId) %}
+				<tr>
 					<td><a href="{{ url('adwizard/' ~ position.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
 					<td>{{ position.name }}</td>
-					<td>{{ ad.totalViews }}</td>
+					<td class="col-divider">{{ ad.totalViews }}</td>
 					<td>{{ ad.totalClicks }}</td>
-					<td>2</td>
-					<td>1</td>
-					<td>31</td>
-					<td>28</td>
-				</tbody>
-			</tr>
-		{% endfor %}
+					<td class="col-divider">{{ craft.adWizard.monthTotalViews(ad.id, thisYear, thisMonth) }}</td>
+					<td>{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
+					<td class="col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>
+					<td>{{ craft.adWizard.monthTotalClicks(ad.id, lastYear, lastMonth) }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
 	</table>
 {% endset %}

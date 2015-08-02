@@ -3,7 +3,7 @@ namespace Craft;
 
 class AdWizard_ViewRecord extends BaseRecord
 {
-	
+
 	public function getTableName()
 	{
 		return 'adwizard_views';

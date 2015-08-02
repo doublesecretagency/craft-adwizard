@@ -1,4 +1,10 @@
 
+.col-divider {
+	border-left: 1px dotted rgba(115, 127, 140, 0.15);
+}
+
+/* ============================== */
+
 .sourceTypeOptions {
 	/* display: none; */
 }
