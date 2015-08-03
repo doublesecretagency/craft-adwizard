@@ -1,30 +1,17 @@
 
+.aw-total {
+	padding-left: 0px !important;
+	text-align: center !important;
+}
+
 .col-divider {
 	border-left: 1px dotted rgba(115, 127, 140, 0.15);
 }
 
-/* ============================== */
-
-.sourceTypeOptions {
-	/* display: none; */
+.aw-views {
+	background-color: rgba(115, 127, 140, 0.15);
 }
 
-/*
-span.delete.icon {
-	cursor: pointer;
+.aw-clicks {
+	background-color: #f6f6f6;
 }
-
-table.adWizard {
-	border: 1px solid #999999;
-}
-table.adWizard th {
-	font-weight: bold;
-	background-color: #EEEEEE;
-}
-table.adWizard td,
-table.adWizard th {
-	text-align: left;
-	padding: 2px 10px;
-	border: 1px solid #CCCCCC;
-}
-*/

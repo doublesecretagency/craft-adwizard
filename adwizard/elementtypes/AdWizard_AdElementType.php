@@ -150,9 +150,13 @@ class AdWizard_AdElementType extends BaseElementType
 
 			case 'totalClicks':
 			case 'totalViews':
-			case 'maxViews':
 			{
 				return $element->$attribute;
+			}
+
+			case 'maxViews':
+			{
+				return ($element->$attribute ? $element->$attribute : '');
 			}
 
 			default:
