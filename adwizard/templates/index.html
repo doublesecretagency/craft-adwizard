@@ -2,11 +2,21 @@
 {% set title = "Ads"|t %}
 {% set elementType = 'AdWizard_Ad' %}
 
+{% includeJsResource  'adwizard/js/admin.js' %}
+
 {% set tabs = {
 	ads:       { label: "Ads"|t,       url: url('adwizard') },
 	positions: { label: "Positions"|t, url: url('adwizard/positions') },
 	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
 } %}
+
+{% includejs %}
+var handles = {
+	{% for source in craft.adWizard.getAllPositions %}
+		{{ source.id }}: '{{ source.handle }}'{{ not loop.last ? ',' }}
+	{% endfor %}
+};
+{% endincludejs %}
 
 {% block sidebar %}
 
@@ -15,7 +25,7 @@
 
 			{% if positions|length > 1 %}
 				<div class="btngroup submit">
-					<a class="btn submit add icon" href="{{ url('adwizard/'~positions[0].handle~'/new') }}">{{ "New Ad"|t }}</a>
+					<div class="btn submit add icon" id="new-ad">{{ "New Ad"|t }}</div>
 					<div class="btn menubtn submit" href="#"></div>
 					<div class="menu">
 						<ul>

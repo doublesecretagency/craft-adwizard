@@ -35,4 +35,16 @@ $(function () {
 		$('.sourceTypeOptions').hide();
 		$('#'+sourceType).show();
 	});
+	// Behavior for "New Ad" button
+	$('#new-ad').on('click', function () {
+		// Get id of current group
+		var id = $('#sidebar a.sel').data('key').replace(/position:/, '');
+		// If id is not valid
+		if (!handles.hasOwnProperty(id)) {
+			// Set to default id
+			id = Object.keys(handles)[0];
+		}
+		// Redirect
+		window.location = Craft.getUrl('adwizard/'+handles[id]+'/new');
+	});
 });
