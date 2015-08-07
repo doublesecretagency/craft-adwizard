@@ -1,10 +1,4 @@
 
-{{ forms.lightswitchField({
-	label: "Enabled"|t,
-	name: 'enabled',
-	on: ad.enabled,
-}) }}
-
 {{ forms.dateTimeField({
 	label: "Beginning of Run"|t,
 	id: 'startDate',
@@ -28,4 +22,10 @@
 	value: ad.maxViews,
 	errors: ad.getErrors('maxViews'),
 	size: 3,
+}) }}
+
+{{ forms.lightswitchField({
+	label: "Enabled"|t,
+	name: 'enabled',
+	on: ad.enabled,
 }) }}

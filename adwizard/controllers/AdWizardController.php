@@ -134,7 +134,7 @@ class AdWizardController extends BaseController
 	{
 		$variables['positions'] = craft()->adWizard->getAllPositions();
 
-		$this->renderTemplate('adwizard/index', $variables);
+		$this->renderTemplate('adwizard/ads', $variables);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class AdWizardController extends BaseController
 		$variables['continueEditingUrl'] = 'adwizard/'.$variables['position']->handle.'/{id}';
 
 		// Render the template!
-		$this->renderTemplate('adwizard/_edit', $variables);
+		$this->renderTemplate('adwizard/ads/_edit', $variables);
 	}
 
 	/**

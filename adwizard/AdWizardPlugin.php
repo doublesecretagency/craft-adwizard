@@ -33,7 +33,7 @@ class AdWizardPlugin extends BasePlugin
 	public function registerCpRoutes()
 	{
 		return array(
-			'adwizard'                                            => array('action' => 'adWizard/adIndex'),
+			'adwizard/ads'                                        => array('action' => 'adWizard/adIndex'),
 			'adwizard/positions'                                  => array('action' => 'adWizard/positionIndex'),
 			'adwizard/positions/new'                              => array('action' => 'adWizard/editPosition'),
 			'adwizard/positions/(?P<positionId>\d+)'              => array('action' => 'adWizard/editPosition'),
