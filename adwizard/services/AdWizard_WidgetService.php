@@ -25,7 +25,6 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 			//'startDate' => '',
 			//'endDate'   => '',
 			//'maxViews'  => '',
-			//'enabled'   => '',
 		));
 		if (empty($adRecords)) {
 			return 'No ads exist in that position.';
@@ -36,14 +35,16 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 		);
 		foreach ($adRecords as $adRecord) {
 			$ad = AdWizard_AdModel::populateModel($adRecord);
-			$name = $ad->title;
-			$views = $this->_getTrackingTotal('AdWizard_ViewRecord', $adRecord);
-			$clicks = $this->_getTrackingTotal('AdWizard_ClickRecord', $adRecord);
-			$data[] = array($name, $views, $clicks);
+			if ($ad->enabled) {
+				$name = $ad->title;
+				$views = $this->_getTrackingTotal('AdWizard_ViewRecord', $adRecord);
+				$clicks = $this->_getTrackingTotal('AdWizard_ClickRecord', $adRecord);
+				$data[] = array($name, $views, $clicks);
+			}
 		}
 
 		$options = $this->_optionsBarChart();
-		$options['chartArea']['height'] = count($adRecords) * 60;
+		$options['chartArea']['height'] = count($data) * 60;
 		$height  = ($options['chartArea']['height'] + 30);
 		return $this->_loadChartJs('BarChart', $data, $options, $height);
 
@@ -178,7 +179,7 @@ function drawChart".$widgetId."() {
 		return array(
 			//'title' => 'Tracking Results',
 			'vAxis' => array(
-				'title' => $ad->title,
+				'title' => 'Daily Totals',
 				//'titleTextStyle' => array('color' => 'red'),
 				'minValue' => 0,
 				//'gridlines' => array('count' => -1),

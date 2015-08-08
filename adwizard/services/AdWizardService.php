@@ -261,7 +261,7 @@ class AdWizardService extends BaseApplicationComponent
 	 */
 	public function getAllAds($indexBy = null)
 	{
-		$adRecords = AdWizard_AdRecord::model()->findAll();
+		$adRecords = AdWizard_AdRecord::model()->findAll(array('order'=>'id desc'));
 		$adsById = AdWizard_AdModel::populateModels($adRecords, 'id');
 
 		if ($indexBy == 'id')

@@ -6,6 +6,18 @@ class AdWizard_AdTimelineWidget extends BaseWidget
 
 	protected $colspan = 2;
 
+	public function getTitle()
+	{
+		$adId = $this->getSettings()->adId;
+		if ($adId) {
+			$ad = craft()->adWizard->getAdById($adId);
+			$title = $ad->title;
+		} else {
+			$title = Craft::t('NEW TIMELINE');
+		}
+		return $title;
+	}
+
 	public function getName()
 	{
 		return Craft::t('Ad Timeline');
@@ -14,7 +26,9 @@ class AdWizard_AdTimelineWidget extends BaseWidget
 	public function getBodyHtml()
 	{
 		$adId = $this->getSettings()->adId;
-		return craft()->adWizard_widget->adLineChart($adId);
+		$chart = craft()->adWizard_widget->adLineChart($adId);
+		$intro = '<h3>Activity this month</h3>';
+		return $intro.'<p>'.$chart.'</p>';
 	}
 
 	protected function defineSettings()

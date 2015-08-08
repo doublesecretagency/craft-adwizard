@@ -6,6 +6,18 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
 	protected $colspan = 2;
 
+	public function getTitle()
+	{
+		$positionId = $this->getSettings()->positionId;
+		if ($positionId) {
+			$position = craft()->adWizard->getPositionById($positionId);
+			$title = $position->name;
+		} else {
+			$title = Craft::t('NEW POSITION CHART');
+		}
+		return $title;
+	}
+
 	public function getName()
 	{
 		return Craft::t('Ad Position Totals');
@@ -14,7 +26,9 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 	public function getBodyHtml()
 	{
 		$positionId = $this->getSettings()->positionId;
-		return craft()->adWizard_widget->positionBarChart($positionId);
+		$chart = craft()->adWizard_widget->positionBarChart($positionId);
+		$intro = '<h3>Lifetime totals</h3>';
+		return $intro.'<p>'.$chart.'</p>';
 	}
 
 	protected function defineSettings()
