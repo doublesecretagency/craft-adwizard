@@ -21,9 +21,9 @@ class AdWizardController extends BaseController
 		} else {
 			$response = 'Click tracking failed.';
 		}
-		$this->returnJson('[Ad Wizard] '.$response);
+		$this->returnJson(craft()->adWizard->errorPrefix.$response);
 	}
-	
+
 	// Positions
 
 	/**

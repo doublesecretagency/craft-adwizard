@@ -6,10 +6,11 @@ namespace Craft;
  */
 class AdWizardService extends BaseApplicationComponent
 {
+	public $errorPrefix = '[Ad Wizard] ';
+	
 	private $_allPositionIds;
 	private $_positionsById;
 	private $_fetchedAllPositions = false;
-	private $_errorPrefix = '[Ad Wizard] ';
 
 	private $_csrfIncluded = false;
 
@@ -155,8 +156,8 @@ class AdWizardService extends BaseApplicationComponent
 			$isNewPosition = true;
 		}
 
-		$positionRecord->name       = $position->name;
-		$positionRecord->handle     = $position->handle;
+		$positionRecord->name   = $position->name;
+		$positionRecord->handle = $position->handle;
 
 		$positionRecord->validate();
 		$position->addErrors($positionRecord->getErrors());
@@ -459,14 +460,16 @@ class AdWizardService extends BaseApplicationComponent
 	private function _getAdByPosition($positionHandle)
 	{
 		if (!$positionHandle) {
-			return $this->_errorPrefix.'Please specify an ad position.';
+			$this->err('Please specify an ad position.');
+			return false;
 		}
 		
 		$positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
 			'handle' => $positionHandle,
 		));
 		if (!$positionRecord) {
-			return $this->_errorPrefix.'Invalid position handle.';
+			$this->err('"'.$positionHandle.'" is not a valid position handle.');
+			return false;
 		}
 
 		$fields = array(
@@ -489,7 +492,8 @@ class AdWizardService extends BaseApplicationComponent
 		if ($result) {
 			return AdWizard_AdModel::populateModel($result);
 		} else {
-			return $this->_errorPrefix.'No ads available in this position.';
+			$this->err('No ads are available in the "'.$positionRecord->name.'" position.');
+			return false;
 		}
 		
 	}
@@ -498,16 +502,13 @@ class AdWizardService extends BaseApplicationComponent
 	// Renders HTML of ad
 	private function _displayAd(AdWizard_AdModel $ad, $transform = null)
 	{
-
 		$asset = craft()->assets->getFileById($ad->assetId);
 
 		if (!$asset) {
-			$ad->html = $this->_errorPrefix.'No image specified for ad "'.$ad->title.'".';
+			$this->err('No image specified for ad "'.$ad->title.'".');
 			return false;
-		}
-
-		if (!$ad->url) {
-			$ad->html = $this->_errorPrefix.'No URL specified for ad "'.$ad->title.'".';
+		} else if (!$ad->url) {
+			$this->err('No URL specified for ad "'.$ad->title.'".');
 			return false;
 		}
 
@@ -727,5 +728,12 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 		);
 	}
 	*/
+
+	// Output error to console log
+	private function err($error)
+	{
+		$err = $this->errorPrefix.$error;
+		craft()->templates->includeJs("console.log('{$err}')");
+	}
 
 }
