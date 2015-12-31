@@ -1,0 +1,10 @@
+{% extends '_layouts/cp' %}
+
+{% set subnav = {} %}
+{% set groupsExist = craft.adWizard.getAllPositions() %}
+
+{% set subnav = subnav|merge({stats:     { label: "Stats"|t,     url: url('adwizard/stats') }}) %}
+{% if groupsExist %}
+	{% set subnav = subnav|merge({ads:   { label: "Ads"|t,       url: url('adwizard/ads') }}) %}
+{% endif %}
+{% set subnav = subnav|merge({positions: { label: "Ad Groups"|t, url: url('adwizard/positions') }}) %}

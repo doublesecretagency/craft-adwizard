@@ -1,17 +1,15 @@
 {% extends '_layouts/elementindex' %}
+{% set selectedSubnavItem = 'ads' %}
 {% set title = "Ads"|t %}
 {% set elementType = 'AdWizard_Ad' %}
 
-{% includeJsResource  'adwizard/js/admin.js' %}
-
-{% set tabs = {
+{% set subnav = {
 	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
 	ads:       { label: "Ads"|t,       url: url('adwizard/ads') },
-	positions: { label: "Positions"|t, url: url('adwizard/positions') },
+	positions: { label: "Ad Groups"|t, url: url('adwizard/positions') },
 } %}
 
-{% set selectedTab = 'ads' %}
-
+{% includeJsResource  'adwizard/js/admin.js' %}
 {% includejs %}
 var handles = {
 	{% for source in craft.adWizard.getAllPositions %}

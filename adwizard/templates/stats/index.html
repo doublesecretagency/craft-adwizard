@@ -1,15 +1,8 @@
-{% extends '_layouts/cp' %}
+{% extends 'adwizard/_layout' %}
+{% set selectedSubnavItem = 'stats' %}
 {% set title = "Stats"|t %}
 
 {% includeCssResource 'adwizard/css/admin.css' %}
-
-{% set tabs = {
-	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
-	ads:       { label: "Ads"|t,       url: url('adwizard/ads') },
-	positions: { label: "Positions"|t, url: url('adwizard/positions') },
-} %}
-
-{% set selectedTab = 'stats' %}
 
 {% set month = [null,
 	'January', 'February', 'March',
@@ -40,8 +33,8 @@
 				<th colspan="2" class="aw-total col-divider">Last Month ({{ month[lastMonth] }})</th>
 			</tr>
 			<tr>
-				<th>Position</th>
-				<th>Title</th>
+				<th>Group</th>
+				<th>Ad</th>
 				<th class="aw-total aw-views col-divider">Views</th>
 				<th class="aw-total aw-clicks">Clicks</th>
 				<th class="aw-total aw-views col-divider">Views</th>
@@ -62,6 +55,18 @@
 					<td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
 					<td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>
 					<td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, lastYear, lastMonth) }}</td>
+				</tr>
+			{% else %}
+				{% set groupsExist = craft.adWizard.getAllPositions() %}
+				{% if groupsExist %}
+					{% set href  = cpUrl('adwizard/ads') %}
+					{% set label = 'Create an ad...' %}
+				{% else %}
+					{% set href  = cpUrl('adwizard/positions') %}
+					{% set label = 'Create an ad group...' %}
+				{% endif %}
+				<tr>
+					<td colspan="8" class="no-stats">You currently have no ads. <a href="{{ href }}">{{ label }}</a></td>
 				</tr>
 			{% endfor %}
 		</tbody>

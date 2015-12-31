@@ -9,9 +9,15 @@
 }
 
 .aw-views {
-	background-color: rgba(115, 127, 140, 0.15);
+	background-color: #f6f6f6;
 }
 
 .aw-clicks {
-	background-color: #f6f6f6;
+	background-color: rgba(115, 127, 140, 0.15);
+}
+
+.no-stats {
+	text-align: center !important;
+	font-style: italic;
+	padding: 33px 0px 30px !important;
 }

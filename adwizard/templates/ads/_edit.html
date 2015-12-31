@@ -1,15 +1,9 @@
-{% extends '_layouts/cp' %}
+{% extends 'adwizard/_layout' %}
+{% set selectedSubnavItem = 'ads' %}
 {% import '_includes/forms' as forms %}
 
 {% includeCssResource 'adwizard/css/admin.css' %}
 {% includeJsResource  'adwizard/js/admin.js' %}
-
-{#
-{% set tabs = {
-	ads:       { label: "Ads"|t,       url: url('adwizard') },
-	positions: { label: "Positions"|t, url: url('adwizard/positions') }
-} %}
-#}
 
 {% set positionHandle = position.handle %}
 

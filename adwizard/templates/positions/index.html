@@ -1,18 +1,14 @@
-{% extends '_layouts/cp' %}
-{% set title = "Positions"|t %}
-
-{% set tabs = {
-	stats:     { label: "Stats"|t,     url: url('adwizard/stats') },
-	ads:       { label: "Ads"|t,       url: url('adwizard/ads') },
-	positions: { label: "Positions"|t, url: url('adwizard/positions') },
-} %}
-
-{% set selectedTab = 'positions' %}
+{% extends 'adwizard/_layout' %}
+{% set selectedSubnavItem = 'positions' %}
+{% set title = "Ad Groups"|t %}
 
 {% set content %}
 	<div id="no-positions"{% if positions %} class="hidden"{% endif %}>
-		<p>Your ads will be divided into groups, based on where they appear on the front-end. Every <strong>Ad</strong> you create will exist in a specific <strong>Position</strong>.</p>
-		<p>No positions exist yet, please create one to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
+		<h2>What is an Ad Group?</h2>
+		<p>When you create an Ad, you will place it in a specific Ad Group. The relationship between Ad &amp; Ad Group is similar to the relationship beteen Entry &amp; Section. It's not possible for an ad to exist in more than one group.</p>
+		<p>You can generally think of an ad group as being in a "position".</p>
+		<hr/>
+		<p><strong>No groups exist yet.</strong> Please create one to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
 	</div>
 
 	{% if positions|length %}
@@ -35,7 +31,7 @@
 	{% endif %}
 
 	<div id="new-position-container" class="buttons">
-		<a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Position"|t }}</a>
+		<a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Group"|t }}</a>
 	</div>
 {% endset %}
 
