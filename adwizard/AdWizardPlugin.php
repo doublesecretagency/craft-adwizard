@@ -9,9 +9,24 @@ class AdWizardPlugin extends BasePlugin
 		return Craft::t('Ad Wizard');
 	}
 
+	public function getDescription()
+	{
+		return 'Easily manage custom advertisements on your website.';
+	}
+
+	public function getDocumentationUrl()
+	{
+		return 'https://craftpl.us/plugins/ad-wizard';
+	}
+
 	public function getVersion()
 	{
-		return '1.2.1 rc';
+		return '1.3.0 rc';
+	}
+
+	public function getSchemaVersion()
+	{
+		return '1.3.0';
 	}
 
 	public function getDeveloper()

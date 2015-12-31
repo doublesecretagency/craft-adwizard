@@ -7,7 +7,7 @@ namespace Craft;
 class AdWizardService extends BaseApplicationComponent
 {
 	public $errorPrefix = '[Ad Wizard] ';
-	
+
 	private $_allPositionIds;
 	private $_positionsById;
 	private $_fetchedAllPositions = false;
@@ -249,7 +249,7 @@ class AdWizardService extends BaseApplicationComponent
 			throw $e;
 		}
 	}
-	
+
 	// ============================================================== //
 
 	// Ads
@@ -418,7 +418,7 @@ class AdWizardService extends BaseApplicationComponent
 	{
 		$this->raiseEvent('onSaveAd', $event);
 	}
-	
+
 	// ============================================================== //
 
 	// Display ad
@@ -445,9 +445,9 @@ class AdWizardService extends BaseApplicationComponent
 		}
 		return TemplateHelper::getRaw($ad->html);
 	}
-	
+
 	// ============================================================== //
-	
+
 
 	// Get individual ad via ID
 	private function _getAdById($id)
@@ -463,7 +463,7 @@ class AdWizardService extends BaseApplicationComponent
 			$this->err('Please specify an ad position.');
 			return false;
 		}
-		
+
 		$positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
 			'handle' => $positionHandle,
 		));
@@ -495,9 +495,9 @@ class AdWizardService extends BaseApplicationComponent
 			$this->err('No ads are available in the "'.$positionRecord->name.'" position.');
 			return false;
 		}
-		
+
 	}
-	
+
 
 	// Renders HTML of ad
 	private function _displayAd(AdWizard_AdModel $ad, $transform = null)
@@ -540,7 +540,7 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 
 		return true;
 	}
-	
+
 	// ============================================================== //
 
 	// Tracking
@@ -595,7 +595,7 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 			return $trackingRecord->save();
 		}
 	}
-	
+
 	// ============================================================== //
 
 	// Records
@@ -656,7 +656,7 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 			'ad' => array(BaseRecord::BELONGS_TO, 'ElementRecord', 'required' => true, 'onDelete' => BaseRecord::CASCADE),
 		);
 	}
-	
+
 	// ============================================================== //
 
 	// Stats
@@ -694,7 +694,7 @@ window.csrfTokenValue = "'.craft()->request->getCsrfToken().'";
 			return 0;
 		}
 	}
-	
+
 	// ============================================================== //
 
 	/*
