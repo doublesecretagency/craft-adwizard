@@ -9,6 +9,28 @@
 	positions: { label: "Ad Groups"|t, url: url('adwizard/positions') },
 } %}
 
+{% set fullPageForm = true %}
+
+{% block saveButton %}
+	{% if positions|length %}
+		<div class="buttons">
+			<div class="btngroup submit first">
+				<input type="submit" class="btn submit" value="{{ 'New Ad'|t }}">
+				{% if positions|length > 1 %}
+					<div class="btn submit menubtn"></div>
+					<div class="menu">
+						<ul>
+							{% for position in positions %}
+								<li><a href="{{ url('adwizard/'~position.handle~'/new') }}">{{ position.name|t }}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
 {% includeJsResource  'adwizard/js/admin.js' %}
 {% includejs %}
 var handles = {
@@ -17,31 +39,3 @@ var handles = {
 	{% endfor %}
 };
 {% endincludejs %}
-
-{% block sidebar %}
-
-	{% if positions|length %}
-		<div class="buttons">
-
-			{% if positions|length > 1 %}
-				<div class="btngroup submit">
-					<div class="btn submit add icon" id="new-ad">{{ "New Ad"|t }}</div>
-					<div class="btn menubtn submit" href="#"></div>
-					<div class="menu">
-						<ul>
-							{% for position in positions %}
-								<li><a href="{{ url('adwizard/'~position.handle~'/new') }}">{{ position.name|t }}</a></li>
-							{% endfor %}
-						</ul>
-					</div>
-				</div>
-			{% else %}
-				<a class="btn submit add icon" href="{{ url('adwizard/'~positions[0].handle~'/new') }}">{{ "New Ad"|t }}</a>
-			{% endif %}
-
-		</div>
-	{% endif %}
-
-	{{ parent() }}
-
-{% endblock %}

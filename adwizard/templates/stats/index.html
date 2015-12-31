@@ -28,9 +28,9 @@
 			<tr>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
-				<th colspan="2" class="aw-total col-divider">Lifetime Total</th>
 				<th colspan="2" class="aw-total col-divider">This Month ({{ month[thisMonth] }})</th>
 				<th colspan="2" class="aw-total col-divider">Last Month ({{ month[lastMonth] }})</th>
+				<th colspan="2" class="aw-total col-divider">Lifetime Total</th>
 			</tr>
 			<tr>
 				<th>Group</th>
@@ -49,12 +49,12 @@
 				<tr>
 					<td>{{ position.name }}</td>
 					<td><a href="{{ url('adwizard/' ~ position.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
-					<td class="aw-total aw-views col-divider">{{ ad.totalViews }}</td>
-					<td class="aw-total aw-clicks">{{ ad.totalClicks }}</td>
 					<td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, thisYear, thisMonth) }}</td>
 					<td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
 					<td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>
 					<td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, lastYear, lastMonth) }}</td>
+					<td class="aw-total aw-views col-divider">{{ ad.totalViews }}</td>
+					<td class="aw-total aw-clicks">{{ ad.totalClicks }}</td>
 				</tr>
 			{% else %}
 				{% set groupsExist = craft.adWizard.getAllPositions() %}

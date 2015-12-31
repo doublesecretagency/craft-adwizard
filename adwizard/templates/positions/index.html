@@ -2,13 +2,21 @@
 {% set selectedSubnavItem = 'positions' %}
 {% set title = "Ad Groups"|t %}
 
+{% set fullPageForm = true %}
+
+{% block saveButton %}
+	<div class="buttons" id="new-position-container">
+		<a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Group"|t }}</a>
+	</div>
+{% endblock %}
+
 {% set content %}
 	<div id="no-positions"{% if positions %} class="hidden"{% endif %}>
 		<h2>What is an Ad Group?</h2>
 		<p>When you create an Ad, you will place it in a specific Ad Group. The relationship between Ad &amp; Ad Group is similar to the relationship beteen Entry &amp; Section. It's not possible for an ad to exist in more than one group.</p>
-		<p>You can generally think of an ad group as being in a "position".</p>
+		<p>You can generally think of an ad group as being in a "position". <em>(ie: "Header Banner", "Right Sidebar")</em></p>
 		<hr/>
-		<p><strong>No groups exist yet.</strong> Please create one to get started. <em>(ie: "Header Banner", "Right Sidebar")</em></p>
+		<p><strong>No groups exist yet.</strong> <a href="{{ url('adwizard/positions/new') }}">Create one to get started...</a></p>
 	</div>
 
 	{% if positions|length %}
@@ -29,20 +37,14 @@
 			</tbody>
 		</table>
 	{% endif %}
-
-	<div id="new-position-container" class="buttons">
-		<a href="{{ url('adwizard/positions/new') }}" class="btn submit add icon">{{ "New Group"|t }}</a>
-	</div>
 {% endset %}
 
-
-{% set js %}
+{% includejs %}
 	var adminTable = new Craft.AdminTable({
 		tableSelector: '#positions',
 		noObjectsSelector: '#no-positions',
 		newObjectBtnSelector: '#new-position-container',
 		deleteAction: 'adWizard/deletePosition',
-		confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}” and all its ads?"|t }}'
+		confirmDeleteMessage: '{{ "Are you sure you want to delete the “{name}” group, including all ads the group contains?"|t }}'
 	});
-{% endset %}
-{% includeJs js %}
+{% endincludejs %}
