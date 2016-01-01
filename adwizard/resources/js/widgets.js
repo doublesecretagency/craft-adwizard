@@ -13,7 +13,7 @@ var adWizard = {
 				adWizard.widgets.positions[id] = adWizard.widgets.$adSelect.find('option.position-'+id);
 			}
 			adWizard.widgets.$positionSelect.on('change', function () {
-				adWizard.widgets.changeOptions();
+				// adWizard.widgets.changeOptions();
 			})
 		},
 		// Change select menu options

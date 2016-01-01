@@ -4,8 +4,6 @@ namespace Craft;
 class AdWizard_PositionTotalsWidget extends BaseWidget
 {
 
-	protected $colspan = 2;
-
 	public function getTitle()
 	{
 		$positionId = $this->getSettings()->positionId;
@@ -20,14 +18,19 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
 	public function getName()
 	{
-		return Craft::t('Ad Position Totals');
+		return Craft::t('Ad Totals');
+	}
+
+	public function getIconPath()
+	{
+		return craft()->path->getPluginsPath().'adwizard/resources/ad-totals.svg';
 	}
 
 	public function getBodyHtml()
 	{
 		$positionId = $this->getSettings()->positionId;
 		$chart = craft()->adWizard_widget->positionBarChart($positionId);
-		$intro = '<h3>Lifetime totals</h3>';
+		$intro = '<p>Lifetime totals of ads in this group.</p>';
 		return $intro.'<p>'.$chart.'</p>';
 	}
 
@@ -40,8 +43,9 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
 	public function getSettingsHtml()
 	{
-		return craft()->templates->render('adwizard/_settings/widgets/positiontotals', array(
+		return craft()->templates->render('adwizard/_settings/widgets/ad-totals', array(
 			'settings' => $this->getSettings(),
+			'pluginsPath' => craft()->path->getPluginsPath(),
 		));
 	}
 

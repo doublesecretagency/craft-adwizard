@@ -14,8 +14,8 @@
 {% endset %}
 
 {{ forms.field({
-	label: "Position"|t,
-	instructions: "Which position is the ad in?"|t,
+	label: "Ad Group"|t,
+	instructions: "Which group is the ad in?"|t,
 	id: 'position',
 }, positionInput) }}
 
@@ -42,7 +42,7 @@
 {% set positionIds %}
 $(function () {
 	adWizard.widgets.init([{{ allPositions|join(',') }}]);
-	adWizard.widgets.changeOptions();
+	// adWizard.widgets.changeOptions();
 });
 {% endset %}
 {% includeJsResource 'adwizard/js/widgets.js' %}
