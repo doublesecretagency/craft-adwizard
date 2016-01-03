@@ -32,6 +32,28 @@ class AdWizard_AdModel extends BaseElementModel
 	}
 
 	/**
+	 * @inheritDoc BaseElementModel::getThumbUrl()
+	 *
+	 * @param int $size
+	 *
+	 * @return string|null
+	 */
+	public function getThumbUrl($size = 125)
+	{
+		$asset = craft()->assets->getFileById($this->assetId);
+		if ($asset)
+		{
+			return UrlHelper::getResourceUrl('assetthumbs/'.$this->assetId.'/'.$size, array(
+				craft()->resources->dateParam => $asset->dateModified->getTimestamp()
+			));
+		}
+		else
+		{
+			return UrlHelper::getResourceUrl('assetthumbs//125'); // Broken image icon
+		}
+	}
+
+	/**
 	 * Returns whether the current user can edit the element.
 	 *
 	 * @return bool

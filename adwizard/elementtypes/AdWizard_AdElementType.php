@@ -73,16 +73,16 @@ class AdWizard_AdElementType extends BaseElementType
 	 * @param string|null $source
 	 * @return array
 	 */
-	public function defineTableAttributes($source = null)
+	public function defineAvailableTableAttributes($source = null)
 	{
 		return array(
-			'title'     => Craft::t('Title'),
-			'url'       => Craft::t('URL'),
-			'startDate' => Craft::t('Start Date'),
-			'endDate'   => Craft::t('End Date'),
-			//'totalClicks' => Craft::t('Total Click-Thrus'),
-			//'totalViews'  => Craft::t('Total Impressions'),
-			'maxViews'  => Craft::t('Max Impressions'),
+			'title'       => Craft::t('Title'),
+			'url'         => Craft::t('URL'),
+			'startDate'   => Craft::t('Start Date'),
+			'endDate'     => Craft::t('End Date'),
+			'maxViews'    => Craft::t('Max Impressions'),
+			'totalClicks' => Craft::t('Total Click-Thrus'),
+			'totalViews'  => Craft::t('Total Impressions'),
 		);
 	}
 

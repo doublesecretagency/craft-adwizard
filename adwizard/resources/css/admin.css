@@ -21,3 +21,7 @@
 	font-style: italic;
 	padding: 33px 0px 30px !important;
 }
+
+input#maxViews {
+	width: 80px;
+}
