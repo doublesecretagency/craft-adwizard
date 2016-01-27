@@ -5,15 +5,29 @@ class AdWizardVariable
 {
 
 	// Display specified ad
-	public function ad($id, $transform = null)
+	public function displayAd($id, $transform = null, $retina = false)
 	{
-		return craft()->adWizard->renderAd($id, $transform);
+		return craft()->adWizard->renderAd($id, $transform, $retina);
 	}
 
-	// Display random ad from specified position
-	public function position($position, $transform = null)
+	// Display random ad from specified ad group
+	public function randomizeAdGroup($group, $transform = null, $retina = false)
 	{
-		return craft()->adWizard->renderAdFromPosition($position, $transform);
+		return craft()->adWizard->renderRandomAdFromGroup($group, $transform, $retina);
+	}
+
+	// ============================================================== //
+
+	// DEPRECATED
+	public function ad($id, $transform = null, $retina = false)
+	{
+		return $this->displayAd($id, $transform, $retina);
+	}
+
+	// DEPRECATED
+	public function position($group, $transform = null, $retina = false)
+	{
+		return $this->randomizeAdGroup($group, $transform, $retina);
 	}
 
 	// ============================================================== //
