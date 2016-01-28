@@ -429,10 +429,16 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	// Display random ad from position
-	public function renderAdFromPosition($position, $transform = null)
+	public function renderRandomAdFromGroup($group, $transform = null, $retina = false)
 	{
-		$ad = $this->_getAdByPosition($position);
-		return $this->_renderIndividualAd($ad, $transform);
+		$ad = $this->_getRandomAdFromGroup($group);
+		return $this->_renderIndividualAd($ad, $transform, $retina);
+	}
+
+	// DEPRECATED
+	public function renderAdFromPosition($group, $transform = null)
+	{
+		return $this->renderRandomAdFromGroup($group, $transform);
 	}
 
 	// Render an individual ad
