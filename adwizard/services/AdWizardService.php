@@ -422,10 +422,10 @@ class AdWizardService extends BaseApplicationComponent
 	// ============================================================== //
 
 	// Display ad
-	public function renderAd($id, $transform = null)
+	public function renderAd($id, $transform = null, $retina = false)
 	{
 		$ad = $this->_getAdById($id);
-		return $this->_renderIndividualAd($ad, $transform);
+		return $this->_renderIndividualAd($ad, $transform, $retina);
 	}
 
 	// Display random ad from position
@@ -442,11 +442,11 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	// Render an individual ad
-	private function _renderIndividualAd($ad, $transform = null)
+	private function _renderIndividualAd($ad, $transform = null, $retina = false)
 	{
 		if (!$ad) {return false;}
 		if (is_string($ad)) {return $ad;}
-		if ($this->_displayAd($ad, $transform)) {
+		if ($this->_displayAd($ad, $transform, $retina)) {
 			$this->trackView($ad->id);
 		}
 		return TemplateHelper::getRaw($ad->html);
@@ -463,7 +463,7 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	// Get individual ad via position
-	private function _getAdByPosition($positionHandle)
+	private function _getRandomAdFromGroup($positionHandle)
 	{
 		if (!$positionHandle) {
 			$this->err('Please specify an ad position.');
@@ -506,7 +506,7 @@ class AdWizardService extends BaseApplicationComponent
 
 
 	// Renders HTML of ad
-	private function _displayAd(AdWizard_AdModel $ad, $transform = null)
+	private function _displayAd(AdWizard_AdModel $ad, $transform = null, $retina = false)
 	{
 		$asset = craft()->assets->getFileById($ad->assetId);
 
@@ -520,11 +520,42 @@ class AdWizardService extends BaseApplicationComponent
 
 		$onclick = "adWizard.click({$ad->id}, '{$ad->url}')";
 
+		if (is_string($transform)) {
+			$t = craft()->assetTransforms->getTransformByHandle($transform);
+		} else if (is_array($transform)) {
+			$t = AssetTransformModel::populateModel($transform);
+		} else {
+			$t = false;
+		}
+
+		if ($t) {
+			$t->unsetAttributes(array(
+				'id',
+				'name',
+				'handle',
+			));
+			if (true === $retina) {
+				$t->setAttribute('width',  $t->width  * 2);
+				$t->setAttribute('height', $t->height * 2);
+			}
+			$url    = $asset->getUrl($t);
+			$width  = $asset->getWidth($t);
+			$height = $asset->getHeight($t);
+			if (true === $retina) {
+				$width  = $width  / 2;
+				$height = $height / 2;
+			}
+		} else {
+			$url    = $asset->getUrl();
+			$width  = $asset->getWidth();
+			$height = $asset->getHeight();
+		}
+
 		$ad->html = PHP_EOL
 				.'<img'
-				.' src="'.$asset->getUrl($transform).'"'
-				.' width="'.$asset->getWidth($transform).'"'
-				.' height="'.$asset->getHeight($transform).'"'
+				.' src="'.$url.'"'
+				.' width="'.$width.'"'
+				.' height="'.$height.'"'
 				.' class="adWizard-ad"'
 				.' style="cursor:pointer"'
 				.' onclick="'.$onclick.'"'
