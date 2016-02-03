@@ -18,16 +18,10 @@ class AdWizardVariable
 
 	// ============================================================== //
 
-	// DEPRECATED
-	public function ad($id, $transform = null, $retina = false)
+	// Get all Ad elements
+	public function ads($criteria = null)
 	{
-		return $this->displayAd($id, $transform, $retina);
-	}
-
-	// DEPRECATED
-	public function position($group, $transform = null, $retina = false)
-	{
-		return $this->randomizeAdGroup($group, $transform, $retina);
+		return craft()->elements->getCriteria('AdWizard_Ad', $criteria);
 	}
 
 	// ============================================================== //
@@ -62,6 +56,20 @@ class AdWizardVariable
 	public function monthTotalClicks($id, $year, $month)
 	{
 		return craft()->adWizard->monthTotalClicks($id, $year, $month);
+	}
+
+	// ============================================================== //
+
+	// DEPRECATED
+	public function ad($id, $transform = null, $retina = false)
+	{
+		return $this->displayAd($id, $transform, $retina);
+	}
+
+	// DEPRECATED
+	public function position($group, $transform = null, $retina = false)
+	{
+		return $this->randomizeAdGroup($group, $transform, $retina);
 	}
 
 }
