@@ -1,17 +1,17 @@
 {% import '_includes/forms' as forms %}
 
-{% set positionInput %}
+{% set groupInput %}
 	<div class="select">
-		<select id="positionId" name="positionId">
-			{% for position in craft.adWizard.getAllPositions %}
-				<option value="{{ position.id }}"{% if position.id == settings.positionId %} selected{% endif %}>{{ position.name }}</option>
+		<select id="groupId" name="groupId">
+			{% for group in craft.adWizard.getAllGroups %}
+				<option value="{{ group.id }}"{% if group.id == settings.groupId %} selected{% endif %}>{{ group.name }}</option>
 			{% endfor %}
 		</select>
 	</div>
 {% endset %}
 
 {{ forms.field({
-	label: "Ad Group"|t,
-	instructions: "Show view/click totals of ads in the specified group."|t,
-	id: 'position',
-}, positionInput) }}
+	label: "Group"|t,
+	instructions: "Show totals of ads in the specified group."|t,
+	id: 'group',
+}, groupInput) }}

@@ -26,9 +26,9 @@ class AdWizard_AdRecord extends BaseRecord
 	public function defineRelations()
 	{
 		return array(
-			'element'  => array(static::BELONGS_TO, 'ElementRecord', 'id', 'required' => true, 'onDelete' => static::CASCADE),
-			'position' => array(static::BELONGS_TO, 'AdWizard_PositionRecord', 'required' => true, 'onDelete' => static::CASCADE),
-			'asset'    => array(static::BELONGS_TO, 'AssetFileRecord'),
+			'element' => array(static::BELONGS_TO, 'ElementRecord',  'id', 'required' => true, 'onDelete' => static::CASCADE),
+			'group'   => array(static::BELONGS_TO, 'AdWizard_GroupRecord', 'required' => true, 'onDelete' => static::CASCADE),
+			'asset'   => array(static::BELONGS_TO, 'AssetFileRecord'),
 		);
 	}
 

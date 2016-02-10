@@ -45,10 +45,10 @@
 		</thead>
 		<tbody>
 			{% for ad in craft.adWizard.getAllAds %}
-				{% set position = craft.adWizard.getPositionById(ad.positionId) %}
+				{% set group = craft.adWizard.getGroupById(ad.groupId) %}
 				<tr>
-					<td>{{ position.name }}</td>
-					<td><a href="{{ url('adwizard/' ~ position.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
+					<td>{{ group.name }}</td>
+					<td><a href="{{ url('adwizard/' ~ group.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
 					<td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, thisYear, thisMonth) }}</td>
 					<td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
 					<td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>
@@ -57,12 +57,12 @@
 					<td class="aw-total aw-clicks">{{ ad.totalClicks }}</td>
 				</tr>
 			{% else %}
-				{% set groupsExist = craft.adWizard.getAllPositions() %}
+				{% set groupsExist = craft.adWizard.getAllGroups() %}
 				{% if groupsExist %}
 					{% set href  = cpUrl('adwizard/ads') %}
 					{% set label = 'Create an ad...' %}
 				{% else %}
-					{% set href  = cpUrl('adwizard/positions') %}
+					{% set href  = cpUrl('adwizard/groups') %}
 					{% set label = 'Create an ad group...' %}
 				{% endif %}
 				<tr>

@@ -7,27 +7,27 @@ namespace Craft;
 class AdWizard_WidgetService extends BaseApplicationComponent
 {
 
-	// 
-	public function positionBarChart($positionId = null)
+	//
+	public function groupBarChart($groupId = null)
 	{
 
-		if (!$positionId) {
-			return 'No ad position specified.';
+		if (!$groupId) {
+			return 'No group specified.';
 		}
 
-		$positionRecord = AdWizard_PositionRecord::model()->findByPk($positionId);
-		if (!$positionRecord) {
-			return 'Specified ad position does not exist.';
+		$groupRecord = AdWizard_GroupRecord::model()->findByPk($groupId);
+		if (!$groupRecord) {
+			return 'Specified group does not exist.';
 		}
 
 		$adRecords = AdWizard_AdRecord::model()->findAllByAttributes(array(
-			'positionId' => $positionRecord->id,
+			'groupId' => $groupRecord->id,
 			//'startDate' => '',
 			//'endDate'   => '',
 			//'maxViews'  => '',
 		));
 		if (empty($adRecords)) {
-			return 'No ads exist in that position.';
+			return 'No ads exist in that group.';
 		}
 
 		$data = array(
@@ -50,7 +50,7 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 
 	}
 
-	// 
+	//
 	public function adLineChart($adId = null)
 	{
 
@@ -86,7 +86,7 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 		return $this->_loadChartJs('LineChart', $data, $options, $height);
 
 	}
-	
+
 	// ============================================================== //
 
 	// Get tracking total for views/clicks
@@ -146,7 +146,7 @@ function drawChart".$widgetId."() {
 	{
 		return substr(number_format(microtime(true),4,'',''),-6);
 	}
-	
+
 	// ============================================================== //
 
 	// Options for bar charts

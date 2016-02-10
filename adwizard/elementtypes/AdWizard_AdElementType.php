@@ -54,13 +54,13 @@ class AdWizard_AdElementType extends BaseElementType
 			)
 		);
 
-		foreach (craft()->adWizard->getAllPositions() as $position)
+		foreach (craft()->adWizard->getAllGroups() as $group)
 		{
-			$key = 'position:'.$position->id;
+			$key = 'group:'.$group->id;
 
 			$sources[$key] = array(
-				'label'    => $position->name,
-				'criteria' => array('positionId' => $position->id)
+				'label'    => $group->name,
+				'criteria' => array('groupId' => $group->id)
 			);
 		}
 
@@ -174,11 +174,11 @@ class AdWizard_AdElementType extends BaseElementType
 	public function defineCriteriaAttributes()
 	{
 		return array(
-			'position'   => AttributeType::Mixed,
-			'positionId' => AttributeType::Mixed,
-			'startDate'  => AttributeType::Mixed,
-			'endDate'    => AttributeType::Mixed,
-			'order'      => array(AttributeType::String, 'default' => 'adwizard_ads.startDate asc'),
+			'group'     => AttributeType::Mixed,
+			'groupId'   => AttributeType::Mixed,
+			'startDate' => AttributeType::Mixed,
+			'endDate'   => AttributeType::Mixed,
+			'order'     => array(AttributeType::String, 'default' => 'adwizard_ads.startDate asc'),
 		);
 	}
 
@@ -195,15 +195,15 @@ class AdWizard_AdElementType extends BaseElementType
 			->addSelect('adwizard_ads.*')
 			->join('adwizard_ads adwizard_ads', 'adwizard_ads.id = elements.id');
 
-		if ($criteria->positionId)
+		if ($criteria->groupId)
 		{
-			$query->andWhere(DbHelper::parseParam('adwizard_ads.positionId', $criteria->positionId, $query->params));
+			$query->andWhere(DbHelper::parseParam('adwizard_ads.groupId', $criteria->groupId, $query->params));
 		}
 
-		if ($criteria->position)
+		if ($criteria->group)
 		{
-			$query->join('adwizard_positions adwizard_positions', 'adwizard_positions.id = adwizard_ads.positionId');
-			$query->andWhere(DbHelper::parseParam('adwizard_positions.handle', $criteria->position, $query->params));
+			$query->join('adwizard_groups adwizard_groups', 'adwizard_groups.id = adwizard_ads.groupId');
+			$query->andWhere(DbHelper::parseParam('adwizard_groups.handle', $criteria->group, $query->params));
 		}
 
 		if ($criteria->startDate)

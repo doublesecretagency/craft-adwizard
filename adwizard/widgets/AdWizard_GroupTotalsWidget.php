@@ -1,17 +1,17 @@
 <?php
 namespace Craft;
 
-class AdWizard_PositionTotalsWidget extends BaseWidget
+class AdWizard_GroupTotalsWidget extends BaseWidget
 {
 
 	public function getTitle()
 	{
-		$positionId = $this->getSettings()->positionId;
-		if ($positionId) {
-			$position = craft()->adWizard->getPositionById($positionId);
-			$title = $position->name;
+		$groupId = $this->getSettings()->groupId;
+		if ($groupId) {
+			$group = craft()->adWizard->getGroupById($groupId);
+			$title = $group->name;
 		} else {
-			$title = Craft::t('NEW POSITION CHART');
+			$title = Craft::t('NEW GROUP CHART');
 		}
 		return $title;
 	}
@@ -28,8 +28,8 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 
 	public function getBodyHtml()
 	{
-		$positionId = $this->getSettings()->positionId;
-		$chart = craft()->adWizard_widget->positionBarChart($positionId);
+		$groupId = $this->getSettings()->groupId;
+		$chart = craft()->adWizard_widget->groupBarChart($groupId);
 		$intro = '<p>Lifetime totals of ads in this group.</p>';
 		return $intro.'<p>'.$chart.'</p>';
 	}
@@ -37,7 +37,7 @@ class AdWizard_PositionTotalsWidget extends BaseWidget
 	protected function defineSettings()
 	{
 		return array(
-			'positionId' => array(AttributeType::Number),
+			'groupId' => array(AttributeType::Number),
 		);
 	}
 

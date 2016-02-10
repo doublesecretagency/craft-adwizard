@@ -37,8 +37,8 @@ class AdWizard_AdTimelineWidget extends BaseWidget
 	protected function defineSettings()
 	{
 		return array(
-			'positionId' => array(AttributeType::Number),
-			'adId'       => array(AttributeType::Number),
+			'groupId' => array(AttributeType::Number),
+			'adId'    => array(AttributeType::Number),
 		);
 	}
 

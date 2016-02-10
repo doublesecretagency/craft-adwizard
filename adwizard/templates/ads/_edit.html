@@ -12,7 +12,7 @@
 			<div class="menu">
 				<ul>
 					<li><a class="formsubmit" data-redirect="{{ continueEditingUrl }}">{{ "Save and continue editing"|t }}</a></li>
-					<li><a class="formsubmit" data-redirect="adwizard/{{ positionHandle }}/new">{{ "Save and add another"|t }}</a></li>
+					<li><a class="formsubmit" data-redirect="adwizard/{{ groupHandle }}/new">{{ "Save and add another"|t }}</a></li>
 				</ul>
 			</div>
 		</div>
@@ -22,12 +22,12 @@
 {% includeCssResource 'adwizard/css/admin.css' %}
 {% includeJsResource  'adwizard/js/admin.js' %}
 
-{% set positionHandle = position.handle %}
+{% set groupHandle = group.handle %}
 
 {% block main %}
 	<input type="hidden" name="action" value="adWizard/saveAd">
 	<input type="hidden" name="redirect" value="adwizard/ads">
-	<input type="hidden" name="positionId" value="{{ position.id }}">
+	<input type="hidden" name="groupId" value="{{ group.id }}">
 	{% if ad.id %}<input type="hidden" name="adId" value="{{ ad.id }}">{% endif %}
 	{% if craft.isLocalized() %}<input type="hidden" name="locale" value="{{ ad.locale }}">{% endif %}
 

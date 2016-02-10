@@ -26,22 +26,24 @@ class AdWizardVariable
 
 	// ============================================================== //
 
+	// Can these methods be replaced by the "ads" method?
+
 	// Get all ads
 	public function getAllAds()
 	{
 		return craft()->adWizard->getAllAds();
 	}
 
-	// Get all positions
-	public function getAllPositions()
+	// Get all groups
+	public function getAllGroups()
 	{
-		return craft()->adWizard->getAllPositions();
+		return craft()->adWizard->getAllGroups();
 	}
 
-	// Get position by id
-	public function getPositionById($positionId)
+	// Get group by id
+	public function getGroupById($groupId)
 	{
-		return craft()->adWizard->getPositionById($positionId);
+		return craft()->adWizard->getGroupById($groupId);
 	}
 
 	// ============================================================== //

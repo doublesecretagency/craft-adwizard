@@ -12,11 +12,11 @@ function deleteAd(id, adName) {
 		});
 	}
 }
-// Delete position
-function deletePosition(id, positionName) {
-	var message = 'Are you sure you want to delete "'+positionName+'"?';
+// Delete group
+function deleteGroup(id, groupName) {
+	var message = 'Are you sure you want to delete "'+groupName+'"?';
 	if (confirm(message)) {
-		var url = Craft.getActionUrl('adWizard/deletePosition');
+		var url = Craft.getActionUrl('adWizard/deleteGroup');
 		$.post(url, {'id':id}, function(response) {
 			if ('SUCCESS' == response) {
 				window.location.reload();
@@ -38,7 +38,7 @@ $(function () {
 	// Behavior for "New Ad" button
 	$('#new-ad').on('click', function () {
 		// Get id of current group
-		var id = $('#sidebar a.sel').data('key').replace(/position:/, '');
+		var id = $('#sidebar a.sel').data('key').replace(/group:/, '');
 		// If id is not valid
 		if (!handles.hasOwnProperty(id)) {
 			// Set to default id

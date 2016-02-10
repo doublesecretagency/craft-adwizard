@@ -2,25 +2,25 @@
 var adWizard = {
 	widgets: {
 		// Variables
-		positions       : {},
-		$positionSelect : $('select#types-AdWizard_AdTimeline-positionId'),
-		$adSelect       : $('select#types-AdWizard_AdTimeline-adId'),
+		groups       : {},
+		$groupSelect : $('select#types-AdWizard_AdTimeline-groupId'),
+		$adSelect    : $('select#types-AdWizard_AdTimeline-adId'),
 		// Initialize JS object
-		init : function (positionIds) {
+		init : function (groupIds) {
 			var i, id;
-			for (i in positionIds) {
-				id = positionIds[i];
-				adWizard.widgets.positions[id] = adWizard.widgets.$adSelect.find('option.position-'+id);
+			for (i in groupIds) {
+				id = groupIds[i];
+				adWizard.widgets.groups[id] = adWizard.widgets.$adSelect.find('option.group-'+id);
 			}
-			adWizard.widgets.$positionSelect.on('change', function () {
+			adWizard.widgets.$groupSelect.on('change', function () {
 				// adWizard.widgets.changeOptions();
 			})
 		},
 		// Change select menu options
 		changeOptions : function () {
-			var selectedId = adWizard.widgets.$positionSelect.find('option:selected').val();
+			var selectedId = adWizard.widgets.$groupSelect.find('option:selected').val();
 			adWizard.widgets.$adSelect.find('option').remove();
-			adWizard.widgets.positions[selectedId].appendTo(adWizard.widgets.$adSelect);
+			adWizard.widgets.groups[selectedId].appendTo(adWizard.widgets.$adSelect);
 		},
 	}
 }

@@ -1,23 +1,23 @@
 {% import '_includes/forms' as forms %}
 
-{% set allPositions = [] %}
+{% set allGroups = [] %}
 
-{% set positionInput %}
+{% set groupInput %}
 	<div class="select">
-		<select id="positionId" name="positionId">
-			{% for position in craft.adWizard.getAllPositions %}
-				{% set allPositions = allPositions|merge([position.id]) %}
-				<option value="{{ position.id }}"{% if position.id == settings.positionId %} selected{% endif %}>{{ position.name }}</option>
+		<select id="groupId" name="groupId">
+			{% for group in craft.adWizard.getAllGroups %}
+				{% set allGroups = allGroups|merge([group.id]) %}
+				<option value="{{ group.id }}"{% if group.id == settings.groupId %} selected{% endif %}>{{ group.name }}</option>
 			{% endfor %}
 		</select>
 	</div>
 {% endset %}
 
 {{ forms.field({
-	label: "Ad Group"|t,
+	label: "Group"|t,
 	instructions: "Which group is the ad in?"|t,
-	id: 'position',
-}, positionInput) }}
+	id: 'group',
+}, groupInput) }}
 
 {% set adIdInput %}
 	<div class="select">
@@ -25,7 +25,7 @@
 			{% for ad in craft.adWizard.getAllAds %}
 				<option
 					value="{{ ad.id }}"
-					class="position-{{ ad.positionId }}"
+					class="group-{{ ad.groupId }}"
 					{% if ad.id == settings.adId %}selected{% endif %}
 				>{{ ad.title }}</option>
 			{% endfor %}
@@ -39,11 +39,11 @@
 	id: 'adId',
 }, adIdInput) }}
 
-{% set positionIds %}
+{% set groupIds %}
 $(function () {
-	adWizard.widgets.init([{{ allPositions|join(',') }}]);
+	adWizard.widgets.init([{{ allGroups|join(',') }}]);
 	// adWizard.widgets.changeOptions();
 });
 {% endset %}
 {% includeJsResource 'adwizard/js/widgets.js' %}
-{% includeJs positionIds %}
+{% includeJs groupIds %}

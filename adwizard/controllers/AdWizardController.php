@@ -24,104 +24,104 @@ class AdWizardController extends BaseController
 		$this->returnJson(craft()->adWizard->errorPrefix.$response);
 	}
 
-	// Positions
+	// Groups
 
 	/**
-	 * Position index
+	 * Group index
 	 */
-	public function actionPositionIndex()
+	public function actionGroupIndex()
 	{
-		$variables['positions'] = craft()->adWizard->getAllPositions();
+		$variables['groups'] = craft()->adWizard->getAllGroups();
 
-		$this->renderTemplate('adwizard/positions', $variables);
+		$this->renderTemplate('adwizard/groups', $variables);
 	}
 
 	/**
-	 * Edit a position.
+	 * Edit a group.
 	 *
 	 * @param array $variables
 	 * @throws HttpException
 	 * @throws Exception
 	 */
-	public function actionEditPosition(array $variables = array())
+	public function actionEditGroup(array $variables = array())
 	{
-		$variables['brandNewPosition'] = false;
+		$variables['brandNewGroup'] = false;
 
-		if (!empty($variables['positionId']))
+		if (!empty($variables['groupId']))
 		{
-			if (empty($variables['position']))
+			if (empty($variables['group']))
 			{
-				$variables['position'] = craft()->adWizard->getPositionById($variables['positionId']);
+				$variables['group'] = craft()->adWizard->getGroupById($variables['groupId']);
 
-				if (!$variables['position'])
+				if (!$variables['group'])
 				{
 					throw new HttpException(404);
 				}
 			}
 
-			$variables['title'] = $variables['position']->name;
+			$variables['title'] = $variables['group']->name;
 		}
 		else
 		{
-			if (empty($variables['position']))
+			if (empty($variables['group']))
 			{
-				$variables['position'] = new AdWizard_PositionModel();
-				$variables['brandNewPosition'] = true;
+				$variables['group'] = new AdWizard_GroupModel();
+				$variables['brandNewGroup'] = true;
 			}
 
-			$variables['title'] = Craft::t('Create a new position');
+			$variables['title'] = Craft::t('Create a new group');
 		}
 
 		$variables['crumbs'] = array(
 			array('label' => Craft::t('Ads'), 'url' => UrlHelper::getUrl('adwizard')),
-			array('label' => Craft::t('Positions'), 'url' => UrlHelper::getUrl('adwizard/positions')),
+			array('label' => Craft::t('Groups'), 'url' => UrlHelper::getUrl('adwizard/groups')),
 		);
 
-		$this->renderTemplate('adwizard/positions/_edit', $variables);
+		$this->renderTemplate('adwizard/groups/_edit', $variables);
 	}
 
 	/**
-	 * Saves a position
+	 * Saves a group
 	 */
-	public function actionSavePosition()
+	public function actionSaveGroup()
 	{
 		$this->requirePostRequest();
 
-		$position = new AdWizard_PositionModel();
+		$group = new AdWizard_GroupModel();
 
 		// Shared attributes
-		$position->id     = craft()->request->getPost('positionId');
-		$position->name   = craft()->request->getPost('name');
-		$position->handle = craft()->request->getPost('handle');
+		$group->id     = craft()->request->getPost('groupId');
+		$group->name   = craft()->request->getPost('name');
+		$group->handle = craft()->request->getPost('handle');
 
 		// Save it
-		if (craft()->adWizard->savePosition($position))
+		if (craft()->adWizard->saveGroup($group))
 		{
-			craft()->userSession->setNotice(Craft::t('Position saved.'));
-			$this->redirectToPostedUrl($position);
+			craft()->userSession->setNotice(Craft::t('Group saved.'));
+			$this->redirectToPostedUrl($group);
 		}
 		else
 		{
-			craft()->userSession->setError(Craft::t('Couldn’t save position.'));
+			craft()->userSession->setError(Craft::t('Couldn’t save group.'));
 		}
 
-		// Send the position back to the template
+		// Send the group back to the template
 		craft()->urlManager->setRouteVariables(array(
-			'position' => $position
+			'group' => $group
 		));
 	}
 
 	/**
-	 * Deletes an position.
+	 * Deletes an group.
 	 */
-	public function actionDeletePosition()
+	public function actionDeleteGroup()
 	{
 		$this->requirePostRequest();
 		$this->requireAjaxRequest();
 
-		$positionId = craft()->request->getRequiredPost('id');
+		$groupId = craft()->request->getRequiredPost('id');
 
-		craft()->adWizard->deletePositionById($positionId);
+		craft()->adWizard->deleteGroupById($groupId);
 		$this->returnJson(array('success' => true));
 	}
 
@@ -132,7 +132,7 @@ class AdWizardController extends BaseController
 	 */
 	public function actionAdIndex()
 	{
-		$variables['positions'] = craft()->adWizard->getAllPositions();
+		$variables['groups'] = craft()->adWizard->getAllGroups();
 
 		$this->renderTemplate('adwizard/ads', $variables);
 	}
@@ -145,16 +145,16 @@ class AdWizardController extends BaseController
 	 */
 	public function actionEditAd(array $variables = array())
 	{
-		if (!empty($variables['positionHandle']))
+		if (!empty($variables['groupHandle']))
 		{
-			$variables['position'] = craft()->adWizard->getPositionByHandle($variables['positionHandle']);
+			$variables['group'] = craft()->adWizard->getGroupByHandle($variables['groupHandle']);
 		}
-		else if (!empty($variables['positionId']))
+		else if (!empty($variables['groupId']))
 		{
-			$variables['position'] = craft()->adWizard->getPositionById($variables['positionId']);
+			$variables['group'] = craft()->adWizard->getGroupById($variables['groupId']);
 		}
 
-		if (empty($variables['position']))
+		if (empty($variables['group']))
 		{
 			throw new HttpException(404);
 		}
@@ -174,7 +174,7 @@ class AdWizardController extends BaseController
 			else
 			{
 				$variables['ad'] = new AdWizard_AdModel();
-				$variables['ad']->positionId = $variables['position']->id;
+				$variables['ad']->groupId = $variables['group']->id;
 			}
 		}
 
@@ -217,11 +217,11 @@ class AdWizardController extends BaseController
 		// Breadcrumbs
 		$variables['crumbs'] = array(
 			array('label' => Craft::t('Ads'), 'url' => UrlHelper::getUrl('adwizard')),
-			array('label' => $variables['position']->name, 'url' => UrlHelper::getUrl('adwizard'))
+			array('label' => $variables['group']->name, 'url' => UrlHelper::getUrl('adwizard'))
 		);
 
 		// Set the "Continue Editing" URL
-		$variables['continueEditingUrl'] = 'adwizard/'.$variables['position']->handle.'/{id}';
+		$variables['continueEditingUrl'] = 'adwizard/'.$variables['group']->handle.'/{id}';
 
 		// Render the template!
 		$this->renderTemplate('adwizard/ads/_edit', $variables);
@@ -251,7 +251,7 @@ class AdWizardController extends BaseController
 		}
 
 		// Set the ad attributes, defaulting to the existing values for whatever is missing from the post data
-		$ad->positionId = craft()->request->getPost('positionId', $ad->positionId);
+		$ad->groupId = craft()->request->getPost('groupId', $ad->groupId);
 		$ad->assetId    = craft()->request->getPost('assetId', $ad->assetId);
 		$ad->url        = craft()->request->getPost('url', $ad->url);
 		$ad->details    = craft()->request->getPost('details', $ad->details);

@@ -21,7 +21,7 @@ class AdWizardPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '1.3.0 rc';
+		return '1.3.0 (rc 1)';
 	}
 
 	public function getSchemaVersion()
@@ -48,12 +48,12 @@ class AdWizardPlugin extends BasePlugin
 	public function registerCpRoutes()
 	{
 		return array(
-			'adwizard/ads'                                        => array('action' => 'adWizard/adIndex'),
-			'adwizard/positions'                                  => array('action' => 'adWizard/positionIndex'),
-			'adwizard/positions/new'                              => array('action' => 'adWizard/editPosition'),
-			'adwizard/positions/(?P<positionId>\d+)'              => array('action' => 'adWizard/editPosition'),
-			'adwizard/(?P<positionHandle>{handle})/new'           => array('action' => 'adWizard/editAd'),
-			'adwizard/(?P<positionHandle>{handle})/(?P<adId>\d+)' => array('action' => 'adWizard/editAd'),
+			'adwizard/ads'                                     => array('action' => 'adWizard/adIndex'),
+			'adwizard/groups'                                  => array('action' => 'adWizard/groupIndex'),
+			'adwizard/groups/new'                              => array('action' => 'adWizard/editGroup'),
+			'adwizard/groups/(?P<groupId>\d+)'                 => array('action' => 'adWizard/editGroup'),
+			'adwizard/(?P<groupHandle>{handle})/new'           => array('action' => 'adWizard/editAd'),
+			'adwizard/(?P<groupHandle>{handle})/(?P<adId>\d+)' => array('action' => 'adWizard/editAd'),
 		);
 	}
 

@@ -2,12 +2,12 @@
 namespace Craft;
 
 /**
- * AdWizard - Position model
+ * AdWizard - Group model
  */
-class AdWizard_PositionModel extends BaseModel
+class AdWizard_GroupModel extends BaseModel
 {
 	/**
-	 * Use the translated position name as the string representation.
+	 * Use the translated group name as the string representation.
 	 *
 	 * @return string
 	 */

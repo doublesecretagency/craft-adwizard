@@ -8,177 +8,177 @@ class AdWizardService extends BaseApplicationComponent
 {
 	public $errorPrefix = '[Ad Wizard] ';
 
-	private $_allPositionIds;
-	private $_positionsById;
-	private $_fetchedAllPositions = false;
+	private $_allGroupIds;
+	private $_groupsById;
+	private $_fetchedAllGroups = false;
 
 	private $_csrfIncluded = false;
 
-	// Positions
+	// Groups
 
 	/**
-	 * Returns all of the position IDs.
+	 * Returns all of the group IDs.
 	 *
 	 * @return array
 	 */
-	public function getAllPositionIds()
+	public function getAllGroupIds()
 	{
-		if (!isset($this->_allPositionIds))
+		if (!isset($this->_allGroupIds))
 		{
-			if ($this->_fetchedAllPositions)
+			if ($this->_fetchedAllGroups)
 			{
-				$this->_allPositionIds = array_keys($this->_positionsById);
+				$this->_allGroupIds = array_keys($this->_groupsById);
 			}
 			else
 			{
-				$this->_allPositionIds = craft()->db->createCommand()
+				$this->_allGroupIds = craft()->db->createCommand()
 					->select('id')
-					->from('adwizard_positions')
+					->from('adwizard_groups')
 					->queryColumn();
 			}
 		}
 
-		return $this->_allPositionIds;
+		return $this->_allGroupIds;
 	}
 
 	/**
-	 * Returns all positions.
+	 * Returns all groups.
 	 *
 	 * @param string|null $indexBy
 	 * @return array
 	 */
-	public function getAllPositions($indexBy = null)
+	public function getAllGroups($indexBy = null)
 	{
-		if (!$this->_fetchedAllPositions)
+		if (!$this->_fetchedAllGroups)
 		{
-			$positionRecords = AdWizard_PositionRecord::model()->ordered()->findAll();
-			$this->_positionsById = AdWizard_PositionModel::populateModels($positionRecords, 'id');
-			$this->_fetchedAllPositions = true;
+			$groupRecords = AdWizard_GroupRecord::model()->ordered()->findAll();
+			$this->_groupsById = AdWizard_GroupModel::populateModels($groupRecords, 'id');
+			$this->_fetchedAllGroups = true;
 		}
 
 		if ($indexBy == 'id')
 		{
-			return $this->_positionsById;
+			return $this->_groupsById;
 		}
 		else if (!$indexBy)
 		{
-			return array_values($this->_positionsById);
+			return array_values($this->_groupsById);
 		}
 		else
 		{
-			$positions = array();
-			foreach ($this->_positionsById as $position)
+			$groups = array();
+			foreach ($this->_groupsById as $group)
 			{
-				$positions[$position->$indexBy] = $position;
+				$groups[$group->$indexBy] = $group;
 			}
 
-			return $positions;
+			return $groups;
 		}
 	}
 
 	/**
-	 * Gets the total number of positions.
+	 * Gets the total number of groups.
 	 *
 	 * @return int
 	 */
-	public function getTotalPositions()
+	public function getTotalGroups()
 	{
-		return count($this->getAllPositionIds());
+		return count($this->getAllGroupIds());
 	}
 
 	/**
-	 * Returns a position by its ID.
+	 * Returns a group by its ID.
 	 *
-	 * @param $positionId
-	 * @return AdWizard_PositionModel|null
+	 * @param $groupId
+	 * @return AdWizard_GroupModel|null
 	 */
-	public function getPositionById($positionId)
+	public function getGroupById($groupId)
 	{
-		if (!isset($this->_positionsById) || !array_key_exists($positionId, $this->_positionsById))
+		if (!isset($this->_groupsById) || !array_key_exists($groupId, $this->_groupsById))
 		{
-			$positionRecord = AdWizard_PositionRecord::model()->findById($positionId);
+			$groupRecord = AdWizard_GroupRecord::model()->findById($groupId);
 
-			if ($positionRecord)
+			if ($groupRecord)
 			{
-				$this->_positionsById[$positionId] = AdWizard_PositionModel::populateModel($positionRecord);
+				$this->_groupsById[$groupId] = AdWizard_GroupModel::populateModel($groupRecord);
 			}
 			else
 			{
-				$this->_positionsById[$positionId] = null;
+				$this->_groupsById[$groupId] = null;
 			}
 		}
 
-		return $this->_positionsById[$positionId];
+		return $this->_groupsById[$groupId];
 	}
 
 	/**
-	 * Gets a position by its handle.
+	 * Gets a group by its handle.
 	 *
-	 * @param string $positionHandle
-	 * @return AdWizard_PositionModel|null
+	 * @param string $groupHandle
+	 * @return AdWizard_GroupModel|null
 	 */
-	public function getPositionByHandle($positionHandle)
+	public function getGroupByHandle($groupHandle)
 	{
-		$positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
-			'handle' => $positionHandle
+		$groupRecord = AdWizard_GroupRecord::model()->findByAttributes(array(
+			'handle' => $groupHandle
 		));
 
-		if ($positionRecord)
+		if ($groupRecord)
 		{
-			return AdWizard_PositionModel::populateModel($positionRecord);
+			return AdWizard_GroupModel::populateModel($groupRecord);
 		}
 	}
 
 	/**
-	 * Saves a position.
+	 * Saves a group.
 	 *
-	 * @param AdWizard_PositionModel $position
+	 * @param AdWizard_GroupModel $group
 	 * @throws \Exception
 	 * @return bool
 	 */
-	public function savePosition(AdWizard_PositionModel $position)
+	public function saveGroup(AdWizard_GroupModel $group)
 	{
-		if ($position->id)
+		if ($group->id)
 		{
-			$positionRecord = AdWizard_PositionRecord::model()->findById($position->id);
+			$groupRecord = AdWizard_GroupRecord::model()->findById($group->id);
 
-			if (!$positionRecord)
+			if (!$groupRecord)
 			{
-				throw new Exception(Craft::t('No position exists with the ID “{id}”', array('id' => $position->id)));
+				throw new Exception(Craft::t('No group exists with the ID “{id}”', array('id' => $group->id)));
 			}
 
-			$oldPosition = AdWizard_PositionModel::populateModel($positionRecord);
-			$isNewPosition = false;
+			$oldGroup = AdWizard_GroupModel::populateModel($groupRecord);
+			$isNewGroup = false;
 		}
 		else
 		{
-			$positionRecord = new AdWizard_PositionRecord();
-			$isNewPosition = true;
+			$groupRecord = new AdWizard_GroupRecord();
+			$isNewGroup = true;
 		}
 
-		$positionRecord->name   = $position->name;
-		$positionRecord->handle = $position->handle;
+		$groupRecord->name   = $group->name;
+		$groupRecord->handle = $group->handle;
 
-		$positionRecord->validate();
-		$position->addErrors($positionRecord->getErrors());
+		$groupRecord->validate();
+		$group->addErrors($groupRecord->getErrors());
 
-		if (!$position->hasErrors())
+		if (!$group->hasErrors())
 		{
 			$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 			try
 			{
 
 				// Save it!
-				$positionRecord->save(false);
+				$groupRecord->save(false);
 
-				// Now that we have a position ID, save it on the model
-				if (!$position->id)
+				// Now that we have a group ID, save it on the model
+				if (!$group->id)
 				{
-					$position->id = $positionRecord->id;
+					$group->id = $groupRecord->id;
 				}
 
-				// Might as well update our cache of the position while we have it.
-				$this->_positionsById[$position->id] = $position;
+				// Might as well update our cache of the group while we have it.
+				$this->_groupsById[$group->id] = $group;
 
 				if ($transaction !== null)
 				{
@@ -204,15 +204,15 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	/**
-	 * Deletes a position by its ID.
+	 * Deletes a group by its ID.
 	 *
-	 * @param int $positionId
+	 * @param int $groupId
 	 * @throws \Exception
 	 * @return bool
 	 */
-	public function deletePositionById($positionId)
+	public function deleteGroupById($groupId)
 	{
-		if (!$positionId)
+		if (!$groupId)
 		{
 			return false;
 		}
@@ -225,12 +225,12 @@ class AdWizardService extends BaseApplicationComponent
 			$adIds = craft()->db->createCommand()
 				->select('id')
 				->from('adwizard_ads')
-				->where(array('positionId' => $positionId))
+				->where(array('groupId' => $groupId))
 				->queryColumn();
 
 			craft()->elements->deleteElementById($adIds);
 
-			$affectedRows = craft()->db->createCommand()->delete('adwizard_positions', array('id' => $positionId));
+			$affectedRows = craft()->db->createCommand()->delete('adwizard_groups', array('id' => $groupId));
 
 			if ($transaction !== null)
 			{
@@ -324,13 +324,13 @@ class AdWizardService extends BaseApplicationComponent
 
 		$assetId = (!empty($ad->assetId) ? $ad->assetId[0] : null);
 
-		$adRecord->positionId = $ad->positionId;
-		$adRecord->assetId    = $assetId;
-		$adRecord->url        = $ad->url;
-		$adRecord->details    = $ad->details;
-		$adRecord->startDate  = $ad->startDate;
-		$adRecord->endDate    = $ad->endDate;
-		$adRecord->maxViews   = (int) $ad->maxViews;
+		$adRecord->groupId   = $ad->groupId;
+		$adRecord->assetId   = $assetId;
+		$adRecord->url       = $ad->url;
+		$adRecord->details   = $ad->details;
+		$adRecord->startDate = $ad->startDate;
+		$adRecord->endDate   = $ad->endDate;
+		$adRecord->maxViews  = (int) $ad->maxViews;
 
 		if (!$adRecord->validate())
 		{
@@ -428,7 +428,7 @@ class AdWizardService extends BaseApplicationComponent
 		return $this->_renderIndividualAd($ad, $transform, $retina);
 	}
 
-	// Display random ad from position
+	// Display random ad from group
 	public function renderRandomAdFromGroup($group, $transform = null, $retina = false)
 	{
 		$ad = $this->_getRandomAdFromGroup($group);
@@ -436,7 +436,7 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	// DEPRECATED
-	public function renderAdFromPosition($group, $transform = null)
+	public function renderAdFromGroup($group, $transform = null)
 	{
 		return $this->renderRandomAdFromGroup($group, $transform);
 	}
@@ -462,19 +462,19 @@ class AdWizardService extends BaseApplicationComponent
 		return AdWizard_AdModel::populateModel($ad);
 	}
 
-	// Get individual ad via position
-	private function _getRandomAdFromGroup($positionHandle)
+	// Get individual ad via group
+	private function _getRandomAdFromGroup($groupHandle)
 	{
-		if (!$positionHandle) {
-			$this->err('Please specify an ad position.');
+		if (!$groupHandle) {
+			$this->err('Please specify an ad group.');
 			return false;
 		}
 
-		$positionRecord = AdWizard_PositionRecord::model()->findByAttributes(array(
-			'handle' => $positionHandle,
+		$groupRecord = AdWizard_GroupRecord::model()->findByAttributes(array(
+			'handle' => $groupHandle,
 		));
-		if (!$positionRecord) {
-			$this->err('"'.$positionHandle.'" is not a valid position handle.');
+		if (!$groupRecord) {
+			$this->err('"'.$groupHandle.'" is not a valid group handle.');
 			return false;
 		}
 
@@ -487,7 +487,7 @@ class AdWizardService extends BaseApplicationComponent
 			->from('adwizard_ads adwizard_ads')
 			->join('elements elements', 'adwizard_ads.id=elements.id')
 			->where('enabled = 1')
-			->andWhere('positionId = :positionId', array(':positionId' => $positionRecord->id))
+			->andWhere('groupId = :groupId', array(':groupId' => $groupRecord->id))
 			->andWhere('assetId IS NOT NULL')
 			->andWhere('(startDate  <= NOW()   ) OR (startDate IS NULL)')
 			->andWhere('(endDate    >= NOW()   ) OR (endDate   IS NULL)')
@@ -498,7 +498,7 @@ class AdWizardService extends BaseApplicationComponent
 		if ($result) {
 			return AdWizard_AdModel::populateModel($result);
 		} else {
-			$this->err('No ads are available in the "'.$positionRecord->name.'" position.');
+			$this->err('No ads are available in the "'.$groupRecord->name.'" group.');
 			return false;
 		}
 

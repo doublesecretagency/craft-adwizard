@@ -1,5 +1,5 @@
 {% extends 'adwizard/_layout' %}
-{% set selectedSubnavItem = 'positions' %}
+{% set selectedSubnavItem = 'groups' %}
 {% set title = "Create an Ad Group"|t %}
 {% import '_includes/forms' as forms %}
 
@@ -12,9 +12,9 @@
 {% endblock %}
 
 {% block content %}
-	<input type="hidden" name="action" value="adWizard/savePosition">
-	<input type="hidden" name="redirect" value="adwizard/positions">
-	{% if position.id %}<input type="hidden" name="positionId" value="{{ position.id }}">{% endif %}
+	<input type="hidden" name="action" value="adWizard/saveGroup">
+	<input type="hidden" name="redirect" value="adwizard/groups">
+	{% if group.id %}<input type="hidden" name="groupId" value="{{ group.id }}">{% endif %}
 
 	{{ forms.textField({
 		first: true,
@@ -23,8 +23,8 @@
 		placeholder: "ie: \"Header Banner\" or \"Right Sidebar\""|t,
 		id: 'name',
 		name: 'name',
-		value: position.name,
-		errors: position.getErrors('name'),
+		value: group.name,
+		errors: group.getErrors('name'),
 		autofocus: true,
 		required: true,
 		translatable: true
@@ -35,13 +35,13 @@
 		id: 'handle',
 		class: 'code',
 		name: 'handle',
-		value: position.handle,
-		errors: position.getErrors('handle'),
+		value: group.handle,
+		errors: group.getErrors('handle'),
 		required: true
 	}) }}
 {% endblock %}
 
-{% if not position.handle %}
+{% if not group.handle %}
 	{%- includejs -%}
 		new Craft.HandleGenerator('#name', '#handle');
 	{%- endincludejs -%}

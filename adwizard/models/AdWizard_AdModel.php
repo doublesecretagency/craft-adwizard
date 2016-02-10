@@ -15,7 +15,7 @@ class AdWizard_AdModel extends BaseElementModel
 	protected function defineAttributes()
 	{
 		return array_merge(parent::defineAttributes(), array(
-			'positionId'  => AttributeType::Number,
+			'groupId'     => AttributeType::Number,
 			'assetId'     => AttributeType::Number,
 			'url'         => AttributeType::Url,
 			'details'     => AttributeType::String,
@@ -70,24 +70,24 @@ class AdWizard_AdModel extends BaseElementModel
 	 */
 	public function getCpEditUrl()
 	{
-		$position = $this->getPosition();
+		$group = $this->getGroup();
 
-		if ($position)
+		if ($group)
 		{
-			return UrlHelper::getCpUrl('adwizard/'.$position->handle.'/'.$this->id);
+			return UrlHelper::getCpUrl('adwizard/'.$group->handle.'/'.$this->id);
 		}
 	}
 
 	/**
-	 * Returns the ad's position.
+	 * Returns the ad's group.
 	 *
-	 * @return AdWizard_PositionModel|null
+	 * @return AdWizard_GroupModel|null
 	 */
-	public function getPosition()
+	public function getGroup()
 	{
-		if ($this->positionId)
+		if ($this->groupId)
 		{
-			return craft()->adWizard->getPositionById($this->positionId);
+			return craft()->adWizard->getGroupById($this->groupId);
 		}
 	}
 }
