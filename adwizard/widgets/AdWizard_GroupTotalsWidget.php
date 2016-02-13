@@ -18,7 +18,7 @@ class AdWizard_GroupTotalsWidget extends BaseWidget
 
 	public function getName()
 	{
-		return Craft::t('Ad Totals');
+		return Craft::t('Ad Group Totals');
 	}
 
 	public function getIconPath()

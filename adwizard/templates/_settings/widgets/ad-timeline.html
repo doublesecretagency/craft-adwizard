@@ -39,11 +39,12 @@
 	id: 'adId',
 }, adIdInput) }}
 
-{% set groupIds %}
+{% includeJsResource 'adwizard/js/widgets.js' %}
+{% includejs %}
+/*
 $(function () {
 	adWizard.widgets.init([{{ allGroups|join(',') }}]);
-	// adWizard.widgets.changeOptions();
+	adWizard.widgets.changeOptions();
 });
-{% endset %}
-{% includeJsResource 'adwizard/js/widgets.js' %}
-{% includeJs groupIds %}
+*/
+{% endincludejs %}
