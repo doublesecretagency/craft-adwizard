@@ -1,13 +1,19 @@
 {% import '_includes/forms' as forms %}
 
-{% set allGroups = [] %}
+{% set defaultGroup = false %}
+{% set defaultAdSelected = false %}
 
 {% set groupInput %}
 	<div class="select">
-		<select id="groupId" name="groupId">
+		<select name="groupId" class="groupId">
 			{% for group in craft.adWizard.getAllGroups %}
-				{% set allGroups = allGroups|merge([group.id]) %}
-				<option value="{{ group.id }}"{% if group.id == settings.groupId %} selected{% endif %}>{{ group.name }}</option>
+				{% if loop.first and (settings.groupId is null) %}
+					{% set defaultGroup = group.id %}
+				{% endif %}
+				<option
+					value="{{ group.id }}"
+					{% if group.id == settings.groupId %}selected{% endif %}
+				>{{ group.name }}</option>
 			{% endfor %}
 		</select>
 	</div>
@@ -21,12 +27,21 @@
 
 {% set adIdInput %}
 	<div class="select">
-		<select id="adId" name="adId">
+		<select name="adId" class="adId">
 			{% for ad in craft.adWizard.getAllAds %}
 				<option
 					value="{{ ad.id }}"
 					class="group-{{ ad.groupId }}"
-					{% if ad.id == settings.adId %}selected{% endif %}
+					{% if ad.id == settings.adId %}
+						selected
+					{% elseif defaultGroup %}
+						{% if defaultGroup != ad.groupId %}
+							style="display: none;"
+						{% elseif not defaultAdSelected %}
+							selected
+							{% set defaultAdSelected = true %}
+						{% endif %}
+					{% endif %}
 				>{{ ad.title }}</option>
 			{% endfor %}
 		</select>
@@ -41,10 +56,10 @@
 
 {% includeJsResource 'adwizard/js/widgets.js' %}
 {% includejs %}
-/*
 $(function () {
-	adWizard.widgets.init([{{ allGroups|join(',') }}]);
-	adWizard.widgets.changeOptions();
+	adWizard.widgets.init();
+	$('.adwizard_adtimeline select.groupId').each(function () {
+		adWizard.widgets.resetAdSelect($(this));
+	});
 });
-*/
 {% endincludejs %}
