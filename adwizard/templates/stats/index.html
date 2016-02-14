@@ -44,7 +44,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for ad in craft.adWizard.getAllAds %}
+			{% for ad in craft.adWizard.ads.order('title') %}
 				{% set group = craft.adWizard.getGroupById(ad.groupId) %}
 				<tr>
 					<td>{{ group.name }}</td>

@@ -26,14 +26,6 @@ class AdWizardVariable
 
 	// ============================================================== //
 
-	// Can these methods be replaced by the "ads" method?
-
-	// Get all ads
-	public function getAllAds()
-	{
-		return craft()->adWizard->getAllAds();
-	}
-
 	// Get all groups
 	public function getAllGroups()
 	{
@@ -60,6 +52,7 @@ class AdWizardVariable
 		return craft()->adWizard->monthTotalClicks($id, $year, $month);
 	}
 
+	// ============================================================== //
 	// ============================================================== //
 
 	// DEPRECATED

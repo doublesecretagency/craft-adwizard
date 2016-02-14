@@ -252,39 +252,6 @@ class AdWizardService extends BaseApplicationComponent
 
 	// ============================================================== //
 
-	// Ads
-
-	/**
-	 * Returns all ads.
-	 *
-	 * @param string|null $indexBy
-	 * @return array
-	 */
-	public function getAllAds($indexBy = null)
-	{
-		$adRecords = AdWizard_AdRecord::model()->findAll(array('order'=>'id desc'));
-		$adsById = AdWizard_AdModel::populateModels($adRecords, 'id');
-
-		if ($indexBy == 'id')
-		{
-			return $adsById;
-		}
-		else if (!$indexBy)
-		{
-			return array_values($adsById);
-		}
-		else
-		{
-			$ads = array();
-			foreach ($adsById as $ad)
-			{
-				$ads[$ad->$indexBy] = $ad;
-			}
-
-			return $ads;
-		}
-	}
-
 	/**
 	 * Returns an ad by its ID.
 	 *
@@ -424,7 +391,7 @@ class AdWizardService extends BaseApplicationComponent
 	// Display ad
 	public function renderAd($id, $transform = null, $retina = false)
 	{
-		$ad = $this->_getAdById($id);
+		$ad = $this->getAdById($id);
 		return $this->_renderIndividualAd($ad, $transform, $retina);
 	}
 
@@ -453,14 +420,6 @@ class AdWizardService extends BaseApplicationComponent
 	}
 
 	// ============================================================== //
-
-
-	// Get individual ad via ID
-	private function _getAdById($id)
-	{
-		$ad = AdWizard_AdRecord::model()->findByPk($id);
-		return AdWizard_AdModel::populateModel($ad);
-	}
 
 	// Get individual ad via group
 	private function _getRandomAdFromGroup($groupHandle)
@@ -503,7 +462,6 @@ class AdWizardService extends BaseApplicationComponent
 		}
 
 	}
-
 
 	// Renders HTML of ad
 	private function _displayAd(AdWizard_AdModel $ad, $transform = null, $retina = false)

@@ -28,7 +28,7 @@
 {% set adIdInput %}
 	<div class="select">
 		<select name="adId" class="adId">
-			{% for ad in craft.adWizard.getAllAds %}
+			{% for ad in craft.adWizard.ads.order('title') %}
 				<option
 					value="{{ ad.id }}"
 					class="group-{{ ad.groupId }}"
