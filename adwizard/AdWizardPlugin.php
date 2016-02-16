@@ -21,7 +21,7 @@ class AdWizardPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '1.3.0 (rc 5)';
+		return '1.3.0';
 	}
 
 	public function getSchemaVersion()
