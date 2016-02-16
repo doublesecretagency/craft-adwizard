@@ -68,6 +68,29 @@ class AdWizard_AdElementType extends BaseElementType
 	}
 
 	/**
+	 * @inheritDoc IElementType::getAvailableActions()
+	 *
+	 * @param string|null $source
+	 *
+	 * @return array|null
+	 */
+	public function getAvailableActions($source = null)
+	{
+		$deleteAction = craft()->elements->getAction('Delete Ads');
+		$deleteAction->setParams(array(
+			'confirmationMessage' => Craft::t('Are you sure you want to delete the selected ads?'),
+			'successMessage'      => Craft::t('Ads deleted.'),
+		));
+
+		$actions[] = $deleteAction;
+
+		$editAction = craft()->elements->getAction('Edit');
+		$actions[] = $editAction;
+
+		return $actions;
+	}
+
+	/**
 	 * Returns the attributes that can be shown/sorted by in table views.
 	 *
 	 * @param string|null $source
