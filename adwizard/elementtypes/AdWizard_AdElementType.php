@@ -76,16 +76,13 @@ class AdWizard_AdElementType extends BaseElementType
 	 */
 	public function getAvailableActions($source = null)
 	{
-		$deleteAction = craft()->elements->getAction('Delete Ads');
+		$deleteAction = craft()->elements->getAction('Delete');
 		$deleteAction->setParams(array(
 			'confirmationMessage' => Craft::t('Are you sure you want to delete the selected ads?'),
 			'successMessage'      => Craft::t('Ads deleted.'),
 		));
 
 		$actions[] = $deleteAction;
-
-		$editAction = craft()->elements->getAction('Edit');
-		$actions[] = $editAction;
 
 		return $actions;
 	}
