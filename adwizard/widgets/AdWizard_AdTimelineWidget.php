@@ -6,12 +6,13 @@ class AdWizard_AdTimelineWidget extends BaseWidget
 
 	public function getTitle()
 	{
+		$title = Craft::t('NEW TIMELINE');
 		$adId = $this->getSettings()->adId;
 		if ($adId) {
 			$ad = craft()->adWizard->getAdById($adId);
-			$title = $ad->title;
-		} else {
-			$title = Craft::t('NEW TIMELINE');
+			if ($ad) {
+				$title = $ad->title;
+			}
 		}
 		return $title;
 	}

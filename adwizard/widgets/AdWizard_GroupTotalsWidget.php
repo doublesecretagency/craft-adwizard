@@ -6,12 +6,13 @@ class AdWizard_GroupTotalsWidget extends BaseWidget
 
 	public function getTitle()
 	{
+		$title = Craft::t('NEW GROUP CHART');
 		$groupId = $this->getSettings()->groupId;
 		if ($groupId) {
 			$group = craft()->adWizard->getGroupById($groupId);
-			$title = $group->name;
-		} else {
-			$title = Craft::t('NEW GROUP CHART');
+			if ($group) {
+				$title = $group->name;
+			}
 		}
 		return $title;
 	}
