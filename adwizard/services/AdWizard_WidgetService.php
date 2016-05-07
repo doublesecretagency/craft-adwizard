@@ -125,26 +125,20 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 	// Load chart JS
 	private function _loadChartJs($chartType, $data, $options, $height)
 	{
-		$widgetId = $this->_uniqueId();
+		$token = md5(str_shuffle(microtime()));
 		craft()->templates->includeJsFile('//www.google.com/jsapi');
 		craft()->templates->includeJs("
 google.load('visualization', '1', {packages:['corechart']});
-google.setOnLoadCallback(drawChart".$widgetId.");
-function drawChart".$widgetId."() {
+google.setOnLoadCallback(drawChart".$token.");
+function drawChart".$token."() {
 	var data = google.visualization.arrayToDataTable(".json_encode($data).");
 	var options = ".json_encode($options).";
-	var chart = new google.visualization.".$chartType."(document.getElementById('chart-".$widgetId."'));
+	var chart = new google.visualization.".$chartType."(document.getElementById('chart-".$token."'));
 	chart.draw(data, options);
 }
 ");
-		return '<div id="chart-'.$widgetId.'" style="height:'.$height.'px"></div>';
-		return '<div id="chart-'.$widgetId.'"></div>';
-	}
-
-	// Create unique widget ID
-	private function _uniqueId()
-	{
-		return substr(number_format(microtime(true),4,'',''),-6);
+		return '<div id="chart-'.$token.'" style="height:'.$height.'px"></div>';
+		return '<div id="chart-'.$token.'"></div>';
 	}
 
 	// ============================================================== //
