@@ -125,7 +125,7 @@ class AdWizard_WidgetService extends BaseApplicationComponent
 	// Load chart JS
 	private function _loadChartJs($chartType, $data, $options, $height)
 	{
-		$token = md5(str_shuffle(microtime()));
+		$token = StringHelper::randomString();
 		craft()->templates->includeJsFile('//www.google.com/jsapi');
 		craft()->templates->includeJs("
 google.load('visualization', '1', {packages:['corechart']});
