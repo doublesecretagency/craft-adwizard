@@ -72,11 +72,6 @@ class AdWizardController extends BaseController
 			$variables['title'] = Craft::t('Create a new group');
 		}
 
-		$variables['crumbs'] = array(
-			array('label' => Craft::t('Ads'), 'url' => UrlHelper::getUrl('adwizard')),
-			array('label' => Craft::t('Groups'), 'url' => UrlHelper::getUrl('adwizard/groups')),
-		);
-
 		$this->renderTemplate('adwizard/groups/_edit', $variables);
 	}
 
@@ -213,12 +208,6 @@ class AdWizardController extends BaseController
 		{
 			$variables['title'] = $variables['ad']->title;
 		}
-
-		// Breadcrumbs
-		$variables['crumbs'] = array(
-			array('label' => Craft::t('Ads'), 'url' => UrlHelper::getUrl('adwizard')),
-			array('label' => $variables['group']->name, 'url' => UrlHelper::getUrl('adwizard'))
-		);
 
 		// Set the "Continue Editing" URL
 		$variables['continueEditingUrl'] = 'adwizard/'.$variables['group']->handle.'/{id}';

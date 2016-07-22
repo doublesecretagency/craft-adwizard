@@ -2,6 +2,11 @@
 {% set selectedSubnavItem = 'groups' %}
 {% set title = "Groups"|t %}
 
+{% set crumbs = [
+	{'label': 'Ad Wizard'|t, 'url': url('adwizard')},
+	{'label': 'Groups'|t,    'url': url('adwizard/groups')},
+] %}
+
 {% set fullPageForm = true %}
 
 {% block saveButton %}

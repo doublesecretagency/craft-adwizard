@@ -3,6 +3,18 @@
 {% set title = "Create an Ad Group"|t %}
 {% import '_includes/forms' as forms %}
 
+{% set crumbs = [
+	{'label': 'Ad Wizard'|t, 'url': url('adwizard')},
+	{'label': 'Groups'|t,    'url': url('adwizard/groups')},
+] %}
+
+{% if group.id %}
+	{% set finalCrumb = {'label': group.name, 'url': url('adwizard/groups/' ~ group.id)} %}
+{% else %}
+	{% set finalCrumb = {'label': 'Create New Group'|t, 'url': url('adwizard/groups/new')} %}
+{% endif %}
+{% set crumbs = crumbs|merge([finalCrumb]) %}
+
 {% set fullPageForm = true %}
 
 {% block saveButton %}

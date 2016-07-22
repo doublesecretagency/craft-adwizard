@@ -9,6 +9,11 @@
 	groups: { label: "Groups"|t, url: url('adwizard/groups') },
 } %}
 
+{% set crumbs = [
+	{'label': 'Ad Wizard'|t, 'url': url('adwizard')},
+	{'label': 'Ads'|t,       'url': url('adwizard/ads')},
+] %}
+
 {% set fullPageForm = true %}
 
 {% block saveButton %}

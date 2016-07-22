@@ -2,6 +2,11 @@
 {% set selectedSubnavItem = 'stats' %}
 {% set title = "Stats"|t %}
 
+{% set crumbs = [
+	{'label': 'Ad Wizard'|t, 'url': url('adwizard')},
+	{'label': 'Stats'|t,     'url': url('adwizard/stats')},
+] %}
+
 {% includeCssResource 'adwizard/css/admin.css' %}
 
 {% set month = [null,
