@@ -21,9 +21,9 @@
 		<div class="buttons">
 			<div class="btngroup submit first">
 				{% if 1 == groups|length %}
-					<a href="{{ cpUrl('adwizard/'~groups[0].handle~'/new') }}" class="btn submit add icon">{{ 'New Ad'|t }}</a>
+					<a href="{{ cpUrl('adwizard/ads/new') }}" class="btn submit add icon">{{ 'New Ad'|t }}</a>
 				{% else %}
-					<a href="{{ cpUrl('adwizard/'~groups[0].handle~'/new') }}" class="btn submit">{{ 'New Ad'|t }}</a>
+					<a href="{{ cpUrl('adwizard/ads/new') }}" class="btn submit">{{ 'New Ad'|t }}</a>
 					<div class="btn submit menubtn"></div>
 					<div class="menu">
 						<ul>

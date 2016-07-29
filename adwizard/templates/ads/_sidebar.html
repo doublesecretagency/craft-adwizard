@@ -1,4 +1,13 @@
 
+{{ forms.selectField({
+	label: "Group"|t,
+	id: 'groupId',
+	name: 'groupId',
+	value: ad.groupId,
+	options: groupSelectOptions,
+	errors: ad.getErrors('groupId'),
+}) }}
+
 {{ forms.dateTimeField({
 	label: "Beginning of Run"|t,
 	id: 'startDate',

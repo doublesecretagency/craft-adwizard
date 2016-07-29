@@ -4,13 +4,13 @@
 
 {% set crumbs = [
 	{'label': 'Ad Wizard'|t, 'url': url('adwizard')},
-	{'label': group.name,    'url': url('adwizard/ads')},
+	{'label': 'Ads'|t,       'url': url('adwizard/ads')},
 ] %}
 
 {% if ad.id %}
-	{% set finalCrumb = {'label': ad.title, 'url': url('adwizard/' ~ group.handle ~ '/' ~ ad.id)} %}
+	{% set finalCrumb = {'label': ad.title, 'url': url('adwizard/ads/' ~ ad.id)} %}
 {% else %}
-	{% set finalCrumb = {'label': 'Create New Ad'|t, 'url': url('adwizard/' ~ group.handle ~ '/new')} %}
+	{% set finalCrumb = {'label': 'Create New Ad'|t, 'url': url('adwizard/ads/new')} %}
 {% endif %}
 {% set crumbs = crumbs|merge([finalCrumb]) %}
 

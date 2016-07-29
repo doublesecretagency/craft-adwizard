@@ -59,6 +59,7 @@ class AdWizardPlugin extends BasePlugin
 			'adwizard/groups'                                  => array('action' => 'adWizard/groupIndex'),
 			'adwizard/groups/new'                              => array('action' => 'adWizard/editGroup'),
 			'adwizard/groups/(?P<groupId>\d+)'                 => array('action' => 'adWizard/editGroup'),
+			'adwizard/ads/new'                                 => array('action' => 'adWizard/editAd'),
 			'adwizard/(?P<groupHandle>{handle})/new'           => array('action' => 'adWizard/editAd'),
 			'adwizard/(?P<groupHandle>{handle})/(?P<adId>\d+)' => array('action' => 'adWizard/editAd'),
 		);

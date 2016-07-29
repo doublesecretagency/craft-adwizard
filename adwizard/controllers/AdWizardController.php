@@ -140,6 +140,14 @@ class AdWizardController extends BaseController
 	 */
 	public function actionEditAd(array $variables = array())
 	{
+
+		$variables['groupSelectOptions'] = array();
+
+		$allGroups = craft()->adWizard->getAllGroups();
+		foreach ($allGroups as $group) {
+			$variables['groupSelectOptions'][$group->id] = $group->name;
+		}
+
 		if (!empty($variables['groupHandle']))
 		{
 			$variables['group'] = craft()->adWizard->getGroupByHandle($variables['groupHandle']);
@@ -151,7 +159,7 @@ class AdWizardController extends BaseController
 
 		if (empty($variables['group']))
 		{
-			throw new HttpException(404);
+			$variables['group'] = $allGroups[0];
 		}
 
 		// Now let's set up the actual ad
@@ -202,7 +210,7 @@ class AdWizardController extends BaseController
 
 		if (!$variables['ad']->id)
 		{
-			$variables['title'] = Craft::t('Create new ad in group:').' '.$variables['group']->name;
+			$variables['title'] = Craft::t('Create a new ad');
 		}
 		else
 		{
@@ -210,7 +218,7 @@ class AdWizardController extends BaseController
 		}
 
 		// Set the "Continue Editing" URL
-		$variables['continueEditingUrl'] = 'adwizard/'.$variables['group']->handle.'/{id}';
+		$variables['continueEditingUrl'] = 'adwizard/ads/{id}';
 
 		// Render the template!
 		$this->renderTemplate('adwizard/ads/_edit', $variables);
