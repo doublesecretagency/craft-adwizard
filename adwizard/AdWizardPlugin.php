@@ -45,6 +45,13 @@ class AdWizardPlugin extends BasePlugin
 		return true;
 	}
 
+	public function addAdWizard_AdActions($source)
+	{
+		return array(
+			'AdWizard_ChangeAdGroup',
+		);
+	}
+
 	public function registerCpRoutes()
 	{
 		return array(

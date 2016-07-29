@@ -1,0 +1,8 @@
+<div class="btn menubtn" role="button">{{ "Move to group..."|t }}</div>
+<div class="menu">
+	<ul>
+		{% for group in groups %}
+			<li><a class="formsubmit" data-param="groupId" data-value="{{ group.id }}">{{ group.name }}</a></li>
+		{% endfor %}
+	</ul>
+</div>

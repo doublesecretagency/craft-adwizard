@@ -388,6 +388,15 @@ class AdWizardService extends BaseApplicationComponent
 
 	// ============================================================== //
 
+	// Move an ad to a different group
+	public function moveAdToGroup(AdWizard_AdModel $ad, $groupId)
+	{
+        $ad->groupId = $groupId;
+        $this->saveAd($ad);
+	}
+
+	// ============================================================== //
+
 	// Display ad
 	public function renderAd($id, $transform = null, $retina = false)
 	{
