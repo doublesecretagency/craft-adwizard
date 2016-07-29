@@ -20,13 +20,15 @@
 	{% if groups|length %}
 		<div class="buttons">
 			<div class="btngroup submit first">
-				<input type="submit" class="btn submit" value="{{ 'New Ad'|t }}">
-				{% if groups|length > 1 %}
+				{% if 1 == groups|length %}
+					<a href="{{ cpUrl('adwizard/'~groups[0].handle~'/new') }}" class="btn submit add icon">{{ 'New Ad'|t }}</a>
+				{% else %}
+					<a href="{{ cpUrl('adwizard/'~groups[0].handle~'/new') }}" class="btn submit">{{ 'New Ad'|t }}</a>
 					<div class="btn submit menubtn"></div>
 					<div class="menu">
 						<ul>
 							{% for group in groups %}
-								<li><a href="{{ url('adwizard/'~group.handle~'/new') }}">{{ group.name|t }}</a></li>
+								<li><a href="{{ cpUrl('adwizard/'~group.handle~'/new') }}">{{ group.name|t }}</a></li>
 							{% endfor %}
 						</ul>
 					</div>

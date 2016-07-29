@@ -202,7 +202,7 @@ class AdWizardController extends BaseController
 
 		if (!$variables['ad']->id)
 		{
-			$variables['title'] = Craft::t('Create a new ad');
+			$variables['title'] = Craft::t('Create new ad in group:').' '.$variables['group']->name;
 		}
 		else
 		{
