@@ -414,6 +414,7 @@ class AdWizardService extends BaseApplicationComponent
 	// DEPRECATED
 	public function renderAdFromGroup($group, $transform = null)
 	{
+		craft()->deprecator->log('AdWizardService::renderAdFromGroup()', 'The PHP method `craft->adWizard->renderAdFromGroup` has been deprecated. Use `craft->adWizard->renderRandomAdFromGroup` instead.');
 		return $this->renderRandomAdFromGroup($group, $transform);
 	}
 

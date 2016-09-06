@@ -58,12 +58,14 @@ class AdWizardVariable
 	// DEPRECATED
 	public function ad($id, $transform = null, $retina = false)
 	{
+		craft()->deprecator->log('AdWizardVariable::ad()', 'The Twig variable `craft.adWizard.ad` has been deprecated. Use `craft.adWizard.displayAd` instead.');
 		return $this->displayAd($id, $transform, $retina);
 	}
 
 	// DEPRECATED
 	public function position($group, $transform = null, $retina = false)
 	{
+		craft()->deprecator->log('AdWizardVariable::position()', 'The Twig variable `craft.adWizard.position` has been deprecated. Use `craft.adWizard.randomizeAdGroup` instead.');
 		return $this->randomizeAdGroup($group, $transform, $retina);
 	}
 
