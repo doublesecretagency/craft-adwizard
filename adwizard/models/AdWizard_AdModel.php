@@ -32,6 +32,13 @@ class AdWizard_AdModel extends BaseElementModel
 	}
 
 	/**
+	 */
+	public function displayAd($transform = null, $retina = false)
+	{
+		return craft()->adWizard->renderAd($this->id, $transform, $retina);
+	}
+
+	/**
 	 * @inheritDoc BaseElementModel::getThumbUrl()
 	 *
 	 * @param int $size
