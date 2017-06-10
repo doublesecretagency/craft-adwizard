@@ -1,6 +1,6 @@
 Ad Wizard License
 ==============
-https://craftpl.us/plugins/ad-wizard
+https://www.doublesecretagency.com/plugins/ad-wizard
 Copyright © 2014 Double Secret Agency. All rights reserved.
 
 This license (the "License") is a legal agreement between you (either an individual or a single entity) and Double Secret Agency covering the use, installation, copying or distribution of Ad Wizard.

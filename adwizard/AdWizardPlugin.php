@@ -14,11 +14,6 @@ class AdWizardPlugin extends BasePlugin
 		return 'Easily manage custom advertisements on your website.';
 	}
 
-	public function getDocumentationUrl()
-	{
-		return 'https://craftpl.us/plugins/ad-wizard';
-	}
-
 	public function getVersion()
 	{
 		return '1.3.1';
@@ -36,8 +31,12 @@ class AdWizardPlugin extends BasePlugin
 
 	public function getDeveloperUrl()
 	{
-		return 'https://craftpl.us/plugins/ad-wizard';
-		//return 'http://doublesecretagency.com';
+		return 'https://www.doublesecretagency.com/plugins';
+	}
+
+	public function getDocumentationUrl()
+	{
+		return 'https://www.doublesecretagency.com/plugins/ad-wizard/docs';
 	}
 
 	public function hasCpSection()
