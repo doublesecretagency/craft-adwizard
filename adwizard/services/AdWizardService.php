@@ -289,7 +289,18 @@ class AdWizardService extends BaseApplicationComponent
 			$adRecord = new AdWizard_AdRecord();
 		}
 
-		$assetId = (!empty($ad->assetId) ? $ad->assetId[0] : null);
+		// Check if asset ID is valid
+		$validInt   = ($ad->assetId && is_numeric($ad->assetId));
+		$validArray = ($ad->assetId && is_array($ad->assetId));
+
+		// Set assetId
+		if ($validInt) {
+			$assetId = $ad->assetId;
+		} else if ($validArray) {
+			$assetId = $ad->assetId[0];
+		} else {
+			$assetId = null;
+		}
 
 		$adRecord->groupId   = $ad->groupId;
 		$adRecord->assetId   = $assetId;
