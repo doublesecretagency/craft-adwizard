@@ -1,0 +1,38 @@
+{
+    "name": "doublesecretagency/craft-adwizard",
+    "description": "Easily manage custom advertisements on your website.",
+    "type": "craft-plugin",
+    "version": "2.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "ad-wizard",
+        "ads"
+    ],
+    "support": {
+        "docs": "https://www.doublesecretagency.com/plugins/ad-wizard/docs",
+        "issues": "https://github.com/doublesecretagency/craft-adwizard/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Double Secret Agency",
+            "homepage": "https://www.doublesecretagency.com/plugins"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "doublesecretagency\\adwizard\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Ad Wizard",
+        "handle": "ad-wizard",
+        "class": "doublesecretagency\\adwizard\\AdWizard"
+    }
+}

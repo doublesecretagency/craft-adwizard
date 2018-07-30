@@ -1,0 +1,37 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.selectField({
+    label: "Group"|t('ad-wizard'),
+    id: 'groupId',
+    name: 'groupId',
+    value: ad.groupId,
+    options: groupSelectOptions,
+}) }}
+
+{{ forms.dateTimeField({
+    label: "Beginning of Run"|t('ad-wizard'),
+    id: 'startDate',
+    name: 'startDate',
+    value: (ad.startDate ? ad.startDate : null),
+}) }}
+{{ forms.dateTimeField({
+    label: "End of Run"|t('ad-wizard'),
+    id: 'endDate',
+    name: 'endDate',
+    value: (ad.endDate ? ad.endDate : null),
+}) }}
+
+{{ forms.textField({
+    label: "Max Views Allowed"|t('ad-wizard'),
+    instructions: '(0 = unlimited)'|t('ad-wizard'),
+    id: 'maxViews',
+    name: 'maxViews',
+    value: ad.maxViews,
+    size: 3,
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Enabled"|t('app'),
+    name: 'enabled',
+    on: ad.enabled,
+}) }}

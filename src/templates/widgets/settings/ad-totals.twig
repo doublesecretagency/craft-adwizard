@@ -1,0 +1,19 @@
+{% import '_includes/forms' as forms %}
+
+{% set groupInput %}
+    <div class="select">
+        <select id="groupId" name="groupId">
+            {% for group in craft.adWizard.getAllGroups %}
+                {% if group.id is defined %}
+                    <option value="{{ group.id }}"{% if group.id == widget.groupId %} selected{% endif %}>{{ group.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+{% endset %}
+
+{{ forms.field({
+    label: "Group"|t('ad-wizard'),
+    instructions: "Show totals of ads in the specified group."|t('ad-wizard'),
+    id: 'group',
+}, groupInput) }}

@@ -1,0 +1,79 @@
+{% extends '_layouts/cp' %}
+{% set selectedSubnavItem = 'stats' %}
+{% set title = "Stats"|t('ad-wizard') %}
+
+{% set crumbs = [
+    {'label': 'Ad Wizard'|t('ad-wizard'), 'url': url('ad-wizard')},
+    {'label': 'Stats'|t('ad-wizard'),     'url': url('ad-wizard/stats')},
+] %}
+
+{% do view.registerAssetBundle("doublesecretagency\\adwizard\\web\\assets\\AdminAssets") %}
+
+{% set month = [null,
+    'January', 'February', 'March',
+    'April',   'May',      'June',
+    'July',    'August',   'September',
+    'October', 'November', 'December',
+] %}
+
+{% set thisMonth = now|date('n') %}
+{% set thisYear  = now|date('Y') %}
+
+{% if thisMonth > 1 %}
+    {% set lastMonth = thisMonth - 1 %}
+    {% set lastYear  = thisYear %}
+{% else %}
+    {% set lastMonth = 12 %}
+    {% set lastYear  = thisYear - 1 %}
+{% endif %}
+
+{% set content %}
+    <table class="data fullwidth collapsible">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th colspan="2" class="aw-total col-divider">This Month ({{ month[thisMonth] }})</th>
+                <th colspan="2" class="aw-total col-divider">Last Month ({{ month[lastMonth] }})</th>
+                <th colspan="2" class="aw-total col-divider">Lifetime Total</th>
+            </tr>
+            <tr>
+                <th>Group</th>
+                <th>Ad</th>
+                <th class="aw-total aw-views col-divider">Views</th>
+                <th class="aw-total aw-clicks">Clicks</th>
+                <th class="aw-total aw-views col-divider">Views</th>
+                <th class="aw-total aw-clicks">Clicks</th>
+                <th class="aw-total aw-views col-divider">Views</th>
+                <th class="aw-total aw-clicks">Clicks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ad in craft.adWizard.ads.orderBy('title').all() %}
+                {% set group = craft.adWizard.getGroupById(ad.groupId) %}
+                <tr>
+                    <td>{{ group.name }}</td>
+                    <td><a href="{{ url('ad-wizard/' ~ group.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
+                    <td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, thisYear, thisMonth) }}</td>
+                    <td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
+                    <td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>
+                    <td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, lastYear, lastMonth) }}</td>
+                    <td class="aw-total aw-views col-divider">{{ ad.totalViews }}</td>
+                    <td class="aw-total aw-clicks">{{ ad.totalClicks }}</td>
+                </tr>
+            {% else %}
+                {% set groupsExist = craft.adWizard.getAllGroups() %}
+                {% if groupsExist %}
+                    {% set href  = cpUrl('ad-wizard/ads') %}
+                    {% set label = 'Create an ad...' %}
+                {% else %}
+                    {% set href  = cpUrl('ad-wizard/groups') %}
+                    {% set label = 'Create an ad group...' %}
+                {% endif %}
+                <tr>
+                    <td colspan="8" class="no-stats">You currently have no ads. <a href="{{ href }}">{{ label }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endset %}

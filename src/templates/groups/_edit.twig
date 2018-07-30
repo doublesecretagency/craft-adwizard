@@ -1,0 +1,45 @@
+{% extends '_layouts/cp' %}
+{% set title = "Create an Ad Group"|t('ad-wizard') %}
+{% import '_includes/forms' as forms %}
+
+{% block actionButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="ad-wizard/ad-groups/save-group">
+    {{ redirectInput('ad-wizard/groups') }}
+    {% if group.id %}<input type="hidden" name="groupId" value="{{ group.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "Group Name"|t('ad-wizard'),
+        instructions: "Define a group of ads."|t('ad-wizard'),
+        placeholder: "ie: \"Header Banner\" or \"Right Sidebar\""|t('ad-wizard'),
+        id: 'name',
+        name: 'name',
+        value: group.name,
+        errors: group.getErrors('name'),
+        autofocus: true,
+        required: true,
+        translatable: true
+    }) }}
+
+    {{ forms.textField({
+        label: "Handle"|t('app'),
+        id: 'handle',
+        class: 'code',
+        name: 'handle',
+        value: group.handle,
+        errors: group.getErrors('handle'),
+        required: true
+    }) }}
+{% endblock %}
+
+{% if not group.handle %}
+    {%- js -%}
+        new Craft.HandleGenerator('#name', '#handle');
+    {%- endjs -%}
+{% endif %}

@@ -1,0 +1,30 @@
+{% extends '_layouts/elementindex' %}
+{% set selectedSubnavItem = 'ads' %}
+{% set elementType = 'doublesecretagency\\adwizard\\elements\\Ad' %}
+{% set title = "Ads"|t('ad-wizard') %}
+
+{% block actionButton %}
+    {% if groups|length %}
+        <div class="btngroup">
+            <a href="{{ cpUrl('ad-wizard/ads/new') }}" class="btn submit add icon">{{ 'New Ad'|t('ad-wizard') }}</a>
+            {% if 1 < groups|length %}
+                <div class="btn submit menubtn"></div>
+                <div class="menu">
+                    <ul>
+                        {% for group in groups %}
+                            <li><a href="{{ cpUrl('ad-wizard/'~group.handle~'/new') }}">{{ group.name|t('site') }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% js %}
+var handles = {
+    {% for source in craft.adWizard.getAllGroups %}
+        {{ source.id }}: '{{ source.handle }}'{{ not loop.last ? ',' }}
+    {% endfor %}
+};
+{% endjs %}

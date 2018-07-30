@@ -1,0 +1,43 @@
+{% extends '_layouts/cp' %}
+{% set title = "Ad Groups"|t('ad-wizard') %}
+
+{% block actionButton %}
+    <a href="{{ cpUrl('ad-wizard/groups/new') }}" class="btn submit add icon">{{ 'New Ad Group'|t('ad-wizard') }}</a>
+{% endblock %}
+
+{% set content %}
+    <div id="noadgroups"{% if groups %} class="hidden"{% endif %}>
+        <h2>What is a Group?</h2>
+        <p>When you create an Ad, you will place it into a specific Group. The relationship between an Ad &amp; Group is similar to the relationship between an Entry &amp; Section. It's not possible for an ad to exist in more than one group.</p>
+        <hr/>
+        <p><strong>No groups exist yet.</strong> <a href="{{ cpUrl('ad-wizard/groups/new') }}">Create one to get started...</a></p>
+    </div>
+
+    {% if groups|length %}
+        <table id="adgroups" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ 'Name'|t('app') }}</th>
+                <th scope="col">{{ 'Handle'|t('app') }}</th>
+                <td class="thin"></td>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                    <tr data-id="{{ group.id }}" data-name="{{ group.name|t('site') }}">
+                        <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ cpUrl('ad-wizard/groups/' ~ group.id) }}">{{ group.name|t('site') }}</a></th>
+                        <td data-title="{{ 'Handle'|t('app') }}"><code>{{ group.handle }}</code></td>
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endset %}
+
+{% js %}
+    new Craft.AdminTable({
+        tableSelector: '#adgroups',
+        noObjectsSelector: '#noadgroups',
+        deleteAction: 'ad-wizard/ad-groups/delete-ad-group',
+        confirmDeleteMessage: '{{ "Are you sure you want to delete the “{name}” group, including all ads the group contains?"|t('ad-wizard') }}'
+    });
+{% endjs %}

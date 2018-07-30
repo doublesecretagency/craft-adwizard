@@ -1,0 +1,8 @@
+<div class="btn menubtn">{{ "Move to group"|t('ad-wizard') }}</div>
+<div class="menu">
+    <ul>
+        {% for group in groups %}
+            <li><a class="formsubmit" data-param="groupId" data-value="{{ group.id }}">{{ group.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

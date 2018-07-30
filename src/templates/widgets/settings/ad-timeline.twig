@@ -1,0 +1,55 @@
+{% import '_includes/forms' as forms %}
+
+{% set defaultGroup = false %}
+{% set defaultAdSelected = false %}
+
+{% set groupInput %}
+    <div class="select">
+        <select name="groupId" class="groupId">
+            {% for group in craft.adWizard.getAllGroups %}
+                {% if loop.first and (widget.groupId is null) %}
+                    {% set defaultGroup = group.id %}
+                {% endif %}
+                <option
+                    value="{{ group.id }}"
+                    {% if group.id == widget.groupId %}selected{% endif %}
+                >{{ group.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endset %}
+
+{{ forms.field({
+    label: "Group"|t('ad-wizard'),
+    instructions: "Which group is the ad in?"|t('ad-wizard'),
+    id: 'group',
+}, groupInput) }}
+
+{% set adIdInput %}
+    <div class="select">
+        <select name="adId" class="adId">
+            {% for ad in craft.adWizard.ads.orderBy('title').all() %}
+                <option
+                    value="{{ ad.id }}"
+                    class="group-{{ ad.groupId }}"
+                    {% if ad.id == widget.adId %}
+                        selected
+                    {% elseif defaultGroup %}
+                        {% if defaultGroup != ad.groupId %}
+                            style="display: none;"
+                        {% elseif not defaultAdSelected %}
+                            selected
+                            {% set defaultAdSelected = true %}
+                        {% endif %}
+                    {% endif %}
+                >{{ ad.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endset %}
+
+{{ forms.field({
+    label: "Select Ad"|t('ad-wizard'),
+    instructions: "Show view/click timeline of specified ad."|t('ad-wizard'),
+    id: 'adId',
+}, adIdInput) }}

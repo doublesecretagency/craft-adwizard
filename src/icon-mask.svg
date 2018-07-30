@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+Icons made by <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
+-->
+<svg width="1637px" height="1637px" viewBox="0 0 1637 1637" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
+    <title>Ad Wizard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="icon-mask" sketch:type="MSLayerGroup" fill="#000000">
+            <g id="g3003" transform="translate(818.059322, 818.669500) scale(1, -1) translate(-818.059322, -818.669500) translate(-0.440678, 0.169500)" sketch:type="MSShapeGroup">
+                <path d="M1163,1056 L1456,1349 L1349,1456 L1056,1163 L1163,1056 Z M1610,1349 C1610,1331 1604,1316 1592,1304 L306,18 C294,6 279,0 261,0 C243,0 228,6 216,18 L18,216 C6,228 0,243 0,261 C0,279 6,294 18,306 L1304,1592 C1316,1604 1331,1610 1349,1610 C1367,1610 1382,1604 1394,1592 L1592,1394 C1604,1382 1610,1367 1610,1349 L1610,1349 Z M259,1539 L357,1509 L259,1479 L229,1381 L199,1479 L101,1509 L199,1539 L229,1637 L259,1539 Z M609,1377 L805,1317 L609,1257 L549,1061 L489,1257 L293,1317 L489,1377 L549,1573 L609,1377 Z M1539,899 L1637,869 L1539,839 L1509,741 L1479,839 L1381,869 L1479,899 L1509,997 L1539,899 Z M899,1539 L997,1509 L899,1479 L869,1381 L839,1479 L741,1509 L839,1539 L869,1637 L899,1539 Z" id="path3005"></path>
+            </g>
+        </g>
+    </g>
+</svg>

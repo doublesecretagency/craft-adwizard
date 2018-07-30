@@ -1,0 +1,17 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Welcome to Ad Wizard!'|t('ad-wizard') %}
+
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@doublesecretagency/adwizard/icon.svg', true) %}
+
+{% set content %}
+    <div style="text-align:center; margin:0 auto;">
+        <img src="{{ iconUrl }}" width="200" style="margin:12px;">
+        <h2>{{ 'Thanks for using Ad Wizard!'|t('ad-wizard') }}</h2>
+        <p>{{ 'Feel free to contact us with any feature requests, bug reports, or suggestions.'|t('ad-wizard') }}</p>
+        <div>
+            <a href="{{ craft.adWizard.docsUrl }}" target="_blank" class="btn submit">{{ 'View full documentation'|t('ad-wizard') }}</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="{{ cpUrl('ad-wizard/groups') }}" class="btn submit">{{ 'Get started...'|t('ad-wizard') }}</a>
+        </div>
+    </div>
+{% endset %}

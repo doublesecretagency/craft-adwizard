@@ -1,0 +1,20 @@
+.col-divider {
+    border-left: 1px dotted #94a3b2;
+}
+
+.aw-total {
+    padding-left: 0 !important;
+    text-align: center !important;
+}
+.aw-views  {background-color: #f6f6f6;}
+.aw-clicks {background-color: #eaecee;}
+
+.no-stats {
+    text-align: center !important;
+    font-style: italic;
+    padding: 33px 0 30px !important;
+}
+
+input#maxViews {
+    width: 80px;
+}

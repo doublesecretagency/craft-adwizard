@@ -1,0 +1,63 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.textField({
+    label: "Title"|t('app'),
+    id: 'title',
+    name: 'title',
+    value: ad.title,
+    errors: ad.getErrors('title'),
+    first: true,
+    autofocus: true,
+    required: true,
+}) }}
+
+{{ forms.textField({
+    label: "URL"|t('app'),
+    type: 'url',
+    id: 'url',
+    name: 'url',
+    value: ad.url,
+    placeholder: 'http://',
+    errors: ad.getErrors('url'),
+    required: true,
+}) }}
+
+<div class="field" id="adGraphic-field">
+    <div class="heading">
+        <label for="adGraphic">Image</label>
+        <div class="instructions"><p>If no graphic is associated, the ad will not be displayed.</p></div>
+    </div>
+    <div class="input">
+        {% if assetsSourceExists %}
+            {{ forms.elementSelect({
+                elements: elements,
+                id: 'adGraphic',
+                name: 'adGraphic',
+                elementType: elementType,
+                sources: '*',
+                criteria: {
+                    'kind': [],
+                    'enabledForSite': null,
+                    'siteId': ad.siteId,
+                },
+                sourceElementId: ad.id,
+                jsClass: 'Craft.AssetSelectInput',
+                selectionLabel: 'Select Ad Graphic',
+                viewMode: 'large',
+                limit: 1,
+                modalStorageKey: 'adWizard.adGraphic',
+            }) }}
+        {% else %}
+            <p class="error">No assets sources currently exist. <a href="{{ newAssetsSourceUrl }}">Create one now...</a></p>
+        {% endif %}
+    </div>
+</div>
+
+{{ forms.textareaField({
+    label: "Details"|t('ad-wizard'),
+    id: 'ad-details',
+    name: 'details',
+    class: 'nicetext',
+    value: ad.details,
+    rows: 6,
+}) }}
