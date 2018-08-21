@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 - 2018-08-21
+
+### Fixed
+- Allows access for logged-in non-admins.
+
 ## 2.0.0 - 2018-07-30
 
 ### Added

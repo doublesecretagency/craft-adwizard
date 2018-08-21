@@ -43,7 +43,7 @@ class AdsController extends Controller
      */
     public function actionIndex(): Response
     {
-        $this->requireAdmin();
+        $this->requireLogin();
 
         $groups = AdWizard::$plugin->adWizard_groups->getAllGroups();
 
@@ -292,7 +292,7 @@ class AdsController extends Controller
     public function actionDeleteAd(): Response
     {
         $this->requirePostRequest();
-        $this->requireAdmin();
+        $this->requireLogin();
 
         $adId = Craft::$app->getRequest()->getRequiredBodyParam('adId');
 

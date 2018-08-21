@@ -35,7 +35,7 @@ class AdGroupsController extends Controller
      */
     public function actionIndex(): Response
     {
-        $this->requireAdmin();
+        $this->requireLogin();
 
         $groups = AdWizard::$plugin->adWizard_groups->getAllGroups();
 
@@ -57,7 +57,7 @@ class AdGroupsController extends Controller
      */
     public function actionEditAdGroup(int $groupId = null, AdGroup $group = null): Response
     {
-        $this->requireAdmin();
+        $this->requireLogin();
 
         if ($groupId !== null) {
             if ($group === null) {
@@ -111,7 +111,7 @@ class AdGroupsController extends Controller
     public function actionSaveGroup()
     {
         $this->requirePostRequest();
-        $this->requireAdmin();
+        $this->requireLogin();
 
         $group = new AdGroup();
 
@@ -149,7 +149,7 @@ class AdGroupsController extends Controller
     {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $this->requireAdmin();
+        $this->requireLogin();
 
         $groupId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
