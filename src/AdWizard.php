@@ -25,6 +25,7 @@ use craft\web\UrlManager;
 
 use doublesecretagency\adwizard\services\Ads;
 use doublesecretagency\adwizard\services\AdGroups;
+use doublesecretagency\adwizard\services\FieldLayouts;
 use doublesecretagency\adwizard\services\Tracking;
 use doublesecretagency\adwizard\services\Widgets;
 use doublesecretagency\adwizard\variables\AdWizardVariable;
@@ -45,7 +46,7 @@ class AdWizard extends Plugin
     public $hasCpSection = true;
 
     /** @var bool  $schemaVersion  Current schema version of the plugin. */
-    public $schemaVersion = '2.0.0';
+    public $schemaVersion = '2.1.0-alpha.1';
 
     /** @inheritDoc */
     public function init()
@@ -55,10 +56,11 @@ class AdWizard extends Plugin
 
         // Load plugin components
         $this->setComponents([
-            'adWizard_ads'      => Ads::class,
-            'adWizard_groups'   => AdGroups::class,
-            'adWizard_tracking' => Tracking::class,
-            'adWizard_widgets'  => Widgets::class,
+            'adWizard_ads'          => Ads::class,
+            'adWizard_groups'       => AdGroups::class,
+            'adWizard_fieldLayouts' => FieldLayouts::class,
+            'adWizard_tracking'     => Tracking::class,
+            'adWizard_widgets'      => Widgets::class,
         ]);
 
         // Register variables
@@ -86,6 +88,10 @@ class AdWizard extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function(RegisterUrlRulesEvent $event) {
+                // Field Layouts
+                $event->rules['ad-wizard/fieldlayouts']                     = 'ad-wizard/field-layouts';
+                $event->rules['ad-wizard/fieldlayouts/new']                 = 'ad-wizard/field-layouts/edit-field-layout';
+                $event->rules['ad-wizard/fieldlayouts/<fieldLayoutId:\d+>'] = 'ad-wizard/field-layouts/edit-field-layout';
                 // Groups
                 $event->rules['ad-wizard/groups']               = 'ad-wizard/ad-groups';
                 $event->rules['ad-wizard/groups/new']           = 'ad-wizard/ad-groups/edit-ad-group';
@@ -125,6 +131,7 @@ class AdWizard extends Plugin
             $item['subnav']['ads'] = ['label' => 'Ads', 'url' => 'ad-wizard/ads'];
         }
         $item['subnav']['groups'] = ['label' => 'Groups', 'url' => 'ad-wizard/groups'];
+        $item['subnav']['fieldlayouts'] = ['label' => 'Field Layouts', 'url' => 'ad-wizard/fieldlayouts'];
 
         return $item;
     }

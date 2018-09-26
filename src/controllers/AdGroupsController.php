@@ -93,6 +93,20 @@ class AdGroupsController extends Controller
             ];
         }
 
+        // Initialize field layout options
+        $fieldLayoutOptions = [
+            '' => ''
+        ];
+
+        // Get field layouts
+        $fieldLayouts = AdWizard::$plugin->adWizard_fieldLayouts->getFieldLayouts();
+
+        // Compile layout options
+        foreach ($fieldLayouts as $layout) {
+            $fieldLayoutOptions[$layout->id] = $layout->name;
+        }
+
+        // Render template
         return $this->renderTemplate('ad-wizard/groups/_edit', [
             'crumbs' => $crumbs,
             'selectedSubnavItem' => 'groups',
@@ -100,6 +114,7 @@ class AdGroupsController extends Controller
             'groupId' => $groupId,
             'group' => $group,
             'title' => $title,
+            'fieldLayoutOptions' => $fieldLayoutOptions,
         ]);
     }
 
@@ -119,9 +134,10 @@ class AdGroupsController extends Controller
         $request = Craft::$app->getRequest();
 
         // Get POST values
-        $group->id     = $request->getBodyParam('groupId');
-        $group->name   = $request->getBodyParam('name');
-        $group->handle = $request->getBodyParam('handle');
+        $group->id            = $request->getBodyParam('groupId');
+        $group->fieldLayoutId = $request->getBodyParam('fieldLayoutId');
+        $group->name          = $request->getBodyParam('name');
+        $group->handle        = $request->getBodyParam('handle');
 
         // Save it
         if (!AdWizard::$plugin->adWizard_groups->saveGroup($group)) {
@@ -134,6 +150,9 @@ class AdGroupsController extends Controller
 
             return null;
         }
+
+        // Update all ads in group with new layout
+        AdWizard::$plugin->adWizard_ads->updateAdsLayout($group->fieldLayoutId, $group->id);
 
         Craft::$app->getSession()->setNotice(Craft::t('ad-wizard', 'Ad group saved.'));
 

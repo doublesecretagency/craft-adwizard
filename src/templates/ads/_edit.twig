@@ -24,7 +24,7 @@
                 {% endif %}
             </ul>
             {% if not isNewAd %}
-                <hr>
+                <hr/>
                 <ul>
                     <li><a class="formsubmit error" data-action="ad-wizard/ads/delete-ad" data-confirm="{{ 'Are you sure you want to delete this ad?'|t('ad-wizard') }}" data-redirect="{{ redirectUrl.index|hash }}">
                             {{ "Delete"|t('app') }}

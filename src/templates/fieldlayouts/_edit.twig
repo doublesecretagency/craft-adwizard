@@ -1,0 +1,34 @@
+{% extends '_layouts/cp' %}
+{% set phrasing = (fieldLayout.id ? "Edit" : "Create a") %}
+{% set title = "#{phrasing} Field Layout"|t('ad-wizard') %}
+{% import '_includes/forms' as forms %}
+
+{% block actionButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="ad-wizard/field-layouts/save-field-layout">
+    {{ redirectInput('ad-wizard/fieldlayouts') }}
+    {% if fieldLayout.id %}<input type="hidden" name="fieldLayoutId" value="{{ fieldLayout.id }}">{% endif %}
+
+    {{ forms.textField({
+        first: true,
+        label: "Layout Name"|t('ad-wizard'),
+        id: 'name',
+        name: 'name',
+        value: fieldLayout.name,
+        errors: fieldLayout.getErrors('name'),
+        autofocus: true,
+        required: true,
+    }) }}
+
+    <hr/>
+
+    {% include '_includes/fieldlayoutdesigner' with {
+        fieldLayout: fieldLayout.getFieldLayout(),
+        customizableTabs: false
+    } only %}
+{% endblock %}

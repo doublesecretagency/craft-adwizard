@@ -53,11 +53,11 @@
     </div>
 </div>
 
-{{ forms.textareaField({
-    label: "Details"|t('ad-wizard'),
-    id: 'ad-details',
-    name: 'details',
-    class: 'nicetext',
-    value: ad.details,
-    rows: 6,
-}) }}
+{% set fieldLayout = ad.getFieldLayout() %}
+
+{% if fieldLayout %}
+    {% include '_includes/fields' with {
+        fields: fieldLayout.getFields(),
+        element: ad
+    } only %}
+{% endif %}

@@ -121,7 +121,6 @@ class AdQuery extends ElementQuery
             'adwizard_ads.groupId',
             'adwizard_ads.assetId',
             'adwizard_ads.url',
-            'adwizard_ads.details',
             'adwizard_ads.startDate',
             'adwizard_ads.endDate',
             'adwizard_ads.maxViews',

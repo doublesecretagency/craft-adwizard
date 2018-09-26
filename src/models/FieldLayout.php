@@ -15,32 +15,34 @@ use Craft;
 use craft\base\Model;
 
 /**
- * Class AdGroup
- * @since 2.0.0
+ * Class FieldLayout
+ * @since 2.1.0
  */
-class AdGroup extends Model
+class FieldLayout extends Model
 {
 
-    /** @var int  $id  ID of ad group. */
+    /** @var int  $id  ID of field layout. */
     public $id;
 
-    /** @var int  $fieldLayoutId  ID of group's field layout. */
-    public $fieldLayoutId;
-
-    /** @var string  $name  Name of ad group. */
+    /** @var string  $name  Name of field layout. */
     public $name;
 
-    /** @var string  $handle  Handle of ad group. */
-    public $handle;
-
     /**
-     * Use the translated group name as the string representation.
+     * Use the translated layout name as the string representation.
      *
      * @return string
      */
     public function __toString(): string
     {
         return (string) Craft::t('site', $this->name);
+    }
+
+    public function getFieldLayout()
+    {
+        if (!$this->id) {
+            return new \craft\models\FieldLayout();
+        }
+        return Craft::$app->getFields()->getLayoutById($this->id);
     }
 
 }

@@ -176,7 +176,7 @@ class AdGroups extends Component
 //        }
 
         if (!$group->validate()) {
-            Craft::info('AdGroup not saved due to validation error.', __METHOD__);
+            Craft::info('Ad group not saved due to validation error.', __METHOD__);
             return false;
         }
 
@@ -190,8 +190,9 @@ class AdGroups extends Component
             $groupRecord = new AdGroupRecord();
         }
 
-        $groupRecord->name   = $group->name;
-        $groupRecord->handle = $group->handle;
+        $groupRecord->fieldLayoutId = $group->fieldLayoutId;
+        $groupRecord->name          = $group->name;
+        $groupRecord->handle        = $group->handle;
 
         $transaction = Craft::$app->getDb()->beginTransaction();
 
@@ -253,17 +254,6 @@ class AdGroups extends Component
 
         $transaction = Craft::$app->getDb()->beginTransaction();
         try {
-//            // Delete the field layout
-//            $fieldLayoutId = (new Query())
-//                ->select(['fieldLayoutId'])
-//                ->from(['{{%adwizard_groups}}'])
-//                ->where(['id' => $groupId])
-//                ->scalar();
-//
-//            if ($fieldLayoutId) {
-//                Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
-//            }
-
             // Delete the ads
             $ads = Ad::find()
                 ->status(null)
@@ -314,7 +304,7 @@ class AdGroups extends Component
 
         $group = new AdGroup($groupRecord->toArray([
             'id',
-//            'fieldLayoutId',
+            'fieldLayoutId',
             'name',
             'handle',
         ]));

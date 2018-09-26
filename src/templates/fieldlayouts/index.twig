@@ -1,0 +1,41 @@
+{% extends '_layouts/cp' %}
+{% set title = "Field Layouts"|t('ad-wizard') %}
+
+{% block actionButton %}
+    <a href="{{ cpUrl('ad-wizard/fieldlayouts/new') }}" class="btn submit add icon">{{ 'New Field Layout'|t('ad-wizard') }}</a>
+{% endblock %}
+
+{% set content %}
+    <div id="nofieldlayouts"{% if fieldLayouts %} class="hidden"{% endif %}>
+        <h2>What is a Field Layout?</h2>
+        <p>As a custom element type, it's possible to assign custom fields to ads in each Group. Each field layout can be assigned to one or more Ad Group.</p>
+        <hr/>
+        <p><strong>No field layouts exist yet.</strong> <a href="{{ cpUrl('ad-wizard/fieldlayouts/new') }}">Create one to get started...</a></p>
+    </div>
+
+    {% if fieldLayouts|length %}
+        <table id="fieldlayouts" class="data fullwidth collapsible">
+            <thead>
+                <th scope="col">{{ 'Layout Name'|t('app') }}</th>
+                <td class="thin"></td>
+            </thead>
+            <tbody>
+                {% for layout in fieldLayouts %}
+                    <tr data-id="{{ layout.id }}" data-name="{{ layout.name|t('site') }}">
+                        <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ cpUrl('ad-wizard/fieldlayouts/' ~ layout.id) }}">{{ layout.name|t('site') }}</a></th>
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endset %}
+
+{% js %}
+    new Craft.AdminTable({
+        tableSelector: '#fieldlayouts',
+        noObjectsSelector: '#nofieldlayouts',
+        deleteAction: 'ad-wizard/field-layouts/delete-field-layout',
+        confirmDeleteMessage: '{{ "Are you sure you want to delete the “{name}” field layout?"|t('ad-wizard') }}'
+    });
+{% endjs %}

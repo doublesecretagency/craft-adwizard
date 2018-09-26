@@ -62,6 +62,39 @@ class Ads extends Component
                     ['id' => $adIds]
                 )
                 ->execute();
+
+            $fieldLayoutId = (new Query())
+                ->select(['fieldLayoutId'])
+                ->from(['{{%adwizard_groups}}'])
+                ->where(['id' => $groupId])
+                ->scalar();
+
+            $this->updateAdsLayout($fieldLayoutId, $groupId);
+        } catch (Exception $e) {
+        }
+    }
+
+    // Set field layout of all ads in group
+    public function updateAdsLayout($fieldLayoutId, $groupId)
+    {
+        // Get ads in group
+        $adIds = (new Query())
+            ->select(['id'])
+            ->from(['{{%adwizard_ads}}'])
+            ->where(['groupId' => $groupId])
+            ->column();
+
+        try {
+            Craft::$app->getDb()->createCommand()
+                ->update(
+                    '{{%elements}}',
+                    ['fieldLayoutId' => $fieldLayoutId],
+                    [
+                        'id'   => $adIds,
+                        'type' => Ad::class,
+                    ]
+                )
+                ->execute();
         } catch (Exception $e) {
         }
     }

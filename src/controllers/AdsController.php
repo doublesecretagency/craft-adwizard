@@ -19,6 +19,7 @@ use yii\web\ServerErrorHttpException;
 
 use Craft;
 use craft\base\Element;
+use craft\db\Query;
 use craft\elements\Asset;
 use craft\errors\InvalidElementException;
 use craft\helpers\DateTimeHelper;
@@ -214,6 +215,8 @@ class AdsController extends Controller
         $ad = $this->_getAdModel();
         $request = Craft::$app->getRequest();
 
+        $ad->setFieldValuesFromRequest('fields');
+
         // Are we duplicating the ad?
         if ($request->getBodyParam('duplicate')) {
             // Swap $ad with the duplicate
@@ -269,6 +272,16 @@ class AdsController extends Controller
 
             return null;
         }
+
+        // Get field layout
+        $fieldLayoutId = (new Query())
+            ->select(['fieldLayoutId'])
+            ->from(['{{%adwizard_groups}}'])
+            ->where(['id' => $ad->groupId])
+            ->scalar();
+
+        // Update all ads in group with new layout
+        AdWizard::$plugin->adWizard_ads->updateAdsLayout($fieldLayoutId, $ad->groupId);
 
         if ($request->getAcceptsJson()) {
             return $this->asJson([
@@ -347,7 +360,6 @@ class AdsController extends Controller
         // Set the ad attributes, defaulting to the existing values for whatever is missing from the post data
         $ad->groupId = $request->getBodyParam('groupId', $ad->groupId);
         $ad->url     = $request->getBodyParam('url', $ad->url);
-        $ad->details = $request->getBodyParam('details', $ad->details);
 
         // Get asset, if specified
         $assets = $request->getBodyParam('adGraphic', [$ad->assetId]);

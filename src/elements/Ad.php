@@ -140,7 +140,7 @@ class Ad extends Element
      */
     protected static function defineSearchableAttributes(): array
     {
-        return ['title', 'url', 'details'];
+        return ['title', 'url'];
     }
 
     /**
@@ -209,11 +209,6 @@ class Ad extends Element
      * @var string $url URL of ad target.
      */
     public $url = '';
-
-    /**
-     * @var string $details Additional details relevant to ad.
-     */
-    public $details = '';
 
     /**
      * @var \DateTime $startDate Date ad will begin its run.
@@ -424,7 +419,6 @@ class Ad extends Element
         $record->groupId   = $this->groupId;
         $record->assetId   = $this->assetId;
         $record->url       = $this->url;
-        $record->details   = $this->details;
         $record->startDate = $this->startDate;
         $record->endDate   = $this->endDate;
         $record->maxViews  = $this->maxViews;

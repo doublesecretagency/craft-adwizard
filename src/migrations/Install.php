@@ -13,6 +13,10 @@ namespace doublesecretagency\adwizard\migrations;
 
 use craft\db\Migration;
 
+use doublesecretagency\adwizard\elements\Ad;
+use doublesecretagency\adwizard\widgets\AdTimeline;
+use doublesecretagency\adwizard\widgets\GroupTotals;
+
 /**
  * Installation Migration
  * @since 2.0.0
@@ -37,8 +41,10 @@ class Install extends Migration
     {
         $this->dropTableIfExists('{{%adwizard_ads}}');
         $this->dropTableIfExists('{{%adwizard_groups}}');
+        $this->dropTableIfExists('{{%adwizard_fieldlayouts}}');
         $this->dropTableIfExists('{{%adwizard_clicks}}');
         $this->dropTableIfExists('{{%adwizard_views}}');
+        $this->deleteElementData();
     }
 
     /**
@@ -53,7 +59,6 @@ class Install extends Migration
             'groupId'     => $this->integer()->notNull(),
             'assetId'     => $this->integer(),
             'url'         => $this->text()->notNull(),
-            'details'     => $this->text(),
             'startDate'   => $this->dateTime(),
             'endDate'     => $this->dateTime(),
             'maxViews'    => $this->integer()->defaultValue(0),
@@ -65,12 +70,21 @@ class Install extends Migration
             'PRIMARY KEY([[id]])',
         ]);
         $this->createTable('{{%adwizard_groups}}', [
-            'id'          => $this->primaryKey(),
+            'id'            => $this->primaryKey(),
+            'fieldLayoutId' => $this->integer(),
+            'name'          => $this->string()->notNull(),
+            'handle'        => $this->string()->notNull(),
+            'dateCreated'   => $this->dateTime()->notNull(),
+            'dateUpdated'   => $this->dateTime()->notNull(),
+            'uid'           => $this->uid(),
+        ]);
+        $this->createTable('{{%adwizard_fieldlayouts}}', [
+            'id'          => $this->integer()->notNull(),
             'name'        => $this->string()->notNull(),
-            'handle'      => $this->string()->notNull(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid'         => $this->uid(),
+            'PRIMARY KEY([[id]])',
         ]);
         $this->createTable('{{%adwizard_clicks}}', $this->_trackingTable());
         $this->createTable('{{%adwizard_views}}',  $this->_trackingTable());
@@ -151,8 +165,46 @@ class Install extends Migration
         $this->addForeignKey(null, '{{%adwizard_ads}}', ['id'],      '{{%elements}}',        ['id'], 'CASCADE');
         $this->addForeignKey(null, '{{%adwizard_ads}}', ['groupId'], '{{%adwizard_groups}}', ['id'], 'CASCADE');
         $this->addForeignKey(null, '{{%adwizard_ads}}', ['assetId'], '{{%assets}}',          ['id'], 'SET NULL');
+        $this->addForeignKey(null, '{{%adwizard_fieldlayouts}}', ['id'],            '{{%fieldlayouts}}', ['id'], 'CASCADE');
+        $this->addForeignKey(null, '{{%adwizard_groups}}',       ['fieldLayoutId'], '{{%fieldlayouts}}', ['id'], 'SET NULL');
         $this->addForeignKey(null, '{{%adwizard_clicks}}', ['adId'], '{{%elements}}', ['id'], 'CASCADE');
         $this->addForeignKey(null, '{{%adwizard_views}}',  ['adId'], '{{%elements}}', ['id'], 'CASCADE');
+    }
+
+    /**
+     * Delete existing Ad data.
+     *
+     * @return void
+     */
+    protected function deleteElementData()
+    {
+        // Delete Ad field layouts
+        $this->delete(
+            '{{%fieldlayouts}}',
+            ['type' => Ad::class]
+        );
+
+        // Delete Ad elements
+        $this->delete(
+            '{{%elements}}',
+            ['type' => Ad::class]
+        );
+
+        // Delete Ad element index settings
+        $this->delete(
+            '{{%elementindexsettings}}',
+            ['type' => Ad::class]
+        );
+
+        // Delete Ad widgets
+        $this->delete(
+            '{{%widgets}}',
+            [
+                'or',
+                ['type' => AdTimeline::class],
+                ['type' => GroupTotals::class]
+            ]
+        );
     }
 
 }

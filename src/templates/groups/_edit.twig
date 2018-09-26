@@ -36,6 +36,30 @@
         errors: group.getErrors('handle'),
         required: true
     }) }}
+
+    {% if (1 == fieldLayoutOptions|length) %}
+
+        <div class="field" id="fieldLayoutId-field">
+            <div class="heading">
+                <label id="fieldLayoutId-label" for="fieldLayoutId">Field Layout</label>
+            </div>
+            <div class="input ltr" style="padding-top:11px">
+                <p>No field layouts exist yet. <a href="{{ cpUrl('ad-wizard/fieldlayouts/new') }}">Create one to get started...</a></p>
+            </div>
+        </div>
+
+    {% else %}
+
+        {{ forms.selectField({
+            label: "Field Layout"|t('ad-wizard'),
+            id: 'fieldLayoutId',
+            name: 'fieldLayoutId',
+            value: group.fieldLayoutId,
+            options: fieldLayoutOptions,
+        }) }}
+
+    {% endif %}
+
 {% endblock %}
 
 {% if not group.handle %}
