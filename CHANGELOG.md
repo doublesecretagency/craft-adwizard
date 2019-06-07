@@ -1,9 +1,12 @@
 # Changelog
 
-## 2.1.0-alpha.1 - 2018-09-26
+## 2.1.0 - Unreleased
 
 ### Added
-- Added "Field Layouts", which allows custom fields on Ads. 
+- Added "Field Layouts", which allows custom fields on Ads.
+
+### Changed
+- Log error message if ad image is in a volume with no public URL.
 
 ## 2.0.1 - 2018-08-21
 

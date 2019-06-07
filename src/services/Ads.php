@@ -128,10 +128,13 @@ class Ads extends Component
             return $ad;
         }
 
-        // If ad can be displayed, track it
-        if ($this->_displayAd($ad, $transform, $retina)) {
-            AdWizard::$plugin->adWizard_tracking->trackView($ad->id);
+        // If ad can't be displayed, bail
+        if (!$this->_displayAd($ad, $transform, $retina)) {
+            return false;
         }
+
+        // Track ad
+        AdWizard::$plugin->adWizard_tracking->trackView($ad->id);
 
         // Render ad
         return Template::raw($ad->html);
@@ -191,6 +194,12 @@ class Ads extends Component
         // If no asset, bail
         if (!$asset) {
             $this->err('No image specified for ad "'.$ad->title.'".');
+            return false;
+        }
+
+        // If asset lacks a public URL, bail
+        if (!$asset->getVolume()->hasUrls) {
+            $this->err('Asset image for ad "'.$ad->title.'" belongs to a volume with no public URL.');
             return false;
         }
 
