@@ -14,6 +14,7 @@ namespace doublesecretagency\adwizard\migrations;
 use craft\db\Migration;
 use craft\db\Query;
 use craft\helpers\MigrationHelper;
+use yii\base\NotSupportedException;
 
 /**
  * Migration: Change "Positions" to "Groups"
@@ -23,7 +24,8 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws NotSupportedException
      */
     public function safeUp()
     {
@@ -32,7 +34,9 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
         $this->_renameWidgets();
     }
 
-    // Rename table
+    /**
+     * Rename table
+     */
     private function _renameTable()
     {
         MigrationHelper::dropIndexIfExists('{{%adwizard_positions}}', ['name'], true, $this);
@@ -42,7 +46,11 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
         $this->createIndex(null, '{{%adwizard_groups}}', ['handle'], true);
     }
 
-    // Rename foreign key
+    /**
+     * Rename foreign key
+     *
+     * @throws NotSupportedException
+     */
     private function _renameForeignKey()
     {
         // If column already exists, bail
@@ -73,7 +81,9 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
         $this->addForeignKey(null, '{{%adwizard_ads}}', 'groupId', '{{%adwizard_groups}}', 'id', 'CASCADE', 'CASCADE');
     }
 
-    // Rename widget
+    /**
+     * Rename widget
+     */
     private function _renameWidgets()
     {
         // Get existing data
@@ -103,9 +113,9 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         echo "m160204_000000_adWizard_changePositionsToGroups cannot be reverted.\n";
 

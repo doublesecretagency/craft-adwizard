@@ -21,13 +21,16 @@ use craft\web\assets\cp\CpAsset;
 class AdminAssets extends AssetBundle
 {
 
-    /** @inheritdoc */
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
-        parent::init();
-
         $this->sourcePath = '@doublesecretagency/adwizard/resources';
-        $this->depends = [CpAsset::class];
+
+        $this->depends = [
+            CpAsset::class,
+        ];
 
         $this->css = [
             'css/admin.css',
@@ -36,6 +39,8 @@ class AdminAssets extends AssetBundle
         $this->js = [
             'js/admin.js',
         ];
+
+        parent::init();
     }
 
 }

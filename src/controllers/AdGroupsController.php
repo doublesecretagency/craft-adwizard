@@ -11,15 +11,16 @@
 
 namespace doublesecretagency\adwizard\controllers;
 
-use yii\base\Response;
-use yii\web\HttpException;
-
 use Craft;
+use craft\errors\MissingComponentException;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\models\AdGroup;
+use Throwable;
+use yii\web\BadRequestHttpException;
+use yii\web\Response;
+use yii\web\HttpException;
 
 /**
  * Class AdGroupsController
@@ -37,7 +38,7 @@ class AdGroupsController extends Controller
     {
         $this->requireLogin();
 
-        $groups = AdWizard::$plugin->adWizard_groups->getAllGroups();
+        $groups = AdWizard::$plugin->groups->getAllGroups();
 
         return $this->renderTemplate('ad-wizard/groups', [
             'crumbs' => $this->_groupsCrumbs(),
@@ -61,7 +62,7 @@ class AdGroupsController extends Controller
 
         if ($groupId !== null) {
             if ($group === null) {
-                $group = AdWizard::$plugin->adWizard_groups->getGroupById($groupId);
+                $group = AdWizard::$plugin->groups->getGroupById($groupId);
 
                 if (!$group) {
                     throw new HttpException('Ad group not found');
@@ -99,7 +100,7 @@ class AdGroupsController extends Controller
         ];
 
         // Get field layouts
-        $fieldLayouts = AdWizard::$plugin->adWizard_fieldLayouts->getFieldLayouts();
+        $fieldLayouts = AdWizard::$plugin->fieldLayouts->getFieldLayouts();
 
         // Compile layout options
         foreach ($fieldLayouts as $layout) {
@@ -122,6 +123,9 @@ class AdGroupsController extends Controller
      * Save an ad group.
      *
      * @return Response|null
+     * @throws BadRequestHttpException
+     * @throws Throwable
+     * @throws MissingComponentException
      */
     public function actionSaveGroup()
     {
@@ -140,7 +144,7 @@ class AdGroupsController extends Controller
         $group->handle        = $request->getBodyParam('handle');
 
         // Save it
-        if (!AdWizard::$plugin->adWizard_groups->saveGroup($group)) {
+        if (!AdWizard::$plugin->groups->saveGroup($group)) {
             Craft::$app->getSession()->setError(Craft::t('ad-wizard', 'Couldn’t save the group.'));
 
             // Send the ad group back to the template
@@ -152,7 +156,7 @@ class AdGroupsController extends Controller
         }
 
         // Update all ads in group with new layout
-        AdWizard::$plugin->adWizard_ads->updateAdsLayout($group->fieldLayoutId, $group->id);
+        AdWizard::$plugin->ads->updateAdsLayout($group->fieldLayoutId, $group->id);
 
         Craft::$app->getSession()->setNotice(Craft::t('ad-wizard', 'Ad group saved.'));
 
@@ -163,6 +167,8 @@ class AdGroupsController extends Controller
      * Deletes an ad group.
      *
      * @return Response
+     * @throws Throwable
+     * @throws BadRequestHttpException
      */
     public function actionDeleteAdGroup(): Response
     {
@@ -172,7 +178,7 @@ class AdGroupsController extends Controller
 
         $groupId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        AdWizard::$plugin->adWizard_groups->deleteGroupById($groupId);
+        AdWizard::$plugin->groups->deleteGroupById($groupId);
 
         return $this->asJson(['success' => true]);
     }

@@ -11,15 +11,14 @@
 
 namespace doublesecretagency\adwizard\services;
 
-use yii\base\Exception;
-
 use Craft;
+use Throwable;
 use craft\base\Component;
 use craft\db\Query;
-
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
+use yii\base\Exception;
 
 /**
  * Class AdGroups
@@ -27,6 +26,7 @@ use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
  */
 class AdGroups extends Component
 {
+
     // Properties
     // =========================================================================
 
@@ -148,6 +148,11 @@ class AdGroups extends Component
 
         if ($groupRecord) {
             $group = $this->_createAdGroupFromRecord($groupRecord);
+
+            if (!$group) {
+                return null;
+            }
+
             $this->_adGroupsById[$group->id] = $group;
 
             return $group;
@@ -160,8 +165,9 @@ class AdGroups extends Component
      * Saves an ad group.
      *
      * @param AdGroup $group
-     * @throws \Exception
      * @return bool
+     * @throws Throwable
+     * @throws \Exception
      */
     public function saveGroup(AdGroup $group): bool
     {
@@ -209,7 +215,7 @@ class AdGroups extends Component
             $this->_adGroupsById[$group->id] = $group;
 
             $transaction->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;
@@ -231,7 +237,7 @@ class AdGroups extends Component
      *
      * @param int $groupId
      * @return bool Whether the group was deleted successfully
-     * @throws \Throwable if reasons
+     * @throws Throwable if reasons
      */
     public function deleteGroupById(int $groupId): bool
     {
@@ -271,7 +277,7 @@ class AdGroups extends Component
                 ->execute();
 
             $transaction->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;

@@ -12,6 +12,7 @@
 namespace doublesecretagency\adwizard\migrations;
 
 use craft\db\Migration;
+use yii\base\NotSupportedException;
 
 /**
  * Migration: Add field layouts table
@@ -21,7 +22,8 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws NotSupportedException
      */
     public function safeUp()
     {
@@ -30,7 +32,9 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
         $this->_addForeignKeys();
     }
 
-    // Create table
+    /**
+     * Create table
+     */
     private function _createTable()
     {
         // If table already exists, bail
@@ -49,7 +53,11 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
         ]);
     }
 
-    // Add column
+    /**
+     * Add column
+     *
+     * @throws NotSupportedException
+     */
     private function _addColumn()
     {
         // If column already exists, bail
@@ -61,7 +69,9 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
         $this->addColumn('{{%adwizard_groups}}', 'fieldLayoutId', $this->integer()->after('id'));
     }
 
-    // Add foreign keys
+    /**
+     * Add foreign keys
+     */
     protected function _addForeignKeys()
     {
         $this->addForeignKey(null, '{{%adwizard_fieldlayouts}}', ['id'],            '{{%fieldlayouts}}', ['id'], 'CASCADE');
@@ -69,9 +79,9 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         echo "m180925_000001_adWizard_addFieldLayoutsTable cannot be reverted.\n";
 

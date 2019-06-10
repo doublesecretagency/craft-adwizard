@@ -12,7 +12,6 @@
 namespace doublesecretagency\adwizard\migrations;
 
 use craft\db\Migration;
-
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\widgets\AdTimeline;
 use doublesecretagency\adwizard\widgets\GroupTotals;
@@ -25,7 +24,7 @@ class Install extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function safeUp()
     {
@@ -35,7 +34,7 @@ class Install extends Migration
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function safeDown()
     {
@@ -49,8 +48,6 @@ class Install extends Migration
 
     /**
      * Creates the tables.
-     *
-     * @return void
      */
     protected function createTables()
     {
@@ -142,8 +139,6 @@ class Install extends Migration
 
     /**
      * Creates the indexes.
-     *
-     * @return void
      */
     protected function createIndexes()
     {
@@ -157,8 +152,6 @@ class Install extends Migration
 
     /**
      * Adds the foreign keys.
-     *
-     * @return void
      */
     protected function addForeignKeys()
     {
@@ -173,8 +166,6 @@ class Install extends Migration
 
     /**
      * Delete existing Ad data.
-     *
-     * @return void
      */
     protected function deleteElementData()
     {

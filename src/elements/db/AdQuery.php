@@ -14,7 +14,6 @@ namespace doublesecretagency\adwizard\elements\db;
 use craft\db\Query;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-
 use doublesecretagency\adwizard\models\AdGroup;
 
 /**
@@ -23,6 +22,7 @@ use doublesecretagency\adwizard\models\AdGroup;
  */
 class AdQuery extends ElementQuery
 {
+
     // Properties
     // =========================================================================
 
@@ -106,7 +106,7 @@ class AdQuery extends ElementQuery
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected function beforePrepare(): bool
     {
@@ -134,4 +134,5 @@ class AdQuery extends ElementQuery
 
         return parent::beforePrepare();
     }
+
 }

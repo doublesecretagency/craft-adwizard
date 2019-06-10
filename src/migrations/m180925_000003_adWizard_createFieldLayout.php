@@ -11,13 +11,13 @@
 
 namespace doublesecretagency\adwizard\migrations;
 
-use yii\base\Exception;
-
 use Craft;
 use craft\db\Migration;
-
+use craft\fields\PlainText;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
+use Throwable;
+use yii\base\Exception;
 
 /**
  * Migration: Create a new field layout
@@ -27,24 +27,40 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return bool|void
+     * @throws Exception
+     * @throws Throwable
      */
     public function safeUp()
     {
         $layoutId = $this->_createFieldLayout();
+
+        // If no layout was created, bail
+        if (!$layoutId) {
+            return;
+        }
+
         $this->_attachLayoutToGroups($layoutId);
         $this->_attachLayoutToAds($layoutId);
     }
 
-    // Create a new field layout
+    /**
+     * Create a new field layout
+     *
+     * @return int|false
+     * @throws Exception
+     * @throws Throwable
+     */
     private function _createFieldLayout()
     {
         // Get new "Details" field
+        /** @var PlainText $detailsField */
         $detailsField = Craft::$app->getFields()->getFieldByHandle('adWizard_details');
 
         // If field not found, bail
         if (!$detailsField) {
-            return;
+            return false;
         }
 
         // Configure field layout
@@ -64,7 +80,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
         // Create Ad Wizard layout record
         $layoutRecord = new FieldLayoutRecord();
         $layoutRecord->id = $fieldLayout->id;
-        $layoutRecord->name = "Custom Ad Fields";
+        $layoutRecord->name = 'Custom Ad Fields';
 
         $transaction = Craft::$app->getDb()->beginTransaction();
 
@@ -73,7 +89,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
             $layoutRecord->save(false);
 
             $transaction->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;
@@ -83,35 +99,37 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
         return $layoutRecord->id;
     }
 
-    // Attach new layout to all groups
-    private function _attachLayoutToGroups($layoutId)
+    /**
+     * Attach new layout to all groups
+     *
+     * @param int $layoutId
+     */
+    private function _attachLayoutToGroups(int $layoutId)
     {
-        try {
-            $this->update(
-                '{{%adwizard_groups}}',
-                ['fieldLayoutId' => $layoutId]
-            );
-        } catch (Exception $e) {
-        }
-    }
-
-    // Attach new layout to all ads
-    private function _attachLayoutToAds($layoutId)
-    {
-        try {
-            $this->update(
-                '{{%elements}}',
-                ['fieldLayoutId' => $layoutId],
-                ['type' => Ad::class]
-            );
-        } catch (Exception $e) {
-        }
+        $this->update(
+            '{{%adwizard_groups}}',
+            ['fieldLayoutId' => $layoutId]
+        );
     }
 
     /**
-     * @inheritdoc
+     * Attach new layout to all ads
+     *
+     * @param int $layoutId
      */
-    public function safeDown()
+    private function _attachLayoutToAds(int $layoutId)
+    {
+        $this->update(
+            '{{%elements}}',
+            ['fieldLayoutId' => $layoutId],
+            ['type' => Ad::class]
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function safeDown(): bool
     {
         echo "m180925_000003_adWizard_createFieldLayout cannot be reverted.\n";
 

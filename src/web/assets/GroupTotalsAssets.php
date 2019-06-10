@@ -21,7 +21,9 @@ use craft\web\assets\cp\CpAsset;
 class GroupTotalsAssets extends AssetBundle
 {
 
-    /** @inheritdoc */
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
         $this->sourcePath = '@doublesecretagency/adwizard/resources';

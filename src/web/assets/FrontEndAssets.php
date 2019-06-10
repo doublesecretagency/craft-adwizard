@@ -20,17 +20,19 @@ use craft\web\AssetBundle;
 class FrontEndAssets extends AssetBundle
 {
 
-    /** @inheritdoc */
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
-        parent::init();
-
         $this->sourcePath = '@doublesecretagency/adwizard/resources';
 
         $this->js = [
             'js/superagent.js',
             'js/adwizard.js',
         ];
+
+        parent::init();
     }
 
 }

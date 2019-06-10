@@ -13,11 +13,15 @@ namespace doublesecretagency\adwizard\widgets;
 
 use Craft;
 use craft\base\Widget;
-
 use doublesecretagency\adwizard\AdWizard;
+use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\web\assets\AdTimelineAssets;
 use doublesecretagency\adwizard\web\assets\AdTimelineSettingsAssets;
 use doublesecretagency\adwizard\web\assets\WidgetAssets;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use yii\base\InvalidConfigException;
 
 /**
  * Class AdTimeline
@@ -29,7 +33,7 @@ class AdTimeline extends Widget
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function displayName(): string
     {
@@ -37,7 +41,7 @@ class AdTimeline extends Widget
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function iconPath()
     {
@@ -62,22 +66,35 @@ class AdTimeline extends Widget
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTitle(): string
     {
+        // Set default title
         $title = Craft::t('ad-wizard', 'New ad timeline');
-        if ($this->adId) {
-            $ad = AdWizard::$plugin->adWizard_ads->getAdById($this->adId);
-            if ($ad) {
-                $title = $ad->title;
-            }
+
+        // No ID, bail with default title
+        if (!$this->adId) {
+            return $title;
         }
-        return $title;
+
+        // Get ad
+        /** @var Ad $ad */
+        $ad = AdWizard::$plugin->ads->getAdById($this->adId);
+
+        // No ad, bail with default title
+        if (!$ad) {
+            return $title;
+        }
+
+        // Return title of ad
+        return $ad->title;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return false|string
+     * @throws InvalidConfigException
      */
     public function getBodyHtml()
     {
@@ -89,7 +106,12 @@ class AdTimeline extends Widget
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return string|null
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws InvalidConfigException
      */
     public function getSettingsHtml()
     {

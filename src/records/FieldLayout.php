@@ -11,20 +11,27 @@
 
 namespace doublesecretagency\adwizard\records;
 
-use yii\db\ActiveQueryInterface;
-
+use DateTime;
 use craft\db\ActiveRecord;
+use yii\db\ActiveQueryInterface;
 
 /**
  * Class FieldLayout
  * @since 2.1.0
+ *
+ * @property int      $id
+ * @property string   $name
+ * @property DateTime $dateCreated
+ * @property DateTime $dateUpdated
+ * @property string   $uid
+ *
+ * @property ActiveQueryInterface $fieldLayouts Groups using field layout.
  */
 class FieldLayout extends ActiveRecord
 {
 
     /**
-     * @inheritdoc
-     *
+     * @inheritDoc
      * @return string
      */
     public static function tableName(): string
@@ -39,7 +46,7 @@ class FieldLayout extends ActiveRecord
      */
     public function getFieldLayouts(): ActiveQueryInterface
     {
-        return $this->hasMany(FieldLayout::class, ['fieldLayoutId' => 'id']);
+            return $this->hasMany(FieldLayout::class, ['fieldLayoutId' => 'id']);
     }
 
 }

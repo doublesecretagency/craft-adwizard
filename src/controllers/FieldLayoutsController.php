@@ -11,16 +11,18 @@
 
 namespace doublesecretagency\adwizard\controllers;
 
-use yii\base\Response;
-use yii\web\HttpException;
-
 use Craft;
+use craft\errors\MissingComponentException;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\FieldLayout;
+use Throwable;
+use yii\base\Exception;
+use yii\web\Response;
+use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
 
 /**
  * Class FieldLayoutsController
@@ -38,7 +40,7 @@ class FieldLayoutsController extends Controller
     {
         $this->requireLogin();
 
-        $fieldLayouts = AdWizard::$plugin->adWizard_fieldLayouts->getFieldLayouts();
+        $fieldLayouts = AdWizard::$plugin->fieldLayouts->getFieldLayouts();
 
         return $this->renderTemplate('ad-wizard/fieldlayouts', [
             'crumbs' => $this->_fieldLayoutsCrumbs(),
@@ -61,7 +63,7 @@ class FieldLayoutsController extends Controller
         $this->requireLogin();
 
         if ($fieldLayoutId !== null && !$fieldLayout) {
-            $fieldLayout = AdWizard::$plugin->adWizard_fieldLayouts->getLayoutById($fieldLayoutId);
+            $fieldLayout = AdWizard::$plugin->fieldLayouts->getLayoutById($fieldLayoutId);
 
             if (!$fieldLayout) {
                 throw new HttpException('Field layout not found');
@@ -101,6 +103,10 @@ class FieldLayoutsController extends Controller
      * Save a field layout.
      *
      * @return Response|null
+     * @throws BadRequestHttpException
+     * @throws Throwable
+     * @throws MissingComponentException
+     * @throws Exception
      */
     public function actionSaveFieldLayout()
     {
@@ -127,7 +133,7 @@ class FieldLayoutsController extends Controller
         $layout->name = $request->getBodyParam('name');
 
         // Save it
-        if (!AdWizard::$plugin->adWizard_fieldLayouts->saveFieldLayout($layout)) {
+        if (!AdWizard::$plugin->fieldLayouts->saveFieldLayout($layout)) {
             Craft::$app->getSession()->setError(Craft::t('ad-wizard', 'Couldn’t save field layout.'));
 
             // Send the field layout back to the template
@@ -147,6 +153,8 @@ class FieldLayoutsController extends Controller
      * Deletes a field layout.
      *
      * @return Response
+     * @throws Throwable
+     * @throws BadRequestHttpException
      */
     public function actionDeleteFieldLayout(): Response
     {
@@ -156,7 +164,7 @@ class FieldLayoutsController extends Controller
 
         $fieldLayoutId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        AdWizard::$plugin->adWizard_fieldLayouts->deleteLayoutById($fieldLayoutId);
+        AdWizard::$plugin->fieldLayouts->deleteLayoutById($fieldLayoutId);
 
         return $this->asJson(['success' => true]);
     }

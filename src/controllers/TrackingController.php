@@ -13,8 +13,10 @@ namespace doublesecretagency\adwizard\controllers;
 
 use Craft;
 use craft\web\Controller;
-
 use doublesecretagency\adwizard\AdWizard;
+use doublesecretagency\adwizard\elements\Ad;
+use yii\web\BadRequestHttpException;
+use yii\web\Response;
 
 /**
  * Class TrackingController
@@ -32,8 +34,13 @@ class TrackingController extends Controller
      */
     protected $allowAnonymous = true;
 
-    // Track click of ad
-    public function actionClick()
+    /**
+     * Track click of ad.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     */
+    public function actionClick(): Response
     {
         $this->requirePostRequest();
 
@@ -41,7 +48,7 @@ class TrackingController extends Controller
         $id = Craft::$app->getRequest()->getBodyParam('id');
 
         // Track click
-        $success = AdWizard::$plugin->adWizard_tracking->trackClick($id);
+        $success = AdWizard::$plugin->tracking->trackClick($id);
 
         // If unsuccessful, return message
         if (!$success) {
@@ -49,7 +56,8 @@ class TrackingController extends Controller
         }
 
         // Return title of ad clicked
-        $ad = AdWizard::$plugin->adWizard_ads->getAdById($id);
+        /** @var Ad $ad */
+        $ad = AdWizard::$plugin->ads->getAdById($id);
         return $this->asJson('[Ad Wizard] Clicked: '.$ad->title);
     }
 

@@ -12,7 +12,6 @@
 namespace doublesecretagency\adwizard\migrations;
 
 use craft\db\Migration;
-
 use doublesecretagency\adwizard\widgets\AdTimeline;
 use doublesecretagency\adwizard\widgets\GroupTotals;
 
@@ -24,7 +23,7 @@ class m180725_000000_adWizard_updateWidgets extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function safeUp()
     {
@@ -44,9 +43,9 @@ class m180725_000000_adWizard_updateWidgets extends Migration
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         echo "m180725_000000_adWizard_updateWidgets cannot be reverted.\n";
 

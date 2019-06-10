@@ -13,10 +13,13 @@ namespace doublesecretagency\adwizard\widgets;
 
 use Craft;
 use craft\base\Widget;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\web\assets\GroupTotalsAssets;
 use doublesecretagency\adwizard\web\assets\WidgetAssets;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use yii\base\InvalidConfigException;
 
 /**
  * Class GroupTotals
@@ -24,11 +27,12 @@ use doublesecretagency\adwizard\web\assets\WidgetAssets;
  */
 class GroupTotals extends Widget
 {
+
     // Static
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function displayName(): string
     {
@@ -36,7 +40,7 @@ class GroupTotals extends Widget
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function iconPath()
     {
@@ -56,22 +60,33 @@ class GroupTotals extends Widget
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTitle(): string
     {
+        // Set default title
         $title = Craft::t('ad-wizard', 'New group chart');
-        if ($this->groupId) {
-            $group = AdWizard::$plugin->adWizard_groups->getGroupById($this->groupId);
-            if ($group) {
-                $title = $group->name;
-            }
+
+        // No ID, bail with default title
+        if (!$this->groupId) {
+            return $title;
         }
-        return $title;
+
+        // Get group
+        $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
+
+        // No group, bail with default title
+        if (!$group) {
+            return $title;
+        }
+
+        // Return name of group
+        return $group->name;
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @throws InvalidConfigException
      */
     public function getBodyHtml()
     {
@@ -83,7 +98,11 @@ class GroupTotals extends Widget
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return string|null
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getSettingsHtml()
     {
@@ -91,4 +110,5 @@ class GroupTotals extends Widget
             'widget' => $this,
         ]);
     }
+
 }

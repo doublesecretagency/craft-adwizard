@@ -13,18 +13,25 @@ namespace doublesecretagency\adwizard\models;
 
 use Craft;
 use craft\base\Model;
+use craft\models\FieldLayout as FieldLayoutModel;
 
 /**
  * Class FieldLayout
  * @since 2.1.0
+ *
+ * @property FieldLayoutModel $fieldLayout
  */
 class FieldLayout extends Model
 {
 
-    /** @var int  $id  ID of field layout. */
+    /**
+     * @var int $id ID of field layout.
+     */
     public $id;
 
-    /** @var string  $name  Name of field layout. */
+    /**
+     * @var string $name Name of field layout.
+     */
     public $name;
 
     /**
@@ -37,10 +44,13 @@ class FieldLayout extends Model
         return (string) Craft::t('site', $this->name);
     }
 
+    /**
+     * @return FieldLayoutModel|null
+     */
     public function getFieldLayout()
     {
         if (!$this->id) {
-            return new \craft\models\FieldLayout();
+            return new FieldLayoutModel();
         }
         return Craft::$app->getFields()->getLayoutById($this->id);
     }

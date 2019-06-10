@@ -21,16 +21,24 @@ use craft\base\Model;
 class AdGroup extends Model
 {
 
-    /** @var int  $id  ID of ad group. */
+    /**
+     * @var int $id ID of ad group.
+     */
     public $id;
 
-    /** @var int  $fieldLayoutId  ID of group's field layout. */
+    /**
+     * @var int $fieldLayoutId ID of group's field layout.
+     */
     public $fieldLayoutId;
 
-    /** @var string  $name  Name of ad group. */
+    /**
+     * @var string $name Name of ad group.
+     */
     public $name;
 
-    /** @var string  $handle  Handle of ad group. */
+    /**
+     * @var string $handle Handle of ad group.
+     */
     public $handle;
 
     /**

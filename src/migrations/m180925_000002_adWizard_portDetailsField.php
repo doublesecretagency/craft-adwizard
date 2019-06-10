@@ -11,13 +11,14 @@
 
 namespace doublesecretagency\adwizard\migrations;
 
-use yii\base\Exception;
-
 use Craft;
 use craft\db\Migration;
 use craft\db\Query;
 use craft\fields\PlainText;
 use craft\models\FieldGroup;
+use Throwable;
+use yii\base\Exception;
+use yii\base\NotSupportedException;
 
 /**
  * Migration: Port the old "Details" field
@@ -27,7 +28,11 @@ class m180925_000002_adWizard_portDetailsField extends Migration
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return bool|void
+     * @throws Exception
+     * @throws Throwable
+     * @throws NotSupportedException
      */
     public function safeUp()
     {
@@ -40,14 +45,19 @@ class m180925_000002_adWizard_portDetailsField extends Migration
         $this->_deleteOldField();
     }
 
-    // Create a new custom field to replace "Details"
+    /**
+     * Create a new custom field to replace "Details"
+     *
+     * @throws Exception
+     * @throws Throwable
+     */
     private function _createNewField()
     {
         $fieldsService = Craft::$app->getFields();
 
         // Create field group
         $fieldGroup = new FieldGroup([
-            'name' => "Ad Wizard",
+            'name' => 'Ad Wizard',
         ]);
         Craft::$app->getFields()->saveGroup($fieldGroup);
 
@@ -55,9 +65,9 @@ class m180925_000002_adWizard_portDetailsField extends Migration
         $field = $fieldsService->createField([
             'groupId' => $fieldGroup->id,
             'type' => PlainText::class,
-            'name' => "Details",
+            'name' => 'Details',
             'handle' => 'adWizard_details',
-            'instructions' => "",
+            'instructions' => '',
             'settings' => [
                 'multiline' => true,
                 'initialRows' => 6
@@ -68,10 +78,11 @@ class m180925_000002_adWizard_portDetailsField extends Migration
         if (!$fieldsService->saveField($field)) {
             throw new Exception('Ad Wizard migration error: Unable to create "Details" field.');
         }
-
     }
 
-    // Copy existing field values
+    /**
+     * Copy existing field values
+     */
     private function _copyFieldValues()
     {
         // Get existing data
@@ -90,16 +101,18 @@ class m180925_000002_adWizard_portDetailsField extends Migration
         }
     }
 
-    // Delete old fixed "Details" field
+    /**
+     * Delete old fixed "Details" field
+     */
     private function _deleteOldField()
     {
         $this->dropColumn('{{%adwizard_ads}}', 'details');
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function safeDown()
+    public function safeDown(): bool
     {
         echo "m180925_000002_adWizard_portDetailsField cannot be reverted.\n";
 

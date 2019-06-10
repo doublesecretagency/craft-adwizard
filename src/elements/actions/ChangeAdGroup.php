@@ -15,8 +15,10 @@ use Craft;
 use craft\base\Element;
 use craft\base\ElementAction;
 use craft\elements\db\ElementQueryInterface;
-
 use doublesecretagency\adwizard\AdWizard;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * Class ChangeAdGroup
@@ -24,6 +26,7 @@ use doublesecretagency\adwizard\AdWizard;
  */
 class ChangeAdGroup extends ElementAction
 {
+
     // Properties
     // =========================================================================
 
@@ -36,7 +39,7 @@ class ChangeAdGroup extends ElementAction
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getTriggerLabel(): string
     {
@@ -47,9 +50,9 @@ class ChangeAdGroup extends ElementAction
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
         $rules[] = [['groupId'], 'required'];
@@ -59,12 +62,16 @@ class ChangeAdGroup extends ElementAction
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @return string|null
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getTriggerHtml()
     {
         // Render the trigger menu template with all the available groups
-        $groups = AdWizard::$plugin->adWizard_groups->getAllGroups();
+        $groups = AdWizard::$plugin->groups->getAllGroups();
 
         // Return template
         return Craft::$app->getView()->renderTemplate('ad-wizard/elementactions/ChangeAdGroup', [
@@ -73,12 +80,12 @@ class ChangeAdGroup extends ElementAction
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function performAction(ElementQueryInterface $query): bool
     {
         // Get the selected group
-        $group = AdWizard::$plugin->adWizard_groups->getGroupById($this->groupId);
+        $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
 
         // Make sure it's a valid group
         if (!$group) {
@@ -90,7 +97,7 @@ class ChangeAdGroup extends ElementAction
         $adIds = $query->ids();
 
         // Set group of the selected ads
-        AdWizard::$plugin->adWizard_ads->updateAdsGroup($adIds, $this->groupId);
+        AdWizard::$plugin->ads->updateAdsGroup($adIds, $this->groupId);
 
         // Success!
         $this->setMessage(Craft::t('ad-wizard', 'Moved to "{groupName}".', [
@@ -99,4 +106,5 @@ class ChangeAdGroup extends ElementAction
 
         return true;
     }
+
 }

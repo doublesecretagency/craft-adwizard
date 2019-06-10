@@ -11,9 +11,7 @@
 
 namespace doublesecretagency\adwizard\services;
 
-use Craft;
 use craft\base\Component;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\records\Click;
@@ -26,8 +24,11 @@ use doublesecretagency\adwizard\records\View;
 class Widgets extends Component
 {
 
-    //
-    public function adTimelineData($adId = null)
+    /**
+     * @param $adId
+     * @return array|string
+     */
+    public function adTimelineData($adId)
     {
         // If no ID, bail
         if (!$adId) {
@@ -35,7 +36,7 @@ class Widgets extends Component
         }
 
         // Get ad
-        $ad = AdWizard::$plugin->adWizard_ads->getAdById($adId);
+        $ad = AdWizard::$plugin->ads->getAdById($adId);
 
         // If no ad, bail
         if (!$ad) {
@@ -77,7 +78,10 @@ class Widgets extends Component
 
     }
 
-    //
+    /**
+     * @param null $groupId
+     * @return array|string
+     */
     public function groupTotalsData($groupId = null)
     {
         // If no group ID, bail
@@ -86,7 +90,7 @@ class Widgets extends Component
         }
 
         // Get group
-        $group = AdWizard::$plugin->adWizard_groups->getGroupById($groupId);
+        $group = AdWizard::$plugin->groups->getGroupById($groupId);
 
         // If no group, bail
         if (!$group) {
@@ -133,8 +137,14 @@ class Widgets extends Component
 
     // ========================================================================= //
 
-    // Get tracking total for views/clicks
-    private function _getTrackingTotal($record, $ad)
+    /**
+     * Get tracking total for views/clicks.
+     *
+     * @param string $record
+     * @param $ad
+     * @return int
+     */
+    private function _getTrackingTotal(string $record, $ad): int
     {
         $tracking = $this->_getTrackingHistory($record, $ad);
         // Count tracking
@@ -148,12 +158,19 @@ class Widgets extends Component
         return $total;
     }
 
-    // Get tracking history for views/clicks
-    private function _getTrackingHistory($record, $ad)
+    /**
+     * Get tracking history for views/clicks.
+     *
+     * @param string $record
+     * @param $ad
+     * @return mixed
+     */
+    private function _getTrackingHistory(string $record, $ad)
     {
         $year  = date('Y');
         $month = date('n');
 
+        /** @var View|Click $record */
         $results = $record::findOne([
             'adId'  => $ad->id,
             'year'  => $year,

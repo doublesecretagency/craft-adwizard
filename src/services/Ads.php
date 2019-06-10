@@ -11,19 +11,21 @@
 
 namespace doublesecretagency\adwizard\services;
 
-use yii\db\Exception;
-use yii\web\NotFoundHttpException;
-
 use Craft;
 use craft\base\Component;
-use craft\helpers\Template;
+use craft\base\ElementInterface;
+use craft\base\Volume;
 use craft\db\Query;
+use craft\helpers\Template;
 use craft\models\AssetTransform;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
 use doublesecretagency\adwizard\web\assets\FrontEndAssets;
+use Twig\Markup;
+use yii\base\InvalidConfigException;
+use yii\db\Exception;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class Ads
@@ -32,6 +34,9 @@ use doublesecretagency\adwizard\web\assets\FrontEndAssets;
 class Ads extends Component
 {
 
+    /**
+     * @var bool Whether the CSRF token has already been set via JavaScript.
+     */
     private $_csrfIncluded = false;
 
     /**
@@ -39,20 +44,22 @@ class Ads extends Component
      *
      * @param int $adId
      * @param int|null $siteId
-     * @return Ad|null
+     * @return ElementInterface|null
      */
     public function getAdById(int $adId, int $siteId = null)
     {
-        /** @var Ad|null $ad */
-        $ad = Craft::$app->getElements()->getElementById($adId, Ad::class, $siteId);
-
-        return $ad;
+        return Craft::$app->getElements()->getElementById($adId, Ad::class, $siteId);
     }
 
     // ========================================================================= //
 
-    // Move ads to a different group
-    public function updateAdsGroup($adIds, $groupId)
+    /**
+     * Move ads to a different group.
+     *
+     * @param array $adIds
+     * @param int $groupId
+     */
+    public function updateAdsGroup(array $adIds, int $groupId)
     {
         try {
             Craft::$app->getDb()->createCommand()
@@ -71,11 +78,17 @@ class Ads extends Component
 
             $this->updateAdsLayout($fieldLayoutId, $groupId);
         } catch (Exception $e) {
+            // Do nothing
         }
     }
 
-    // Set field layout of all ads in group
-    public function updateAdsLayout($fieldLayoutId, $groupId)
+    /**
+     * Set field layout of all ads in group.
+     *
+     * @param int $fieldLayoutId
+     * @param int $groupId
+     */
+    public function updateAdsLayout(int $fieldLayoutId, int $groupId)
     {
         // Get ads in group
         $adIds = (new Query())
@@ -96,37 +109,65 @@ class Ads extends Component
                 )
                 ->execute();
         } catch (Exception $e) {
+            // Do nothing
         }
     }
 
     // ========================================================================= //
 
-    // Display ad
-    public function renderAd($id, $transform = null, $retina = false)
+    /**
+     * Display ad.
+     *
+     * @param int $id
+     * @param string|array|null $transform
+     * @param bool $retina
+     * @return Markup|bool
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function renderAd(int $id, $transform = null, bool $retina = false)
     {
         $ad = $this->getAdById($id);
         return $this->_renderIndividualAd($ad, $transform, $retina);
     }
 
-    // Display random ad from group
-    public function renderRandomAdFromGroup($group, $transform = null, $retina = false)
+    /**
+     * Display random ad from group.
+     *
+     * @param string $group
+     * @param string|array|null $transform
+     * @param bool $retina
+     * @return Markup|bool
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function renderRandomAdFromGroup(string $group, $transform = null, bool $retina = false)
     {
         $ad = $this->_getRandomAdFromGroup($group);
         return $this->_renderIndividualAd($ad, $transform, $retina);
     }
 
-    // Render an individual ad
-    private function _renderIndividualAd($ad, $transform = null, $retina = false)
+    /**
+     * Render an individual ad.
+     *
+     * @param $ad
+     * @param string|array|null $transform
+     * @param bool $retina
+     * @return Markup|bool
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    private function _renderIndividualAd($ad, $transform = null, bool $retina = false)
     {
         // If no ad is specified, bail
         if (!$ad) {
             return false;
         }
 
-        // If the ad is already a string, bail
-        if (is_string($ad)) {
-            return $ad;
-        }
+//        // If the ad is already a string, bail
+//        if (is_string($ad)) {
+//            return $ad;
+//        }
 
         // If ad can't be displayed, bail
         if (!$this->_displayAd($ad, $transform, $retina)) {
@@ -134,7 +175,7 @@ class Ads extends Component
         }
 
         // Track ad
-        AdWizard::$plugin->adWizard_tracking->trackView($ad->id);
+        AdWizard::$plugin->tracking->trackView($ad->id);
 
         // Render ad
         return Template::raw($ad->html);
@@ -142,8 +183,13 @@ class Ads extends Component
 
     // ========================================================================= //
 
-    // Get individual ad via group
-    private function _getRandomAdFromGroup($groupHandle)
+    /**
+     * Get individual ad via group.
+     *
+     * @param string $groupHandle
+     * @return ElementInterface|bool|null
+     */
+    private function _getRandomAdFromGroup(string $groupHandle)
     {
         // If no group handle is specified, bail
         if (!$groupHandle) {
@@ -186,8 +232,17 @@ class Ads extends Component
         return $this->getAdById($ad['id']);
     }
 
-    // Renders HTML of ad
-    private function _displayAd(Ad $ad, $transform = null, $retina = false)
+    /**
+     * Renders HTML of ad.
+     *
+     * @param Ad $ad
+     * @param string|array|null $transform
+     * @param bool $retina
+     * @return bool
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    private function _displayAd(Ad $ad, $transform = null, bool $retina = false): bool
     {
         $asset = Craft::$app->getAssets()->getAssetById($ad->assetId);
 
@@ -197,8 +252,12 @@ class Ads extends Component
             return false;
         }
 
+        // Get asset volume
+        /** @var Volume $volume */
+        $volume = $asset->getVolume();
+
         // If asset lacks a public URL, bail
-        if (!$asset->getVolume()->hasUrls) {
+        if (!$volume->hasUrls) {
             $this->err('Asset image for ad "'.$ad->title.'" belongs to a volume with no public URL.');
             return false;
         }
@@ -228,8 +287,8 @@ class Ads extends Component
             $height = $asset->getHeight($t);
             // If retina, make <img> tag smaller
             if (true === $retina) {
-                $width  = $width  / 2;
-                $height = $height / 2;
+                $width  /= 2;
+                $height /= 2;
             }
         } else {
             $url    = $asset->getUrl();
@@ -258,23 +317,28 @@ class Ads extends Component
         // Get config settings
         $config = Craft::$app->getConfig()->getGeneral();
 
+        // Whether to include CSRF
+        $includeCsrf = ($config->enableCsrfProtection === true);
+
         // CSRF
-        if ($config->enableCsrfProtection === true) {
-            if (!$this->_csrfIncluded) {
-                $csrf = '
+        if ($includeCsrf && !$this->_csrfIncluded) {
+            $csrf = '
 window.csrfTokenName = "'.$config->csrfTokenName.'";
 window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
 ';
-                $view->registerJs($csrf, $view::POS_END);
-                $this->_csrfIncluded = true;
-            }
+            $view->registerJs($csrf, $view::POS_END);
+            $this->_csrfIncluded = true;
         }
 
         return true;
     }
 
-    // Output error to console log
-    private function err($error)
+    /**
+     * Output error to console log.
+     *
+     * @param string $error
+     */
+    private function err(string $error)
     {
         // Get view
         $view = Craft::$app->getView();

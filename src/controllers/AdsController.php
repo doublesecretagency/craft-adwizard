@@ -11,24 +11,28 @@
 
 namespace doublesecretagency\adwizard\controllers;
 
-use yii\base\Response;
-use yii\web\HttpException;
-use yii\web\NotFoundHttpException;
-use yii\web\BadRequestHttpException;
-use yii\web\ServerErrorHttpException;
-
 use Craft;
 use craft\base\Element;
 use craft\db\Query;
 use craft\elements\Asset;
+use craft\errors\ElementNotFoundException;
 use craft\errors\InvalidElementException;
+use craft\errors\MissingComponentException;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
-
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\web\assets\AdminAssets;
+use Exception;
+use Throwable;
+use yii\base\Exception as YiiException;
+use yii\base\InvalidConfigException;
+use yii\web\Response;
+use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Class AdsController
@@ -46,7 +50,7 @@ class AdsController extends Controller
     {
         $this->requireLogin();
 
-        $groups = AdWizard::$plugin->adWizard_groups->getAllGroups();
+        $groups = AdWizard::$plugin->groups->getAllGroups();
 
         // Breadcrumbs
         $crumbs = [
@@ -61,7 +65,7 @@ class AdsController extends Controller
         ];
 
         return $this->renderTemplate('ad-wizard/ads', [
-            'elementType' => 'doublesecretagency\\adwizard\\elements\\Ad',
+            'elementType' => Ad::class,
             'fullPageForm' => true,
             'groups' => $groups,
             'crumbs' => $crumbs,
@@ -76,6 +80,7 @@ class AdsController extends Controller
      * @return Response
      * @throws HttpException
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionEditAd(string $groupHandle = null, int $adId = null): Response
     {
@@ -86,16 +91,16 @@ class AdsController extends Controller
             'groupSelectOptions' => []
         ];
 
-        $allGroups = AdWizard::$plugin->adWizard_groups->getAllGroups();
+        $allGroups = AdWizard::$plugin->groups->getAllGroups();
 
         foreach ($allGroups as $group) {
             $variables['groupSelectOptions'][$group->id] = $group->name;
         }
 
         if (!empty($variables['groupHandle'])) {
-            $variables['group'] = AdWizard::$plugin->adWizard_groups->getGroupByHandle($variables['groupHandle']);
+            $variables['group'] = AdWizard::$plugin->groups->getGroupByHandle($variables['groupHandle']);
         } else if (!empty($variables['groupId'])) {
-            $variables['group'] = AdWizard::$plugin->adWizard_groups->getGroupById($variables['groupId']);
+            $variables['group'] = AdWizard::$plugin->groups->getGroupById($variables['groupId']);
         } else if (!empty($allGroups)) {
             $variables['group'] = $allGroups[0];
         }
@@ -112,7 +117,7 @@ class AdsController extends Controller
 
         if (empty($variables['ad'])) {
             if (!empty($variables['adId'])) {
-                $variables['ad'] = AdWizard::$plugin->adWizard_ads->getAdById($variables['adId']);
+                $variables['ad'] = AdWizard::$plugin->ads->getAdById($variables['adId']);
 
                 if (!$variables['ad']) {
                     throw new NotFoundHttpException('Ad not found');
@@ -189,7 +194,7 @@ class AdsController extends Controller
         $variables['redirectUrl'] = [
             'continueEditing' => "ad-wizard/{$groupHandle}/{id}",
             'addAnother'      => "ad-wizard/{$groupHandle}/new",
-            'index'           => "ad-wizard/ads",
+            'index'           => 'ad-wizard/ads',
         ];
 
         // Set whether ad is new
@@ -206,7 +211,13 @@ class AdsController extends Controller
      * Saves an ad.
      *
      * @return Response|null
+     * @throws BadRequestHttpException
+     * @throws MissingComponentException
+     * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
+     * @throws Throwable
+     * @throws ElementNotFoundException
+     * @throws YiiException
      */
     public function actionSaveAd()
     {
@@ -242,7 +253,7 @@ class AdsController extends Controller
                 ]);
 
                 return null;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 throw new ServerErrorHttpException(Craft::t('ad-wizard', 'An error occurred when duplicating the ad.'), 0, $e);
             }
         }
@@ -281,7 +292,7 @@ class AdsController extends Controller
             ->scalar();
 
         // Update all ads in group with new layout
-        AdWizard::$plugin->adWizard_ads->updateAdsLayout($fieldLayoutId, $ad->groupId);
+        AdWizard::$plugin->ads->updateAdsLayout($fieldLayoutId, $ad->groupId);
 
         if ($request->getAcceptsJson()) {
             return $this->asJson([
@@ -301,6 +312,9 @@ class AdsController extends Controller
      * Deletes an ad.
      *
      * @return Response
+     * @throws BadRequestHttpException
+     * @throws Throwable
+     * @throws MissingComponentException
      */
     public function actionDeleteAd(): Response
     {
@@ -330,14 +344,14 @@ class AdsController extends Controller
         $adId = $request->getBodyParam('adId');
 
         if ($adId) {
-            $ad = AdWizard::$plugin->adWizard_ads->getAdById($adId);
+            $ad = AdWizard::$plugin->ads->getAdById($adId);
 
             if (!$ad) {
                 throw new NotFoundHttpException('Ad not found');
             }
         } else {
             $groupId = $request->getRequiredBodyParam('groupId');
-            if (($group = AdWizard::$plugin->adWizard_groups->getGroupById($groupId)) === null) {
+            if (($group = AdWizard::$plugin->groups->getGroupById($groupId)) === null) {
                 throw new BadRequestHttpException('Invalid ad group ID: '.$groupId);
             }
 
@@ -352,6 +366,7 @@ class AdsController extends Controller
      * Populates an Ad with post data.
      *
      * @param Ad $ad
+     * @throws Exception
      */
     private function _populateAdModel(Ad $ad)
     {

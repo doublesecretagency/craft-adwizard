@@ -15,7 +15,7 @@ use Craft;
 use craft\web\Controller;
 use doublesecretagency\adwizard\AdWizard;
 use yii\base\Exception;
-use yii\base\Response;
+use yii\web\Response;
 
 /**
  * Class ChartsController
@@ -23,6 +23,7 @@ use yii\base\Response;
  */
 class ChartsController extends Controller
 {
+
     // Public Methods
     // =========================================================================
 
@@ -37,7 +38,7 @@ class ChartsController extends Controller
         $adId = Craft::$app->getRequest()->getRequiredBodyParam('adId');
 
         // Get the chart data
-        $data = AdWizard::$plugin->adWizard_widgets->adTimelineData($adId);
+        $data = AdWizard::$plugin->widgets->adTimelineData($adId);
 
         // If error message was returned
         if (is_string($data)) {
@@ -63,7 +64,7 @@ class ChartsController extends Controller
         $groupId = Craft::$app->getRequest()->getRequiredBodyParam('groupId');
 
         // Get the chart data
-        $data = AdWizard::$plugin->adWizard_widgets->groupTotalsData($groupId);
+        $data = AdWizard::$plugin->widgets->groupTotalsData($groupId);
 
         // If error message was returned
         if (is_string($data)) {
@@ -77,4 +78,5 @@ class ChartsController extends Controller
             'data' => $data
         ]);
     }
+
 }

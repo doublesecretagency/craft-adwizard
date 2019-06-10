@@ -13,9 +13,10 @@ namespace doublesecretagency\adwizard\services;
 
 use Craft;
 use craft\base\Component;
-
 use doublesecretagency\adwizard\models\FieldLayout;
 use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
+use Exception;
+use Throwable;
 
 /**
  * Class FieldLayouts
@@ -23,6 +24,7 @@ use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
  */
 class FieldLayouts extends Component
 {
+
     // Properties
     // =========================================================================
 
@@ -98,8 +100,9 @@ class FieldLayouts extends Component
      * Saves a field layout.
      *
      * @param FieldLayout $layout
-     * @throws \Exception
      * @return bool
+     * @throws Throwable
+     * @throws Exception
      */
     public function saveFieldLayout(FieldLayout $layout): bool
     {
@@ -133,7 +136,7 @@ class FieldLayouts extends Component
             $this->_fieldLayoutsById[$layout->id] = $layout;
 
             $transaction->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;
@@ -146,8 +149,8 @@ class FieldLayouts extends Component
      * Deletes a field layout by its ID.
      *
      * @param int $fieldLayoutId
-     * @return bool Whether the layout was deleted successfully
-     * @throws \Throwable if reasons
+     * @return bool Whether the layout was deleted successfully.
+     * @throws Throwable
      */
     public function deleteLayoutById(int $fieldLayoutId): bool
     {
@@ -161,7 +164,7 @@ class FieldLayouts extends Component
             Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
 
             $transaction->commit();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $transaction->rollBack();
 
             throw $e;

@@ -21,13 +21,16 @@ use craft\web\assets\cp\CpAsset;
 class WidgetAssets extends AssetBundle
 {
 
-    /** @inheritdoc */
+    /**
+     * @inheritDoc
+     */
     public function init()
     {
-        parent::init();
-
         $this->sourcePath = '@doublesecretagency/adwizard/resources';
-        $this->depends = [CpAsset::class];
+
+        $this->depends = [
+            CpAsset::class,
+        ];
 
         $this->css = [
             'css/billboard.min.css',
@@ -36,6 +39,8 @@ class WidgetAssets extends AssetBundle
         $this->js = [
             'js/billboard.min.js',
         ];
+
+        parent::init();
     }
 
 }

@@ -11,22 +11,24 @@
 
 namespace doublesecretagency\adwizard\elements;
 
-use yii\base\Exception;
-use yii\base\InvalidConfigException;
-
 use Craft;
 use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
 use craft\elements\db\ElementQueryInterface;
-use craft\i18n\Locale;
 use craft\helpers\UrlHelper;
-
+use craft\i18n\Locale;
+use DateTime;
 use doublesecretagency\adwizard\AdWizard;
-use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
-use doublesecretagency\adwizard\records\Ad as AdRecord;
+use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\models\AdGroup;
+use doublesecretagency\adwizard\records\Ad as AdRecord;
+use Twig\Markup;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
+use yii\base\NotSupportedException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class Ad
@@ -34,11 +36,12 @@ use doublesecretagency\adwizard\models\AdGroup;
  */
 class Ad extends Element
 {
+
     // Static
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function displayName(): string
     {
@@ -46,7 +49,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function refHandle()
     {
@@ -54,7 +57,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function hasContent(): bool
     {
@@ -62,7 +65,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function hasTitles(): bool
     {
@@ -70,7 +73,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public static function hasStatuses(): bool
     {
@@ -78,7 +81,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @return AdQuery The newly created [[AdQuery]] instance.
      */
     public static function find(): ElementQueryInterface
@@ -87,7 +90,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineSources(string $context = null): array
     {
@@ -100,7 +103,7 @@ class Ad extends Element
             ]
         ];
 
-        foreach (AdWizard::$plugin->adWizard_groups->getAllGroups() as $group) {
+        foreach (AdWizard::$plugin->groups->getAllGroups() as $group) {
             $sources[] = [
                 'key'       => 'group:'.$group->id,
                 'label'     => Craft::t('site', $group->name),
@@ -113,7 +116,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineActions(string $source = null): array
     {
@@ -136,7 +139,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineSearchableAttributes(): array
     {
@@ -144,7 +147,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineSortOptions(): array
     {
@@ -160,7 +163,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineTableAttributes(): array
     {
@@ -178,7 +181,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
@@ -211,12 +214,12 @@ class Ad extends Element
     public $url = '';
 
     /**
-     * @var \DateTime $startDate Date ad will begin its run.
+     * @var DateTime $startDate Date ad will begin its run.
      */
     public $startDate;
 
     /**
-     * @var \DateTime $endDate Date ad will end its run.
+     * @var DateTime $endDate Date ad will end its run.
      */
     public $endDate;
 
@@ -259,7 +262,7 @@ class Ad extends Element
     // =========================================================================
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function datetimeAttributes(): array
     {
@@ -270,7 +273,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function getIsEditable(): bool
     {
@@ -278,19 +281,23 @@ class Ad extends Element
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function getCpEditUrl()
+    public function getCpEditUrl(): string
     {
         // Get ad group
-        $group = AdWizard::$plugin->adWizard_groups->getGroupById($this->groupId);
+        /** @var AdGroup $group */
+        $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
 
         // Return edit url
         return UrlHelper::cpUrl('ad-wizard/'.$group->handle.'/'.$this->id);
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @param int $size
+     * @return string|null
+     * @throws NotSupportedException
      */
     public function getThumbUrl(int $size)
     {
@@ -308,7 +315,7 @@ class Ad extends Element
         }
 
         // Return thumbnail URL
-        return Craft::$app->getAssets()->getThumbUrl($asset, $size, $size, false);
+        return Craft::$app->getAssets()->getThumbUrl($asset, $size, $size);
     }
 
     /**
@@ -323,7 +330,7 @@ class Ad extends Element
             throw new InvalidConfigException('Ad is missing its group ID');
         }
 
-        $group = AdWizard::$plugin->adWizard_groups->getGroupById($this->groupId);
+        $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
 
         if ($group === null) {
             throw new InvalidConfigException('Invalid ad group ID: '.$this->groupId);
@@ -332,17 +339,28 @@ class Ad extends Element
         return $group;
     }
 
-    // Display this ad
+    /**
+     * Display this ad.
+     *
+     * @param null $transform
+     * @param bool $retina
+     * @return bool|Markup
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     */
     public function displayAd($transform = null, $retina = false)
     {
-        return AdWizard::$plugin->adWizard_ads->renderAd($this->id, $transform, $retina);
+        return AdWizard::$plugin->ads->renderAd($this->id, $transform, $retina);
     }
 
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
     /**
-     * @inheritdoc
+     * @inheritDoc
+     * @param string $attribute
+     * @return string
+     * @throws InvalidConfigException
      */
     protected function tableAttributeHtml(string $attribute): string
     {
@@ -388,7 +406,7 @@ class Ad extends Element
                 return $this->$attribute;
 
             case 'maxViews':
-                return ($this->$attribute ? $this->$attribute : '');
+                return ($this->$attribute ?: '');
 
         }
 
@@ -399,7 +417,7 @@ class Ad extends Element
     // -------------------------------------------------------------------------
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      * @throws Exception if ad ID is invalid
      */
     public function afterSave(bool $isNew)
@@ -436,8 +454,9 @@ class Ad extends Element
      *
      * @return string Path to "broken image" SVG.
      */
-    private function _defaultThumb()
+    private function _defaultThumb(): string
     {
         return Craft::$app->getAssetManager()->getPublishedUrl('@app/icons', true, 'broken-image.svg');
     }
+
 }
