@@ -6,6 +6,7 @@
 - Added "Field Layouts", which allows custom fields on Ads.
 
 ### Changed
+- Improved Postgres compatibility.
 - Log error message if ad image is in a volume with no public URL.
 
 ## 2.0.1 - 2018-08-21

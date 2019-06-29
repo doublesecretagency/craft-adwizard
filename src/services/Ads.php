@@ -210,15 +210,15 @@ class Ads extends Component
 
         // Select random viable ad
         $ad = (new Query())
-            ->select(['adwizard_ads.id'])
-            ->from(['{{%adwizard_ads}} adwizard_ads'])
-            ->innerJoin('{{%elements}} elements', '[[adwizard_ads.id]] = [[elements.id]]')
+            ->select(['ads.id'])
+            ->from(['{{%adwizard_ads}} ads'])
+            ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
             ->where('[[elements.enabled]] = 1')
-            ->andWhere(['groupId' => $groupRecord->id])
-            ->andWhere('assetId IS NOT NULL')
-            ->andWhere('(startDate  <= NOW()   ) OR (startDate IS NULL)')
-            ->andWhere('(endDate    >= NOW()   ) OR (endDate   IS NULL)')
-            ->andWhere('(totalViews <  maxViews) OR (maxViews  =  0)   ')
+            ->andWhere(['[[ads.groupId]]' => $groupRecord->id])
+            ->andWhere('[[ads.assetId]] IS NOT NULL')
+            ->andWhere('([[ads.startDate]]  <= NOW()) OR ([[ads.startDate]] IS NULL)')
+            ->andWhere('([[ads.endDate]]    >= NOW()) OR ([[ads.endDate]]   IS NULL)')
+            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0)')
             ->orderBy('RAND()')
             ->one();
 
