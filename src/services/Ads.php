@@ -244,6 +244,13 @@ class Ads extends Component
      */
     private function _displayAd(Ad $ad, $transform = null, bool $retina = false): bool
     {
+        // If no asset ID, bail
+        if (!$ad->assetId) {
+            $this->err('No image specified for ad "'.$ad->title.'".');
+            return false;
+        }
+
+        // Get asset
         $asset = Craft::$app->getAssets()->getAssetById($ad->assetId);
 
         // If no asset, bail

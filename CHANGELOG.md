@@ -7,7 +7,8 @@
 
 ### Changed
 - Improved Postgres compatibility.
-- Log error message if ad image is in a volume with no public URL.
+- Log error message in console if ad has no image asset.
+- Log error message in console if ad image is in a volume with no public URL.
 
 ## 2.0.1 - 2018-08-21
 
