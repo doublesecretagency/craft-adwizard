@@ -5,11 +5,7 @@ Easily manage custom advertisements on your website.
 
 ***
 
->This version is for Craft 3. To install it, visit the Plugin Store in your site's Control Panel.
->
->For the Craft 2 version, see [doublesecretagency.com/plugins/ad-wizard](https://www.doublesecretagency.com/plugins/ad-wizard)
-
-***
+**For complete documentation, see [doublesecretagency.com/plugins/ad-wizard](https://www.doublesecretagency.com/plugins/ad-wizard)**
 
 ## Create Ads
 
