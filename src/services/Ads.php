@@ -127,7 +127,7 @@ class Ads extends Component
      */
     public function renderAd(int $id, $transform = null, bool $retina = false)
     {
-        $ad = $this->getAdById($id);
+        $ad = $this->_getSingleAd($id);
         return $this->_renderIndividualAd($ad, $transform, $retina);
     }
 
@@ -184,6 +184,55 @@ class Ads extends Component
     // ========================================================================= //
 
     /**
+     * Get ID of valid ad.
+     *
+     * @param array $conditions
+     * @return bool|false|string|null
+     */
+    public function getValidAdId(array $conditions)
+    {
+         return (new Query())
+            ->select(['ads.id'])
+            ->from(['{{%adwizard_ads}} ads'])
+            ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
+            ->where($conditions)
+            ->andWhere('[[elements.enabled]] = 1')
+            ->andWhere('[[ads.assetId]] IS NOT NULL')
+            ->andWhere('([[ads.startDate]]  <= NOW()) OR ([[ads.startDate]] IS NULL)')
+            ->andWhere('([[ads.endDate]]    >= NOW()) OR ([[ads.endDate]]   IS NULL)')
+            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0)')
+            ->orderBy('RAND()')
+            ->scalar();
+    }
+
+    /**
+     * Get a single specific ad.
+     *
+     * @param int $id
+     * @return ElementInterface|bool|null
+     */
+    private function _getSingleAd($id)
+    {
+        // If invalid ad ID, bail
+        if (!$id || !is_int($id)) {
+            $this->err('Invalid ad ID specified.');
+            return false;
+        }
+
+        // Ensure ad ID is valid (not disabled/expired/maxed)
+        $adId = $this->getValidAdId(['[[ads.id]]' => $id]);
+
+        // If ad isn't available, bail
+        if (!$adId) {
+            $this->err('Ad with ID of '.$id.' is not valid.');
+            return false;
+        }
+
+        // Return ad
+        return $this->getAdById($adId);
+    }
+
+    /**
      * Get individual ad via group.
      *
      * @param string $groupHandle
@@ -208,28 +257,17 @@ class Ads extends Component
             return false;
         }
 
-        // Select random viable ad
-        $ad = (new Query())
-            ->select(['ads.id'])
-            ->from(['{{%adwizard_ads}} ads'])
-            ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
-            ->where('[[elements.enabled]] = 1')
-            ->andWhere(['[[ads.groupId]]' => $groupRecord->id])
-            ->andWhere('[[ads.assetId]] IS NOT NULL')
-            ->andWhere('([[ads.startDate]]  <= NOW()) OR ([[ads.startDate]] IS NULL)')
-            ->andWhere('([[ads.endDate]]    >= NOW()) OR ([[ads.endDate]]   IS NULL)')
-            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0)')
-            ->orderBy('RAND()')
-            ->one();
+        // Get a random ad ID from specified ad group
+        $adId = $this->getValidAdId(['[[ads.groupId]]' => $groupRecord->id]);
 
         // If no ads are available, bail
-        if (!$ad || !is_array($ad)) {
+        if (!$adId) {
             $this->err('No ads are available in the "'.$groupRecord->name.'" group.');
             return false;
         }
 
         // Return ad
-        return $this->getAdById($ad['id']);
+        return $this->getAdById($adId);
     }
 
     /**

@@ -7,6 +7,7 @@
 
 ### Changed
 - Improved Postgres compatibility.
+- `displayAd` will no longer show an expired or max viewed ad.
 - Log error message in console if ad has no image asset.
 - Log error message in console if ad image is in a volume with no public URL.
 
