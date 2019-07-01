@@ -3,13 +3,17 @@
 ## 2.1.0 - Unreleased
 
 ### Added
-- Added "Field Layouts", which allows custom fields on Ads.
+- Added ability to use custom fields on Ads via Field Layouts.
+- Added ability to completely customize the attributes of ad's `<img>` tag.
 
 ### Changed
 - Improved Postgres compatibility.
-- `displayAd` will no longer show an expired or max viewed ad.
 - Log error message in console if ad has no image asset.
 - Log error message in console if ad image is in a volume with no public URL.
+- Log deprecation warning for old transforms method.
+
+### Fixed
+- `displayAd` will no longer show an expired or max viewed ad.
 
 ## 2.0.1 - 2018-08-21
 

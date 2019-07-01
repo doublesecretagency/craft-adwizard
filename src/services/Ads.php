@@ -16,10 +16,11 @@ use craft\base\Component;
 use craft\base\ElementInterface;
 use craft\base\Volume;
 use craft\db\Query;
+use craft\errors\DeprecationException;
 use craft\helpers\Template;
-use craft\models\AssetTransform;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
+use doublesecretagency\adwizard\models\Config;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
 use doublesecretagency\adwizard\web\assets\FrontEndAssets;
 use Twig\Markup;
@@ -119,45 +120,48 @@ class Ads extends Component
      * Display ad.
      *
      * @param int $id
-     * @param string|array|null $transform
-     * @param bool $retina
-     * @return Markup|bool
-     * @throws NotFoundHttpException
+     * @param array $options
+     * @param bool $retinaDeprecated
+     * @return bool|Markup
+     * @throws DeprecationException
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
-    public function renderAd(int $id, $transform = null, bool $retina = false)
+    public function renderAd(int $id, $options = [], bool $retinaDeprecated = false)
     {
         $ad = $this->_getSingleAd($id);
-        return $this->_renderIndividualAd($ad, $transform, $retina);
+        return $this->_renderIndividualAd($ad, $options, $retinaDeprecated);
     }
 
     /**
      * Display random ad from group.
      *
      * @param string $group
-     * @param string|array|null $transform
-     * @param bool $retina
-     * @return Markup|bool
-     * @throws NotFoundHttpException
+     * @param array $options
+     * @param bool $retinaDeprecated
+     * @return bool|Markup
+     * @throws DeprecationException
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
-    public function renderRandomAdFromGroup(string $group, $transform = null, bool $retina = false)
+    public function renderRandomAdFromGroup(string $group, $options = [], bool $retinaDeprecated = false)
     {
         $ad = $this->_getRandomAdFromGroup($group);
-        return $this->_renderIndividualAd($ad, $transform, $retina);
+        return $this->_renderIndividualAd($ad, $options, $retinaDeprecated);
     }
 
     /**
      * Render an individual ad.
      *
      * @param $ad
-     * @param string|array|null $transform
-     * @param bool $retina
-     * @return Markup|bool
-     * @throws NotFoundHttpException
+     * @param array $options
+     * @param bool $retinaDeprecated
+     * @return bool|Markup
+     * @throws DeprecationException
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
-    private function _renderIndividualAd($ad, $transform = null, bool $retina = false)
+    private function _renderIndividualAd($ad, $options = [], bool $retinaDeprecated = false)
     {
         // If no ad is specified, bail
         if (!$ad) {
@@ -169,8 +173,11 @@ class Ads extends Component
 //            return $ad;
 //        }
 
+        // Get raw HTML of ad
+        $html = $this->_getAdHtml($ad, $options, $retinaDeprecated);
+
         // If ad can't be displayed, bail
-        if (!$this->_displayAd($ad, $transform, $retina)) {
+        if (!$html) {
             return false;
         }
 
@@ -178,7 +185,7 @@ class Ads extends Component
         AdWizard::$plugin->tracking->trackView($ad->id);
 
         // Render ad
-        return Template::raw($ad->html);
+        return Template::raw($html);
     }
 
     // ========================================================================= //
@@ -271,16 +278,71 @@ class Ads extends Component
     }
 
     /**
-     * Renders HTML of ad.
+     * Whether the code is using a deprecated method.
      *
-     * @param Ad $ad
-     * @param string|array|null $transform
-     * @param bool $retina
+     * @param $options
      * @return bool
-     * @throws NotFoundHttpException
+     */
+    public function oldParams($options): bool
+    {
+        // No options defined, not using old parameters
+        if (empty($options)) {
+            return false;
+        }
+
+        // Using pre-defined transform
+        if (is_string($options)) {
+            return true;
+        }
+
+        // Using dynamic transform
+        if (is_array($options) && !isset($options['image']) && !isset($options['attr']) && !isset($options['js'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Load CSRF token data into JavaScript.
+     *
      * @throws InvalidConfigException
      */
-    private function _displayAd(Ad $ad, $transform = null, bool $retina = false): bool
+    private function _loadCsrf()
+    {
+        // Get services
+        $view = Craft::$app->getView();
+        $config = Craft::$app->getConfig()->getGeneral();
+
+        // Register assets
+        $view->registerAssetBundle(FrontEndAssets::class);
+
+        // Whether to include CSRF
+        $includeCsrf = ($config->enableCsrfProtection === true);
+
+        // CSRF
+        if ($includeCsrf && !$this->_csrfIncluded) {
+            $csrf = '
+window.csrfTokenName = "'.$config->csrfTokenName.'";
+window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
+';
+            $view->registerJs($csrf, $view::POS_END);
+            $this->_csrfIncluded = true;
+        }
+    }
+
+    /**
+     * Configures and returns HTML of ad.
+     *
+     * @param Ad $ad
+     * @param array $options
+     * @param bool $retinaDeprecated
+     * @return bool|string
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     * @throws DeprecationException
+     */
+    private function _getAdHtml(Ad $ad, $options = [], bool $retinaDeprecated = false)
     {
         // If no asset ID, bail
         if (!$ad->assetId) {
@@ -313,69 +375,27 @@ class Ads extends Component
             return false;
         }
 
-        // Get image transform
-        if (is_string($transform)) {
-            $t = clone Craft::$app->getAssetTransforms()->getTransformByHandle($transform);
-            if (!$t) {
-                throw new NotFoundHttpException('Transform not found');
-            }
-        } else if (is_array($transform)) {
-            $t = new AssetTransform($transform);
-        } else {
-            $t = false;
+        // If using the old parameter structure
+        if ($this->oldParams($options)) {
+
+            // Convert old structure to new structure
+            $options = [
+                'image' => [
+                    'transform' => $options,
+                    'retina' => $retinaDeprecated,
+                ]
+            ];
+
         }
 
-        // If transform exists, apply it
-        if ($t) {
-            $url    = $asset->getUrl($t);
-            $width  = $asset->getWidth($t);
-            $height = $asset->getHeight($t);
-            // If retina, make <img> tag smaller
-            if (true === $retina) {
-                $width  /= 2;
-                $height /= 2;
-            }
-        } else {
-            $url    = $asset->getUrl();
-            $width  = $asset->getWidth();
-            $height = $asset->getHeight();
-        }
+        // Load CSRF token data into JS
+        $this->_loadCsrf();
 
-        $onclick = "adWizard.click({$ad->id}, '{$ad->url}')";
+        // Configure ad layout from options
+        $config = new Config($ad, $asset, $options);
 
-        $ad->html = PHP_EOL
-            .'<img'
-            .' src="'.$url.'"'
-            .' width="'.$width.'"'
-            .' height="'.$height.'"'
-            .' class="adWizard-ad"'
-            .' style="cursor:pointer"'
-            .' onclick="'.$onclick.'"'
-            .'/>';
-
-        // Get view
-        $view = Craft::$app->getView();
-
-        // Register assets
-        $view->registerAssetBundle(FrontEndAssets::class);
-
-        // Get config settings
-        $config = Craft::$app->getConfig()->getGeneral();
-
-        // Whether to include CSRF
-        $includeCsrf = ($config->enableCsrfProtection === true);
-
-        // CSRF
-        if ($includeCsrf && !$this->_csrfIncluded) {
-            $csrf = '
-window.csrfTokenName = "'.$config->csrfTokenName.'";
-window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
-';
-            $view->registerJs($csrf, $view::POS_END);
-            $this->_csrfIncluded = true;
-        }
-
-        return true;
+        // Return configured HTML
+        return $config->getHtml();
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace doublesecretagency\adwizard\variables;
 
 use Craft;
+use craft\errors\DeprecationException;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\elements\db\AdQuery;
@@ -46,30 +47,42 @@ class AdWizardVariable
      * Display specified ad.
      *
      * @param $id
-     * @param null $transform
-     * @param bool $retina
+     * @param array $options
+     * @param bool $retinaDeprecated
      * @return bool|Markup
+     * @throws DeprecationException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      */
-    public function displayAd($id, $transform = null, $retina = false)
+    public function displayAd($id, $options = [], $retinaDeprecated = false)
     {
-        return AdWizard::$plugin->ads->renderAd($id, $transform, $retina);
+        // If using the old parameter structure
+        if (AdWizard::$plugin->ads->oldParams($options)) {
+            Craft::$app->getDeprecator()->log('craft.adWizard.displayAd', 'The parameters of `craft.adWizard.displayAd` have changed. Please consult the docs.');
+        }
+
+        return AdWizard::$plugin->ads->renderAd($id, $options, $retinaDeprecated);
     }
 
     /**
      * Display random ad from specified ad group.
      *
      * @param $group
-     * @param null $transform
-     * @param bool $retina
+     * @param array $options
+     * @param bool $retinaDeprecated
      * @return bool|Markup
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws DeprecationException
      */
-    public function randomizeAdGroup($group, $transform = null, $retina = false)
+    public function randomizeAdGroup($group, $options = [], $retinaDeprecated = false)
     {
-        return AdWizard::$plugin->ads->renderRandomAdFromGroup($group, $transform, $retina);
+        // If using the old parameter structure
+        if (AdWizard::$plugin->ads->oldParams($options)) {
+            Craft::$app->getDeprecator()->log('craft.adWizard.randomizeAdGroup', 'The parameters of `craft.adWizard.randomizeAdGroup` have changed. Please consult the docs.');
+        }
+
+        return AdWizard::$plugin->ads->renderRandomAdFromGroup($group, $options, $retinaDeprecated);
     }
 
     // ========================================================================= //

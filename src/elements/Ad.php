@@ -16,6 +16,7 @@ use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
 use craft\elements\db\ElementQueryInterface;
+use craft\errors\DeprecationException;
 use craft\helpers\UrlHelper;
 use craft\i18n\Locale;
 use DateTime;
@@ -342,15 +343,21 @@ class Ad extends Element
     /**
      * Display this ad.
      *
-     * @param null $transform
-     * @param bool $retina
+     * @param array $options
+     * @param bool $retinaDeprecated
      * @return bool|Markup
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws DeprecationException
      */
-    public function displayAd($transform = null, $retina = false)
+    public function displayAd($options = [], $retinaDeprecated = false)
     {
-        return AdWizard::$plugin->ads->renderAd($this->id, $transform, $retina);
+        // If using the old parameter structure
+        if (AdWizard::$plugin->ads->oldParams($options)) {
+            Craft::$app->getDeprecator()->log('ad.displayAd', 'The parameters of `ad.displayAd` have changed. Please consult the docs.');
+        }
+
+        return AdWizard::$plugin->ads->renderAd($this->id, $options, $retinaDeprecated);
     }
 
     // Indexes, etc.
