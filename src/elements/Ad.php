@@ -15,6 +15,7 @@ use Craft;
 use craft\base\Element;
 use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
+use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\errors\DeprecationException;
 use craft\helpers\UrlHelper;
@@ -358,6 +359,16 @@ class Ad extends Element
         }
 
         return AdWizard::$plugin->ads->renderAd($this->id, $options, $retinaDeprecated);
+    }
+
+    /**
+     * Get image asset.
+     *
+     * @return Asset|null
+     */
+    public function image()
+    {
+        return Craft::$app->getAssets()->getAssetById($this->assetId);
     }
 
     // Indexes, etc.

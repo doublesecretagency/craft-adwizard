@@ -5,6 +5,7 @@
 ### Added
 - Added ability to use custom fields on Ads via Field Layouts.
 - Added ability to completely customize the attributes of ad's `<img>` tag.
+- Supports dot notation in dynamic attributes.
 
 ### Changed
 - Improved Postgres compatibility.

@@ -344,6 +344,12 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
      */
     private function _getAdHtml(Ad $ad, $options = [], bool $retinaDeprecated = false)
     {
+        // If no URL, bail
+        if (!$ad->url) {
+            $this->err('No URL specified for ad "'.$ad->title.'".');
+            return false;
+        }
+
         // If no asset ID, bail
         if (!$ad->assetId) {
             $this->err('No image specified for ad "'.$ad->title.'".');
@@ -366,12 +372,6 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
         // If asset lacks a public URL, bail
         if (!$volume->hasUrls) {
             $this->err('Asset image for ad "'.$ad->title.'" belongs to a volume with no public URL.');
-            return false;
-        }
-
-        // If no URL, bail
-        if (!$ad->url) {
-            $this->err('No URL specified for ad "'.$ad->title.'".');
             return false;
         }
 

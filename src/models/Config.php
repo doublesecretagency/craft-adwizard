@@ -16,6 +16,8 @@ use craft\base\Model;
 use craft\elements\Asset;
 use craft\models\AssetTransform;
 use doublesecretagency\adwizard\elements\Ad;
+use Throwable;
+use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -56,7 +58,9 @@ class Config extends Model
     /**
      * @var array JavaScript trigger options.
      */
-    public $js = [];
+    public $js = [
+        'click' => 'adWizard.click({id}, \'{url}\')',
+    ];
 
     /**
      * Config constructor.
@@ -71,9 +75,6 @@ class Config extends Model
         // Set ad & asset
         $this->ad = $ad;
         $this->asset = $asset;
-
-        // Set default click behavior
-        $this->js['click'] = "adWizard.click({$this->ad->id}, '{$this->ad->url}')";
 
         // Merge options over default configuration
         $properties = ['image','attr','js'];
@@ -100,6 +101,8 @@ class Config extends Model
      *
      * @return string
      * @throws NotFoundHttpException
+     * @throws Throwable
+     * @throws Exception
      */
     public function getHtml(): string
     {
@@ -112,9 +115,12 @@ class Config extends Model
             $attributes .= "{$key}=\"{$value}\" ";
         }
 
-        // Return <img> tag
+        // Compile <img> tag with attributes
         /** @noinspection HtmlRequiredAltAttribute */
-        return PHP_EOL."<img {$attributes}/>";
+        $tag = "<img {$attributes}/>";
+
+        // Return <img> tag
+        return PHP_EOL.Craft::$app->getView()->renderObjectTemplate($tag, $this->ad);
     }
 
     // ========================================================================= //
