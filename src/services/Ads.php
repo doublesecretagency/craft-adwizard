@@ -86,10 +86,10 @@ class Ads extends Component
     /**
      * Set field layout of all ads in group.
      *
-     * @param int $fieldLayoutId
+     * @param int|null $fieldLayoutId
      * @param int $groupId
      */
-    public function updateAdsLayout(int $fieldLayoutId, int $groupId)
+    public function updateAdsLayout($fieldLayoutId, int $groupId)
     {
         // Get ads in group
         $adIds = (new Query())
