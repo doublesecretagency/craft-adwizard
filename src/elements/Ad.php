@@ -13,6 +13,8 @@ namespace doublesecretagency\adwizard\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\base\Field;
+use craft\base\FieldInterface;
 use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
 use craft\elements\Asset;
@@ -26,6 +28,7 @@ use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
 use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\records\Ad as AdRecord;
+use Throwable;
 use Twig\Markup;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -96,19 +99,23 @@ class Ad extends Element
      */
     protected static function defineSources(string $context = null): array
     {
+        // "All ads"
         $sources = [
             [
                 'key'       => '*',
                 'label'     => Craft::t('ad-wizard', 'All ads'),
+                'data'      => ['handle' => ''],
                 'criteria'  => ['status' => null],
                 'hasThumbs' => true
             ]
         ];
 
+        // Loop through remaining sources
         foreach (AdWizard::$plugin->groups->getAllGroups() as $group) {
             $sources[] = [
-                'key'       => 'group:'.$group->id,
+                'key'       => $group->handle,
                 'label'     => Craft::t('site', $group->name),
+                'data'      => ['handle' => $group->handle],
                 'criteria'  => ['groupId' => $group->id],
                 'hasThumbs' => true
             ];
@@ -292,7 +299,7 @@ class Ad extends Element
         $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
 
         // Return edit url
-        return UrlHelper::cpUrl('ad-wizard/'.$group->handle.'/'.$this->id);
+        return UrlHelper::cpUrl('ad-wizard/ads/'.$group->handle.'/'.$this->id);
     }
 
     /**
@@ -347,9 +354,11 @@ class Ad extends Element
      * @param array $options
      * @param bool $retinaDeprecated
      * @return bool|Markup
+     * @throws DeprecationException
+     * @throws Exception
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
-     * @throws DeprecationException
+     * @throws Throwable
      */
     public function displayAd($options = [], $retinaDeprecated = false)
     {
@@ -369,6 +378,19 @@ class Ad extends Element
     public function image()
     {
         return Craft::$app->getAssets()->getAssetById($this->assetId);
+    }
+
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns the field with a given handle.
+     *
+     * @param string $handle
+     * @return Field|FieldInterface|null
+     */
+    protected function fieldByHandle(string $handle)
+    {
+        return Craft::$app->getFields()->getFieldByHandle($handle);
     }
 
     // Indexes, etc.

@@ -94,7 +94,10 @@ class AdsController extends Controller
         $allGroups = AdWizard::$plugin->groups->getAllGroups();
 
         foreach ($allGroups as $group) {
-            $variables['groupSelectOptions'][$group->id] = $group->name;
+            $variables['groupSelectOptions'][$group->id] = [
+                'name' => $group->name,
+                'layoutId' => $group->fieldLayoutId
+            ];
         }
 
         if (!empty($variables['groupHandle'])) {
@@ -192,8 +195,8 @@ class AdsController extends Controller
 
         // Set the "Continue Editing" URL
         $variables['redirectUrl'] = [
-            'continueEditing' => "ad-wizard/{$groupHandle}/{id}",
-            'addAnother'      => "ad-wizard/{$groupHandle}/new",
+            'continueEditing' => "ad-wizard/ads/{$groupHandle}/{id}",
+            'addAnother'      => "ad-wizard/ads/{$groupHandle}/new",
             'index'           => 'ad-wizard/ads',
         ];
 

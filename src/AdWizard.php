@@ -61,7 +61,7 @@ class AdWizard extends Plugin
     /**
      * @var bool $schemaVersion Current schema version of the plugin.
      */
-    public $schemaVersion = '2.1.0-alpha.1';
+    public $schemaVersion = '2.1.0';
 
     /**
      * @inheritDoc
@@ -114,10 +114,11 @@ class AdWizard extends Plugin
                 $event->rules['ad-wizard/groups/new']           = 'ad-wizard/ad-groups/edit-ad-group';
                 $event->rules['ad-wizard/groups/<groupId:\d+>'] = 'ad-wizard/ad-groups/edit-ad-group';
                 // Ads
-                $event->rules['ad-wizard/ads']                               = 'ad-wizard/ads';
-                $event->rules['ad-wizard/ads/new']                           = 'ad-wizard/ads/edit-ad';
-                $event->rules['ad-wizard/<groupHandle:{handle}>/new']        = 'ad-wizard/ads/edit-ad';
-                $event->rules['ad-wizard/<groupHandle:{handle}>/<adId:\d+>'] = 'ad-wizard/ads/edit-ad';
+                $event->rules['ad-wizard/ads']                                   = 'ad-wizard/ads';
+                $event->rules['ad-wizard/ads/new']                               = 'ad-wizard/ads/edit-ad';
+                $event->rules['ad-wizard/ads/<groupHandle:{handle}>']            = 'ad-wizard/ads';
+                $event->rules['ad-wizard/ads/<groupHandle:{handle}>/new']        = 'ad-wizard/ads/edit-ad';
+                $event->rules['ad-wizard/ads/<groupHandle:{handle}>/<adId:\d+>'] = 'ad-wizard/ads/edit-ad';
             }
         );
 

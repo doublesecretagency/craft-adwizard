@@ -1,12 +1,26 @@
 {% import '_includes/forms' as forms %}
 
-{{ forms.selectField({
-    label: "Group"|t('ad-wizard'),
-    id: 'groupId',
-    name: 'groupId',
-    value: ad.groupId,
-    options: groupSelectOptions,
-}) }}
+{#{{ forms.selectField({#}
+{#    label: "Group"|t('ad-wizard'),#}
+{#    id: 'groupId',#}
+{#    name: 'groupId',#}
+{#    value: ad.groupId,#}
+{#    options: groupSelectOptions,#}
+{#}) }}#}
+
+<div id="groupId-field" class="field" data-cpfieldlinks="true">
+    <div class="heading"><label id="groupId-label" for="groupId">{{ 'Group'|t('ad-wizard') }}</label></div>
+    <div class="input ltr">
+        <div class="select">
+            <select id="groupId" name="groupId" @change="updateLayout">
+                {% for id,option in groupSelectOptions %}
+                    {% set selected = (id == ad.groupId ? 'selected="selected"' : '') %}
+                    <option value="{{ id }}" data-layout-id="{{ option.layoutId }}" {{ selected|raw }}>{{ option.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
 
 {{ forms.dateTimeField({
     label: "Beginning of Run"|t('ad-wizard'),

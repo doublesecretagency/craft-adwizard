@@ -17,7 +17,9 @@ use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\models\AdGroup;
+use Throwable;
 use Twig\Markup;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
 
@@ -53,6 +55,8 @@ class AdWizardVariable
      * @throws DeprecationException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws Throwable
+     * @throws Exception
      */
     public function displayAd($id, $options = [], $retinaDeprecated = false)
     {
@@ -71,9 +75,11 @@ class AdWizardVariable
      * @param array $options
      * @param bool $retinaDeprecated
      * @return bool|Markup
+     * @throws DeprecationException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
-     * @throws DeprecationException
+     * @throws Throwable
+     * @throws Exception
      */
     public function randomizeAdGroup($group, $options = [], $retinaDeprecated = false)
     {
@@ -106,6 +112,16 @@ class AdWizardVariable
     public function getGroupById($groupId)
     {
         return AdWizard::$plugin->groups->getGroupById($groupId);
+    }
+
+    /**
+     * Get all field layouts.
+     *
+     * @return array
+     */
+    public function getLayouts()
+    {
+        return AdWizard::$plugin->fieldLayouts->getFieldLayouts();
     }
 
     // ========================================================================= //

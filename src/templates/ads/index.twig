@@ -3,6 +3,8 @@
 {% set elementType = 'doublesecretagency\\adwizard\\elements\\Ad' %}
 {% set title = "Ads"|t('ad-wizard') %}
 
+{% set currentGroup = craft.app.request.getSegment(3) %}
+
 {% block actionButton %}
     {% if groups|length %}
         <div class="btngroup">
@@ -12,7 +14,7 @@
                 <div class="menu">
                     <ul>
                         {% for group in groups %}
-                            <li><a href="{{ cpUrl('ad-wizard/'~group.handle~'/new') }}">{{ group.name|t('site') }}</a></li>
+                            <li><a href="{{ cpUrl('ad-wizard/ads/'~group.handle~'/new') }}">{{ group.name|t('site') }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -22,9 +24,30 @@
 {% endblock %}
 
 {% js %}
-var handles = {
-    {% for source in craft.adWizard.getAllGroups %}
-        {{ source.id }}: '{{ source.handle }}'{{ not loop.last ? ',' }}
-    {% endfor %}
-};
+    $(function () {
+
+        // When link is clicked, update URL
+        Craft.elementIndex.onSelectSource = function () {
+
+            if (this.settings.context === 'index' && typeof history !== 'undefined') {
+                var uri = 'ad-wizard/ads';
+
+                if (this.sourceKey && '*' !== this.sourceKey) {
+                    uri += '/' + this.sourceKey;
+                }
+
+                history.replaceState({}, '', Craft.getUrl(uri));
+            }
+
+            this.settings.onSelectSource(this.sourceKey);
+            this.trigger('selectSource', {sourceKey: this.sourceKey});
+        };
+
+        // If group currently selected, update
+        {% if currentGroup %}
+            Craft.elementIndex.selectSourceByKey('{{ currentGroup }}');
+            Craft.elementIndex.updateElements();
+        {% endif %}
+
+    });
 {% endjs %}

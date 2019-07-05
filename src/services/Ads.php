@@ -16,14 +16,15 @@ use craft\base\Component;
 use craft\base\ElementInterface;
 use craft\base\Volume;
 use craft\db\Query;
-use craft\errors\DeprecationException;
 use craft\helpers\Template;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\Config;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
 use doublesecretagency\adwizard\web\assets\FrontEndAssets;
+use Throwable;
 use Twig\Markup;
+use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\web\NotFoundHttpException;
@@ -123,9 +124,10 @@ class Ads extends Component
      * @param array $options
      * @param bool $retinaDeprecated
      * @return bool|Markup
-     * @throws DeprecationException
+     * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws Throwable
      */
     public function renderAd(int $id, $options = [], bool $retinaDeprecated = false)
     {
@@ -140,9 +142,10 @@ class Ads extends Component
      * @param array $options
      * @param bool $retinaDeprecated
      * @return bool|Markup
-     * @throws DeprecationException
+     * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws Throwable
      */
     public function renderRandomAdFromGroup(string $group, $options = [], bool $retinaDeprecated = false)
     {
@@ -157,9 +160,10 @@ class Ads extends Component
      * @param array $options
      * @param bool $retinaDeprecated
      * @return bool|Markup
-     * @throws DeprecationException
+     * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
+     * @throws Throwable
      */
     private function _renderIndividualAd($ad, $options = [], bool $retinaDeprecated = false)
     {
@@ -340,7 +344,8 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
      * @return bool|string
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
-     * @throws DeprecationException
+     * @throws Throwable
+     * @throws BaseException
      */
     private function _getAdHtml(Ad $ad, $options = [], bool $retinaDeprecated = false)
     {
