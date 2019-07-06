@@ -53,7 +53,7 @@
                 {% set group = craft.adWizard.getGroupById(ad.groupId) %}
                 <tr>
                     <td>{{ group.name }}</td>
-                    <td><a href="{{ url('ad-wizard/' ~ group.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
+                    <td><a href="{{ url('ad-wizard/ads/' ~ group.handle ~ '/' ~ ad.id) }}">{{ ad.title }}</a></td>
                     <td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, thisYear, thisMonth) }}</td>
                     <td class="aw-total aw-clicks">{{ craft.adWizard.monthTotalClicks(ad.id, thisYear, thisMonth) }}</td>
                     <td class="aw-total aw-views col-divider">{{ craft.adWizard.monthTotalViews(ad.id, lastYear, lastMonth) }}</td>

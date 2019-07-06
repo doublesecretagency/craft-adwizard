@@ -30,7 +30,6 @@ use yii\base\Exception as YiiException;
 use yii\base\InvalidConfigException;
 use yii\web\Response;
 use yii\web\BadRequestHttpException;
-use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -75,12 +74,12 @@ class AdsController extends Controller
     /**
      * Displays the ad edit page.
      *
-     * @param string $groupHandle The ad group’s handle.
+     * @param string|null $groupHandle The ad group’s handle.
      * @param int|null $adId The ad’s ID, if editing an existing ad.
      * @return Response
-     * @throws HttpException
-     * @throws NotFoundHttpException
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     * @throws YiiException
      */
     public function actionEditAd(string $groupHandle = null, int $adId = null): Response
     {
@@ -88,15 +87,16 @@ class AdsController extends Controller
             'groupHandle' => $groupHandle,
             'adId' => $adId,
             'fullPageForm' => true,
-            'groupSelectOptions' => []
+            'groupData' => []
         ];
 
         $allGroups = AdWizard::$plugin->groups->getAllGroups();
 
         foreach ($allGroups as $group) {
-            $variables['groupSelectOptions'][$group->id] = [
+            $variables['groupData'][$group->id] = [
                 'name' => $group->name,
-                'layoutId' => $group->fieldLayoutId
+                'layoutId' => $group->fieldLayoutId,
+                'redirectHash' => Craft::$app->getSecurity()->hashData("ad-wizard/ads/{$group->handle}")
             ];
         }
 

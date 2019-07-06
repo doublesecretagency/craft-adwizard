@@ -71,15 +71,31 @@
         el: '#main-content',
         delimiters: ['${', '}'],
         data: {
-            layoutId: null
+            groupId: null,
+            layoutId: null,
+            groupRedirects: {}
+        },
+        computed: {
+            redirectHash: function () {
+                var r = this.groupRedirects;
+                return (r[this.groupId] ? r[this.groupId] : r[0]);
+            }
         },
         methods: {
             updateLayout: function (event) {
                 var options = event.target.options;
                 var i = options.selectedIndex;
+                this.groupId = options[i].value;
                 this.layoutId = options[i].dataset.layoutId;
             }
         }
     });
+    dynamicLayout.groupId = {{ ad.group.id }};
     dynamicLayout.layoutId = {{ ad.group.fieldLayoutId }};
+    dynamicLayout.groupRedirects = {
+        0: '{{ 'ad-wizard/ads'|hash }}',
+        {% for id,row in groupData %}
+            {{ id }}: '{{ row.redirectHash }}'{{ not loop.last ? ',' }}
+        {% endfor %}
+    };
 {% endjs %}
