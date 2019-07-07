@@ -4,7 +4,7 @@
     <div class="heading"><label id="groupId-label" for="groupId">{{ 'Group'|t('ad-wizard') }}</label></div>
     <div class="input ltr">
         <div class="select">
-            <select id="groupId" name="groupId" @change="updateLayout">
+            <select id="adGroup" name="groupId" @change="updateLayout">
                 {% for id,row in groupData %}
                     {% set selected = (id == ad.groupId ? 'selected="selected"' : '') %}
                     <option value="{{ id }}" data-layout-id="{{ row.layoutId }}" {{ selected|raw }}>{{ row.name }}</option>

@@ -55,16 +55,9 @@
     </div>
 </div>
 
-{% for layout in craft.adWizard.getLayouts() %}
-    {% set groupLayout = layout.getFieldLayout() %}
-    {% set sameId = (groupLayout.id == ad.group.fieldLayoutId) %}
-    <div class="fieldlayout" v-show="layoutId == {{ layout.id }}">
-        {% include '_includes/fields' with {
-            fields: groupLayout.getFields(),
-            element: ad
-        } only %}
-    </div>
-{% endfor %}
+<div id="fields">
+    {% include 'ad-wizard/ads/_fields' %}
+</div>
 
 {% js %}
     var dynamicLayout = new Vue({
@@ -72,7 +65,7 @@
         delimiters: ['${', '}'],
         data: {
             groupId: null,
-            layoutId: null,
+            // layoutId: null,
             groupRedirects: {}
         },
         computed: {
@@ -86,12 +79,12 @@
                 var options = event.target.options;
                 var i = options.selectedIndex;
                 this.groupId = options[i].value;
-                this.layoutId = options[i].dataset.layoutId;
+                // this.layoutId = options[i].dataset.layoutId;
             }
         }
     });
     dynamicLayout.groupId = {{ ad.group.id }};
-    dynamicLayout.layoutId = {{ ad.group.fieldLayoutId }};
+    // dynamicLayout.layoutId = {{ ad.group.fieldLayoutId }};
     dynamicLayout.groupRedirects = {
         0: '{{ 'ad-wizard/ads'|hash }}',
         {% for id,row in groupData %}

@@ -1,0 +1,7 @@
+{% set layout = ad.group.getFieldLayout() %}
+<div class="fieldlayout">
+    {% include '_includes/fields' with {
+        fields: layout.getFields(),
+        element: ad
+    } only %}
+</div>

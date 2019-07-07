@@ -23,9 +23,13 @@ use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
+use doublesecretagency\adwizard\web\assets\AdGroupSwitcherAssets;
 use doublesecretagency\adwizard\web\assets\AdminAssets;
 use Exception;
 use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Exception as YiiException;
 use yii\base\InvalidConfigException;
 use yii\web\Response;
@@ -114,6 +118,19 @@ class AdsController extends Controller
 
         // Ensure group handle is valid
         $groupHandle = $variables['group']->handle;
+
+        // Multiple ad groups
+        // ---------------------------------------------------------------------
+
+        // If more than one ad group
+        if (count($allGroups) > 1) {
+
+            // Load ad group switcher JS
+            $view = $this->getView();
+            $view->registerJs('new Craft.AdGroupSwitcher();');
+            $view->registerAssetBundle(AdGroupSwitcherAssets::class);
+
+        }
 
         // Get the ad
         // ---------------------------------------------------------------------
@@ -331,6 +348,41 @@ class AdsController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('ad-wizard', 'Ad deleted.'));
 
         return $this->redirectToPostedUrl();
+    }
+
+    /**
+     * Switches between two ad groups.
+     *
+     * @throws BadRequestHttpException
+     * @throws NotFoundHttpException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws Exception
+     */
+    public function actionSwitchAdGroup(): Response
+    {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        $ad = $this->_getAdModel();
+        $this->_populateAdModel($ad);
+
+        $variables = [
+            'ad' => $ad
+        ];
+
+        $view = $this->getView();
+        $fieldsHtml = $view->renderTemplate('ad-wizard/ads/_fields', $variables);
+
+        $headHtml = $view->getHeadHtml();
+        $bodyHtml = $view->getBodyHtml();
+
+        return $this->asJson(compact(
+            'fieldsHtml',
+            'headHtml',
+            'bodyHtml'
+        ));
     }
 
     /**

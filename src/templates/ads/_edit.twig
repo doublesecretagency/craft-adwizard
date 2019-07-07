@@ -41,9 +41,7 @@
     <input type="hidden" name="groupId" value="{{ group.id }}">
     {% if ad.id %}<input type="hidden" name="adId" value="{{ ad.id }}">{% endif %}
     {% if craft.app.getIsMultiSite() %}<input type="hidden" name="siteId" value="{{ ad.siteId }}">{% endif %}
-    <div id="fields">
-        {% include 'ad-wizard/ads/_main' %}
-    </div>
+    {% include 'ad-wizard/ads/_main' %}
 {% endblock %}
 
 {% block details %}
