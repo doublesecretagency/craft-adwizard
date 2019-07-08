@@ -22,6 +22,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\errors\DeprecationException;
 use craft\helpers\UrlHelper;
 use craft\i18n\Locale;
+use craft\models\FieldLayout;
 use DateTime;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
@@ -393,6 +394,18 @@ class Ad extends Element
         return Craft::$app->getFields()->getFieldByHandle($handle);
     }
 
+    /**
+     * Gets field layout of ad (based on group).
+     *
+     * @inheritdoc
+     * @return FieldLayout|null
+     * @throws InvalidConfigException
+     */
+    public function getFieldLayout()
+    {
+        return parent::getFieldLayout() ?? $this->getGroup()->getFieldLayout();
+    }
+
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
@@ -450,7 +463,16 @@ class Ad extends Element
 
         }
 
-        return parent::tableAttributeHtml($attribute);
+        // If layout exists, return the value of matching field
+        if ($layout = $this->getFieldLayout()) {
+            foreach ($layout->getFields() as $field) {
+                if ("field:{$field->id}" == $attribute) {
+                    return parent::tableAttributeHtml($attribute);
+                }
+            }
+        }
+
+        return false;
     }
 
     // Events
