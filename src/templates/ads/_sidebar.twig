@@ -7,7 +7,7 @@
             <select id="adGroup" name="groupId" @change="updateLayout">
                 {% for id,row in groupData %}
                     {% set selected = (id == ad.groupId ? 'selected="selected"' : '') %}
-                    <option value="{{ id }}" data-layout-id="{{ row.layoutId }}" {{ selected|raw }}>{{ row.name }}</option>
+                    <option value="{{ id }}" {{ selected|raw }}>{{ row.name }}</option>
                 {% endfor %}
             </select>
         </div>

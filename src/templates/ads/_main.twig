@@ -65,7 +65,6 @@
         delimiters: ['${', '}'],
         data: {
             groupId: null,
-            // layoutId: null,
             groupRedirects: {}
         },
         computed: {
@@ -79,12 +78,10 @@
                 var options = event.target.options;
                 var i = options.selectedIndex;
                 this.groupId = options[i].value;
-                // this.layoutId = options[i].dataset.layoutId;
             }
         }
     });
     dynamicLayout.groupId = {{ ad.group.id }};
-    // dynamicLayout.layoutId = {{ ad.group.fieldLayoutId }};
     dynamicLayout.groupRedirects = {
         0: '{{ 'ad-wizard/ads'|hash }}',
         {% for id,row in groupData %}
