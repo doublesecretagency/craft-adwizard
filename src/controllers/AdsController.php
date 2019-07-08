@@ -246,8 +246,6 @@ class AdsController extends Controller
         $ad = $this->_getAdModel();
         $request = Craft::$app->getRequest();
 
-        $ad->setFieldValuesFromRequest('fields');
-
         // Are we duplicating the ad?
         if ($request->getBodyParam('duplicate')) {
             // Swap $ad with the duplicate
@@ -280,6 +278,8 @@ class AdsController extends Controller
 
         // Populate the ad with post data
         $this->_populateAdModel($ad);
+
+        $ad->setFieldValuesFromRequest('fields');
 
         // Save the ad
         if ($ad->enabled && $ad->enabledForSite) {
@@ -446,6 +446,21 @@ class AdsController extends Controller
         $ad->enabled = (bool) $request->getBodyParam('enabled', $ad->enabled);
 
         $ad->title = $request->getBodyParam('title', $ad->title);
+
+        if (!$ad->groupId) {
+            // Default to the first available ad group
+            $ad->groupId = AdWizard::$plugin->groups->getAllGroups()[0]->id;
+        }
+
+        // Prevent the last ad group's field layout from being used
+        $ad->fieldLayoutId = null;
+
+        $group = AdWizard::$plugin->groups->getGroupById($ad->groupId);
+
+        // Update field layout
+        if ($group) {
+            $ad->fieldLayoutId = $group->fieldLayoutId;
+        }
     }
 
 }
