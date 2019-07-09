@@ -187,9 +187,11 @@ class Config extends Model
         }
 
         // Set new image source & dimensions
-        $this->attr['src']    = $url;
-        $this->attr['width']  = $width;
-        $this->attr['height'] = $height;
+        $this->attr = array_merge([
+            'src'    => $url,
+            'width'  => $width,
+            'height' => $height,
+        ], $this->attr);
     }
 
 }
