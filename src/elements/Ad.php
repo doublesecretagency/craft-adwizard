@@ -20,18 +20,24 @@ use craft\elements\actions\SetStatus;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
 use craft\errors\DeprecationException;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\i18n\Locale;
 use craft\models\FieldLayout;
 use DateTime;
+use DateTimeZone;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
 use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\records\Ad as AdRecord;
+use Exception;
 use Throwable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Markup;
-use yii\base\Exception;
+use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\web\NotFoundHttpException;
@@ -356,7 +362,7 @@ class Ad extends Element
      * @param bool $retinaDeprecated
      * @return bool|Markup
      * @throws DeprecationException
-     * @throws Exception
+     * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
@@ -414,6 +420,7 @@ class Ad extends Element
      * @param string $attribute
      * @return string
      * @throws InvalidConfigException
+     * @throws Exception
      */
     protected function tableAttributeHtml(string $attribute): string
     {
@@ -452,6 +459,13 @@ class Ad extends Element
                     return '';
                 }
 
+                $date = $this->_normalizeDate($date);
+
+                // If still no date, bail
+                if (!$date) {
+                    return '';
+                }
+
                 return Craft::$app->getFormatter()->asDate($date, Locale::LENGTH_SHORT);
 
             case 'totalClicks':
@@ -475,12 +489,89 @@ class Ad extends Element
         return false;
     }
 
+    /**
+     * @inheritdoc
+     * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function getEditorHtml(): string
+    {
+        $view = Craft::$app->getView();
+
+
+        $html = $view->renderTemplateMacro('_includes/forms', 'textField', [
+            [
+                'label' => Craft::t('app', 'Title'),
+//                'siteId' => $this->siteId,
+                'id' => 'title',
+                'name' => 'title',
+                'value' => $this->title,
+                'errors' => $this->getErrors('title'),
+                'first' => true,
+                'autofocus' => true,
+                'required' => true,
+            ]
+        ]);
+
+        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
+            [
+                'label' => Craft::t('app', 'URL'),
+//                'siteId' => $this->siteId,
+                'id' => 'url',
+                'name' => 'url',
+                'value' => $this->url,
+                'errors' => $this->getErrors('url'),
+                'required' => true,
+            ]
+        ]);
+
+        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
+            [
+                'label' => Craft::t('ad-wizard', 'Beginning of Run'),
+                'id' => 'startDate',
+                'name' => 'startDate',
+                'value' => $this->startDate,
+                'errors' => $this->getErrors('startDate'),
+            ]
+        ]);
+
+        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
+            [
+                'label' => Craft::t('ad-wizard', 'End of Run'),
+                'id' => 'endDate',
+                'name' => 'endDate',
+                'value' => $this->endDate,
+                'errors' => $this->getErrors('endDate'),
+            ]
+        ]);
+
+        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
+            [
+                'label' => Craft::t('ad-wizard', 'Max Views Allowed'),
+                'instructions' => Craft::t('ad-wizard', '(0 = unlimited)'),
+                'id' => 'maxViews',
+                'name' => 'maxViews',
+                'value' => $this->maxViews,
+                'errors' => $this->getErrors('maxViews'),
+                'size' => 3,
+            ]
+        ]);
+
+        // Render the custom fields
+        $html .= parent::getEditorHtml();
+
+        return $html;
+    }
+
     // Events
     // -------------------------------------------------------------------------
 
     /**
      * @inheritDoc
-     * @throws Exception if ad ID is invalid
+     * @throws BaseException
+     * @throws Exception
      */
     public function afterSave(bool $isNew)
     {
@@ -489,7 +580,7 @@ class Ad extends Element
             $record = AdRecord::findOne($this->id);
 
             if (!$record) {
-                throw new Exception('Invalid ad ID: '.$this->id);
+                throw new BaseException('Invalid ad ID: '.$this->id);
             }
         } else {
             $record = new AdRecord();
@@ -499,8 +590,8 @@ class Ad extends Element
         $record->groupId   = $this->groupId;
         $record->assetId   = $this->assetId;
         $record->url       = $this->url;
-        $record->startDate = $this->startDate;
-        $record->endDate   = $this->endDate;
+        $record->startDate = $this->_normalizeDate($this->startDate);
+        $record->endDate   = $this->_normalizeDate($this->endDate);
         $record->maxViews  = $this->maxViews;
 
         $record->save(false);
@@ -510,6 +601,40 @@ class Ad extends Element
 
     // Private Methods
     // =========================================================================
+
+    /**
+     * Properly format datetime for database.
+     *
+     * @param $date
+     * @return DateTime|mixed
+     * @throws Exception
+     */
+    private function _normalizeDate($date)
+    {
+        // If it's an array, create a DateTime object
+        if (is_array($date) && isset($date['timezone'])) {
+
+            // If no date or time, bail
+            if (!$date['date'] && !$date['time']) {
+                return null;
+            }
+
+            // Get datetime
+            $datetime = new DateTime(
+                $date['date'].' '.$date['time'],
+                new DateTimeZone($date['timezone'])
+            );
+
+            // If datetime was determined, return formatted string
+            if ($datetime) {
+                return DateTimeHelper::toIso8601($datetime);
+            }
+
+        }
+
+        // Return unchanged value
+        return $date;
+    }
 
     /**
      * Default thumbnail for missing images.

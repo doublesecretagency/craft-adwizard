@@ -6,6 +6,7 @@
 - Added ability to use custom fields on Ads via Field Layouts.
 - Added ability to completely customize the attributes of ad's `<img>` tag.
 - Supports dot notation in dynamic attributes.
+- Added native fields to HUD editor.
 
 ### Changed
 - Improved Postgres compatibility.

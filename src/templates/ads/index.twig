@@ -43,8 +43,8 @@
             this.trigger('selectSource', {sourceKey: this.sourceKey});
         };
 
-        // If group currently selected, update
         {% if currentGroup %}
+            // If group currently selected, update
             Craft.elementIndex.selectSourceByKey('{{ currentGroup }}');
             Craft.elementIndex.updateElements();
         {% endif %}
