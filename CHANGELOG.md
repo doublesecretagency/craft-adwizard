@@ -7,6 +7,7 @@
 - Added ability to completely customize the attributes of ad's `<img>` tag.
 - Supports dot notation in dynamic attributes.
 - Added native fields to HUD editor.
+- Added ability to show "Group" on index page.
 
 ### Changed
 - Improved Postgres compatibility.

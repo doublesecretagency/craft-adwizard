@@ -186,6 +186,7 @@ class Ad extends Element
         $attributes = [
             'title'       => ['label' => Craft::t('app', 'Title')],
             'url'         => ['label' => Craft::t('app', 'URL')],
+            'group'       => ['label' => Craft::t('ad-wizard', 'Group')],
             'startDate'   => ['label' => Craft::t('ad-wizard', 'Start Date')],
             'endDate'     => ['label' => Craft::t('ad-wizard', 'End Date')],
             'maxViews'    => ['label' => Craft::t('ad-wizard', 'Max Views')],
@@ -203,6 +204,7 @@ class Ad extends Element
     {
         return [
             'url',
+            'group',
             'startDate',
             'endDate',
             'maxViews',
@@ -425,6 +427,17 @@ class Ad extends Element
     protected function tableAttributeHtml(string $attribute): string
     {
         switch ($attribute) {
+
+            case 'group':
+
+                $group = $this->getGroup();
+
+                // If no group, bail
+                if (!$group) {
+                    return '';
+                }
+
+                return $group->name;
 
             case 'url':
                 $url = $this->$attribute;
