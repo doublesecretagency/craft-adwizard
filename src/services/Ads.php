@@ -211,7 +211,7 @@ class Ads extends Component
             ->andWhere('[[ads.assetId]] IS NOT NULL')
             ->andWhere('([[ads.startDate]]  <= NOW()) OR ([[ads.startDate]] IS NULL)')
             ->andWhere('([[ads.endDate]]    >= NOW()) OR ([[ads.endDate]]   IS NULL)')
-            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0)')
+            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0) OR ([[ads.maxViews]] IS NULL)')
             ->orderBy('RAND()')
             ->scalar();
     }
