@@ -37,8 +37,7 @@
 
 {% block content %}
     <input type="hidden" name="action" value="ad-wizard/ads/save-ad">
-    <input type="hidden" name="redirect" :value="redirectHash">
-    <input type="hidden" name="groupId" value="{{ group.id }}">
+    <input type="hidden" name="redirect" value="">
     {% if ad.id %}<input type="hidden" name="adId" value="{{ ad.id }}">{% endif %}
     {% if craft.app.getIsMultiSite() %}<input type="hidden" name="siteId" value="{{ ad.siteId }}">{% endif %}
     {% include 'ad-wizard/ads/_main' %}

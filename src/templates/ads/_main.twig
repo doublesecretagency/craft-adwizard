@@ -1,7 +1,5 @@
 {% import '_includes/forms' as forms %}
 
-{% do view.registerAssetBundle("doublesecretagency\\adwizard\\web\\assets\\VueAssets") %}
-
 {{ forms.textField({
     label: "Title"|t('app'),
     id: 'title',
@@ -59,33 +57,11 @@
     {% include 'ad-wizard/ads/_fields' %}
 </div>
 
-{% js %}
-    var dynamicLayout = new Vue({
-        el: '#main-content',
-        delimiters: ['${', '}'],
-        data: {
-            groupId: null,
-            groupRedirects: {}
-        },
-        computed: {
-            redirectHash: function () {
-                var r = this.groupRedirects;
-                return (r[this.groupId] ? r[this.groupId] : r[0]);
-            }
-        },
-        methods: {
-            updateLayout: function (event) {
-                var options = event.target.options;
-                var i = options.selectedIndex;
-                this.groupId = options[i].value;
-            }
-        }
-    });
-    dynamicLayout.groupId = {{ ad.group.id }};
-    dynamicLayout.groupRedirects = {
+<script>
+    var groupRedirects = {
         0: '{{ 'ad-wizard/ads'|hash }}',
         {% for id,row in groupData %}
             {{ id }}: '{{ row.redirectHash }}'{{ not loop.last ? ',' }}
         {% endfor %}
     };
-{% endjs %}
+</script>

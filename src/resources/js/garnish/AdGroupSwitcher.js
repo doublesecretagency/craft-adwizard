@@ -7,6 +7,9 @@
             $spinner: null,
 
             init: function() {
+                this.$redirect = $('input[name="redirect"]');
+                this.$redirect.val(groupRedirects[0]);
+
                 this.$groupSelect = $('#adGroup');
                 this.$spinner = $('<div class="spinner hidden"/>').insertAfter(this.$groupSelect.parent());
 
@@ -22,7 +25,14 @@
                     if (textStatus === 'success') {
                         this.trigger('beforeGroupChange');
 
-                        $fields = $('#fields');
+                        var groupId = this.$groupSelect.val();
+
+                        var r = groupRedirects;
+                        var uri = (groupId in r ? r[groupId] : r[0]);
+
+                        this.$redirect.val(uri);
+
+                        var $fields = $('#fields');
 
                         $fields.html(response.fieldsHtml);
                         Craft.initUiElements($fields);
