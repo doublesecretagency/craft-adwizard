@@ -373,7 +373,10 @@ class Ad extends Element
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            Craft::$app->getDeprecator()->log('ad.displayAd', 'The parameters of `ad.displayAd` have changed. Please consult the docs.');
+            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
+            $message = "The parameters of `ad.displayAd` have changed. {$docsLink}";
+            Craft::$app->getDeprecator()->log('ad.displayAd', $message);
         }
 
         return AdWizard::$plugin->ads->renderAd($this->id, $options, $retinaDeprecated);

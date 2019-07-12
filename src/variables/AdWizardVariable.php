@@ -62,7 +62,10 @@ class AdWizardVariable
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            Craft::$app->getDeprecator()->log('craft.adWizard.displayAd', 'The parameters of `craft.adWizard.displayAd` have changed. Please consult the docs.');
+            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
+            $message = "The parameters of `craft.adWizard.displayAd` have changed. {$docsLink}";
+            Craft::$app->getDeprecator()->log('craft.adWizard.displayAd', $message);
         }
 
         return AdWizard::$plugin->ads->renderAd($id, $options, $retinaDeprecated);
@@ -85,7 +88,10 @@ class AdWizardVariable
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            Craft::$app->getDeprecator()->log('craft.adWizard.randomizeAdGroup', 'The parameters of `craft.adWizard.randomizeAdGroup` have changed. Please consult the docs.');
+            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
+            $message = "The parameters of `craft.adWizard.randomizeAdGroup` have changed. {$docsLink}";
+            Craft::$app->getDeprecator()->log('craft.adWizard.randomizeAdGroup', $message);
         }
 
         return AdWizard::$plugin->ads->renderRandomAdFromGroup($group, $options, $retinaDeprecated);
