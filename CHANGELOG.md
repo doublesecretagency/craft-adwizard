@@ -18,6 +18,7 @@
 ### Fixed
 - `displayAd` will no longer show an expired or max viewed ad.
 - Fixed null maxViews bug.
+- Fixed system timezone bug.
 
 ## 2.0.1 - 2018-08-21
 

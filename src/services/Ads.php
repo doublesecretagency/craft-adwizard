@@ -17,16 +17,19 @@ use craft\base\ElementInterface;
 use craft\base\Volume;
 use craft\db\Query;
 use craft\helpers\Template;
+use DateTime;
+use DateTimeZone;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\Config;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
 use doublesecretagency\adwizard\web\assets\FrontEndAssets;
+use Exception;
 use Throwable;
 use Twig\Markup;
 use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
-use yii\db\Exception;
+use yii\db\Exception as DbException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -79,7 +82,7 @@ class Ads extends Component
                 ->scalar();
 
             $this->updateAdsLayout($fieldLayoutId, $groupId);
-        } catch (Exception $e) {
+        } catch (DbException $e) {
             // Do nothing
         }
     }
@@ -110,7 +113,7 @@ class Ads extends Component
                     ]
                 )
                 ->execute();
-        } catch (Exception $e) {
+        } catch (DbException $e) {
             // Do nothing
         }
     }
@@ -199,18 +202,24 @@ class Ads extends Component
      *
      * @param array $conditions
      * @return bool|false|string|null
+     * @throws Exception
      */
     public function getValidAdId(array $conditions)
     {
-         return (new Query())
+        // Current timestamp (in UTC)
+        $current = new DateTime('now', new DateTimeZone('UTC'));
+        $timestamp = $current->format('Y-m-d H:i:s');
+
+        // Return valid ad ID
+        return (new Query())
             ->select(['ads.id'])
             ->from(['{{%adwizard_ads}} ads'])
             ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
             ->where($conditions)
             ->andWhere('[[elements.enabled]] = 1')
             ->andWhere('[[ads.assetId]] IS NOT NULL')
-            ->andWhere('([[ads.startDate]]  <= NOW()) OR ([[ads.startDate]] IS NULL)')
-            ->andWhere('([[ads.endDate]]    >= NOW()) OR ([[ads.endDate]]   IS NULL)')
+            ->andWhere("([[ads.startDate]]  <= '{$timestamp}') OR ([[ads.startDate]] IS NULL)")
+            ->andWhere("([[ads.endDate]]    >= '{$timestamp}') OR ([[ads.endDate]]   IS NULL)")
             ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0) OR ([[ads.maxViews]] IS NULL)')
             ->orderBy('RAND()')
             ->scalar();
@@ -221,6 +230,7 @@ class Ads extends Component
      *
      * @param int $id
      * @return ElementInterface|bool|null
+     * @throws Exception
      */
     private function _getSingleAd($id)
     {
@@ -248,6 +258,7 @@ class Ads extends Component
      *
      * @param string $groupHandle
      * @return ElementInterface|bool|null
+     * @throws Exception
      */
     private function _getRandomAdFromGroup(string $groupHandle)
     {
