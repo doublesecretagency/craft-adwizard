@@ -49,21 +49,22 @@ Two new widget types will be available to you:
 ![](src/resources/img/example-ad-timeline.png)
 ![](src/resources/img/example-group-totals.png)
 
+Read more about [seeing your ad statistics...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/seeing-your-ad-statistics)
+
 ## Use Image Transforms (supports Retina display)
 
 You can easily apply an image transform to your ads...
 
 ```twig
-{{ craft.adWizard.randomizeAdGroup('rightSidebar', 'large') }}
+{{ craft.adWizard.randomizeAdGroup('rightSidebar', {
+   'image': {
+       'transform': 'large',
+       'retina': true
+   }
+}) }}
 ```
 
-Passing `true` as the third parameter will display a retina (2x) image.
-
-```twig
-{{ craft.adWizard.randomizeAdGroup('rightSidebar', 'large', true) }}
-```
-
-Read more about the image transform and retina options in the [full documentation...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms)
+Read more about [image transforms...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms)
 
 ***
 
