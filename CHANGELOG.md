@@ -1,16 +1,17 @@
 # Changelog
 
-## 2.1.0 - Unreleased
+## 3.0.0 - 2019-07-16
 
 ### Added
-- Added ability to use custom fields on Ads via Field Layouts.
-- Added ability to completely customize the attributes of ad's `<img>` tag.
+- Added ability to [use custom fields on Ads via Field Layouts](https://www.doublesecretagency.com/plugins/ad-wizard/docs/custom-fields).
+- Added ability to [completely customize the attributes](https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter) of an ad's `<img>` tag.
 - Supports dot notation in dynamic attributes.
 - Added native fields to HUD editor.
 - Added ability to show "Group" on index page.
 
 ### Changed
 - Improved Postgres compatibility.
+- Improved technique for handling [image transforms](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms).
 - Log error message in console if ad has no image asset.
 - Log error message in console if ad image is in a volume with no public URL.
 - Log deprecation warning for old transforms method.
@@ -54,16 +55,16 @@
 ### Added
 - **REQUIRES CRAFT 2.5**
 - Added thumbnail images for ads.
-- [Retina support.](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms#retina-support)
-- [Added "displayAd" and "randomizeAdGroup" variables.](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads)
-- [Get ads via an ElementCriteriaModel.](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads#get-ads-via-an-ecm)
+- Introduced [retina support](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms#retina-support).
+- Added ["displayAd" and "randomizeAdGroup"](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads) variables.
+- Get ads via an [ElementCriteriaModel](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads#get-ads-via-an-ecm).
 - Added ability to bulk delete ads.
 
 ### Changed
 - Fully tested and reformatted to fit better with Craft 2.5.
 - Moved error messages to console.
-- [Changed all references from "Positions" to "Groups".](https://www.doublesecretagency.com/plugins/ad-wizard/docs/positions-has-changed-to-groups)
-- [DEPRECATED: "ad" and "position" variables.](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads)
+- Changed all references from ["Positions" to "Groups"](https://www.doublesecretagency.com/plugins/ad-wizard/docs/positions-has-changed-to-groups).
+- DEPRECATED: ["ad" and "position" variables](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads).
 
 ### Fixed
 - Fixed widgets to be compatible with Craft 2.5.
@@ -72,7 +73,7 @@
 
 ### Added
 - Added new "Stats" page.
-- Full support for [image transforms](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms).
+- Added support for [image transforms](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms).
 
 ### Changed
 - Vastly improved widget UX.
