@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1 - 2019-08-21
+
+### Added
+- Added `.onlyValid()` filter for [getting Ads with an Element Query](https://www.doublesecretagency.com/plugins/ad-wizard/docs/get-ads-with-an-element-query).
+
 ## 3.0.0 - 2019-07-16
 
 ### Added
@@ -57,7 +62,7 @@
 - Added thumbnail images for ads.
 - Introduced [retina support](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms#retina-support).
 - Added ["displayAd" and "randomizeAdGroup"](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads) variables.
-- Get ads via an [ElementCriteriaModel](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads#get-ads-via-an-ecm).
+- Get ads via an [ElementCriteriaModel](https://www.doublesecretagency.com/plugins/ad-wizard/docs/get-ads-with-an-element-query).
 - Added ability to bulk delete ads.
 
 ### Changed

@@ -14,6 +14,8 @@ namespace doublesecretagency\adwizard\elements\db;
 use craft\db\Query;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+use DateTime;
+use DateTimeZone;
 use doublesecretagency\adwizard\models\AdGroup;
 
 /**
@@ -64,6 +66,11 @@ class AdQuery extends ElementQuery
      */
     public $totalClicks;
 
+    /**
+     * @var bool Whether to exclude invalid ads.
+     */
+    protected $_excludeInvalid = false;
+
     // Public Methods
     // =========================================================================
 
@@ -102,6 +109,17 @@ class AdQuery extends ElementQuery
         return $this;
     }
 
+    /**
+     * Ensures that only valid ads will be included in the query.
+     *
+     * @return AdQuery $this
+     */
+    public function onlyValid()
+    {
+        $this->_excludeInvalid = true;
+        return $this;
+    }
+
     // Protected Methods
     // =========================================================================
 
@@ -130,6 +148,23 @@ class AdQuery extends ElementQuery
 
         if ($this->groupId) {
             $this->subQuery->andWhere(Db::parseParam('adwizard_ads.groupId', $this->groupId));
+        }
+
+        if ($this->_excludeInvalid) {
+
+            // Current timestamp (in UTC)
+            $current = new DateTime('now', new DateTimeZone('UTC'));
+            $timestamp = $current->format('Y-m-d H:i:s');
+
+            // Adjust subquery to filter out invalid ads
+            $this->subQuery->andWhere('[[elements.enabled]] = 1');
+            $this->subQuery->andWhere('[[adwizard_ads.assetId]] IS NOT NULL');
+            $this->subQuery->andWhere("([[adwizard_ads.startDate]]  <= '{$timestamp}') OR ([[adwizard_ads.startDate]] IS NULL)");
+            $this->subQuery->andWhere("([[adwizard_ads.endDate]]    >= '{$timestamp}') OR ([[adwizard_ads.endDate]]   IS NULL)");
+            $this->subQuery->andWhere('([[adwizard_ads.totalViews]] < [[adwizard_ads.maxViews]]) OR ([[adwizard_ads.maxViews]] = 0) OR ([[adwizard_ads.maxViews]] IS NULL)');
+
+            // Reset flag
+            $this->_excludeInvalid = false;
         }
 
         return parent::beforePrepare();
