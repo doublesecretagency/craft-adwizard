@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.2 - 2019-08-22
+
+### Fixed
+- Fixed redirect bug which occurred when saving an ad.
+
 ## 3.0.1 - 2019-08-21
 
 ### Added
