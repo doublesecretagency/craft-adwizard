@@ -76,7 +76,7 @@ class FieldLayouts extends Component
      */
     public function getLayoutById(int $layoutId)
     {
-        if ($this->_fieldLayoutsById !== null && array_key_exists($layoutId, $this->_fieldLayoutsById)) {
+        if ($this->_fieldLayoutsById !== null && isset($this->_fieldLayoutsById[$layoutId])) {
             return $this->_fieldLayoutsById[$layoutId];
         }
 

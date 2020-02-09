@@ -114,7 +114,7 @@ class AdGroups extends Component
      */
     public function getGroupById(int $groupId)
     {
-        if ($this->_adGroupsById !== null && array_key_exists($groupId, $this->_adGroupsById)) {
+        if ($this->_adGroupsById !== null && isset($this->_adGroupsById[$groupId])) {
             return $this->_adGroupsById[$groupId];
         }
 
