@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.3 - 2020-02-08
+
+### Fixed
+- Fixed PHP 7.4 compatibility issues.
+
 ## 3.0.2 - 2019-08-22
 
 ### Fixed
