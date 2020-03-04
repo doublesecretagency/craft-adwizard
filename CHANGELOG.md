@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.4 - 2020-03-04
+
+### Fixed
+- Fixed broken link to asset volumes.
+
 ## 3.0.3 - 2020-02-08
 
 ### Fixed
