@@ -17,9 +17,12 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Dashboard;
+use craft\services\Fields;
 use craft\services\Plugins;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
+use doublesecretagency\adwizard\fields\Ads as AdsField;
+use doublesecretagency\adwizard\fields\AdGroups as AdGroupsField;
 use doublesecretagency\adwizard\services\AdGroups;
 use doublesecretagency\adwizard\services\Ads;
 use doublesecretagency\adwizard\services\FieldLayouts;
@@ -97,6 +100,16 @@ class AdWizard extends Plugin
             static function(RegisterComponentTypesEvent $event) {
                 $event->types[] = AdTimeline::class;
                 $event->types[] = GroupTotals::class;
+            }
+        );
+
+        // Register fields
+        Event::on(
+            Fields::class,
+            Fields::EVENT_REGISTER_FIELD_TYPES,
+            static function(RegisterComponentTypesEvent $event) {
+                $event->types[] = AdsField::class;
+                $event->types[] = AdGroupsField::class;
             }
         );
 
