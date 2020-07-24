@@ -29,7 +29,7 @@ class FrontEndAssets extends AssetBundle
 
         $this->js = [
             'js/superagent.js',
-            'js/adwizard.js',
+            'js/aw.js',
         ];
 
         parent::init();
