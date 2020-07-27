@@ -14,13 +14,14 @@
     </div>
 
     {% if groups|length %}
-        <table id="adgroups" class="data fullwidth collapsible">
-            <thead>
+        <div class="tableview tablepane">
+            <table id="adgroups" class="data fullwidth">
+                <thead>
                 <th scope="col">{{ 'Name'|t('app') }}</th>
                 <th scope="col">{{ 'Handle'|t('app') }}</th>
                 <td class="thin"></td>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for group in groups %}
                     <tr data-id="{{ group.id }}" data-name="{{ group.name|t('site') }}">
                         <th scope="row" data-title="{{ 'Name'|t('app') }}"><a href="{{ cpUrl('ad-wizard/groups/' ~ group.id) }}">{{ group.name|t('site') }}</a></th>
@@ -28,8 +29,9 @@
                         <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     {% endif %}
 {% endset %}
 

@@ -28,8 +28,9 @@
 {% endif %}
 
 {% set content %}
-    <table class="data fullwidth collapsible">
-        <thead>
+    <div class="tableview tablepane">
+        <table class="data fullwidth">
+            <thead>
             <tr>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
@@ -47,8 +48,8 @@
                 <th class="aw-total aw-views col-divider">Views</th>
                 <th class="aw-total aw-clicks">Clicks</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for ad in craft.adWizard.ads.orderBy('title').all() %}
                 {% set group = craft.adWizard.getGroupById(ad.groupId) %}
                 <tr>
@@ -74,6 +75,7 @@
                     <td colspan="8" class="no-stats">You currently have no ads. <a href="{{ href }}">{{ label }}</a></td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 {% endset %}
