@@ -27,8 +27,9 @@
 
     <hr/>
 
-    {% include '_includes/fieldlayoutdesigner' with {
+    {{ forms.fieldLayoutDesignerField({
         fieldLayout: fieldLayout.getFieldLayout(),
         customizableTabs: false
-    } only %}
+    }) }}
+
 {% endblock %}

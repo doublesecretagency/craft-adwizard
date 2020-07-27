@@ -149,11 +149,19 @@ class AdsController extends Controller
             }
         }
 
+        // Prep the form tabs & content
+        $fieldLayout = $variables['group']->getFieldLayout();
+        if ($fieldLayout) {
+            $form = $fieldLayout->createForm($variables['ad']);
+            $variables['fieldsHtml'] = $form->render();
+        } else {
+            $variables['fieldsHtml'] = null;
+        }
+
         // ---------------------------------------------------------------------
 
         // Whether this is a new ad
         $newAd = ($variables['ad']->id === null);
-
 
         // Whether any assets sources exist
         $sources = Craft::$app->getAssets()->findFolders();
