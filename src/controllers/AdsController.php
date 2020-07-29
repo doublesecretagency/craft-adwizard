@@ -401,9 +401,16 @@ class AdsController extends Controller
             'ad' => $ad
         ];
 
-        $view = $this->getView();
-        $fieldsHtml = $view->renderTemplate('ad-wizard/ads/_fields', $variables);
+        // Prep the form tabs & content
+        $fieldLayout = $ad->getGroup()->getFieldLayout();
+        if ($fieldLayout) {
+            $form = $fieldLayout->createForm($variables['ad']);
+            $fieldsHtml = $form->render();
+        } else {
+            $fieldsHtml = null;
+        }
 
+        $view = $this->getView();
         $headHtml = $view->getHeadHtml();
         $bodyHtml = $view->getBodyHtml();
 
