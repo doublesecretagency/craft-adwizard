@@ -80,16 +80,19 @@ class AdsController extends Controller
      *
      * @param string|null $groupHandle The ad group’s handle.
      * @param int|null $adId The ad’s ID, if editing an existing ad.
+     * @param string|null $siteHandle The site handle, if specified.
+     * @param Ad|null $ad The ad being edited, if there were any validation errors.
      * @return Response
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws YiiException
      */
-    public function actionEditAd(string $groupHandle = null, int $adId = null): Response
+    public function actionEditAd(string $groupHandle = null, int $adId = null, string $siteHandle = null, Ad $ad = null): Response
     {
         $variables = [
             'groupHandle' => $groupHandle,
             'adId' => $adId,
+            'ad' => $ad,
             'fullPageForm' => true,
             'groupData' => []
         ];
@@ -286,8 +289,26 @@ class AdsController extends Controller
 
         // Populate the ad with post data
         $this->_populateAdModel($ad);
-
         $ad->setFieldValuesFromRequest('fields');
+
+        // Validate
+        if (!$ad->validate()) {
+            if ($request->getAcceptsJson()) {
+                return $this->asJson([
+                    'success' => false,
+                    'errors' => $ad->getErrors(),
+                ]);
+            }
+
+            Craft::$app->getSession()->setError(Craft::t('ad-wizard', 'Couldn’t save ad.'));
+
+            // Send the ad back to the template
+            Craft::$app->getUrlManager()->setRouteParams([
+                'ad' => $ad
+            ]);
+
+            return null;
+        }
 
         // Save the ad
         if ($ad->enabled && $ad->enabledForSite) {

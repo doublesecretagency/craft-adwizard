@@ -213,6 +213,18 @@ class Ad extends Element
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
+    protected function defineRules(): array
+    {
+        $rules = parent::defineRules();
+
+        $rules[] = [['url'], 'required'];
+
+        return $rules;
+    }
+
     // Properties
     // =========================================================================
 
