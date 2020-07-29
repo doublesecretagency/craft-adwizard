@@ -3,12 +3,21 @@
 {% set elementType = 'doublesecretagency\\adwizard\\elements\\Ad' %}
 {% set title = "Ads"|t('ad-wizard') %}
 
-{% set currentGroup = craft.app.request.getSegment(3) %}
+{% set params = craft.app.urlManager.getRouteParams() %}
+{% set currentGroup = (params.groupHandle ?? false) %}
 
 {% block actionButton %}
     {% if groups|length %}
+
+        {# Set link to new Ad #}
+        {% if currentGroup %}
+            {% set href = cpUrl("ad-wizard/ads/#{currentGroup}/new") %}
+        {% else %}
+            {% set href = cpUrl("ad-wizard/ads/new") %}
+        {% endif %}
+
         <div class="btngroup">
-            <a href="{{ cpUrl('ad-wizard/ads/new') }}" class="btn submit add icon">{{ 'New Ad'|t('ad-wizard') }}</a>
+            <a id="new-ad-button" href="{{ href }}" class="btn submit add icon">{{ 'New Ad'|t('ad-wizard') }}</a>
             {% if 1 < groups|length %}
                 <div class="btn submit menubtn"></div>
                 <div class="menu">
@@ -23,31 +32,49 @@
     {% endif %}
 {% endblock %}
 
+{% js "var currentGroup = '#{currentGroup}'" %}
+
 {% js %}
+
+    // Change selected Ad Group
+    var changeGroup = function (newGroup) {
+
+        // Base URI
+        var uri = 'ad-wizard/ads';
+
+        // Optionally append the new group
+        if (newGroup && '*' !== newGroup) {
+            uri += '/' + newGroup;
+        }
+
+        // Update browser URL
+        history.replaceState({}, '', Craft.getUrl(uri));
+
+        // Update href of submit button
+        $('#new-ad-button').attr('href', Craft.getUrl(uri + '/new'));
+    }
+
+    // On page load
     $(function () {
+
+        // Set current group
+        changeGroup(Craft.elementIndex.sourceKey);
 
         // When link is clicked, update URL
         Craft.elementIndex.onSelectSource = function () {
 
             if (this.settings.context === 'index' && typeof history !== 'undefined') {
-                var uri = 'ad-wizard/ads';
-
-                if (this.sourceKey && '*' !== this.sourceKey) {
-                    uri += '/' + this.sourceKey;
-                }
-
-                history.replaceState({}, '', Craft.getUrl(uri));
+                changeGroup(this.sourceKey);
             }
 
             this.settings.onSelectSource(this.sourceKey);
             this.trigger('selectSource', {sourceKey: this.sourceKey});
         };
 
-        {% if currentGroup %}
-            // If group currently selected, update
-            Craft.elementIndex.selectSourceByKey('{{ currentGroup }}');
-            Craft.elementIndex.updateElements();
-        {% endif %}
+        // If group currently selected, update
+        Craft.elementIndex.selectSourceByKey(currentGroup);
+        Craft.elementIndex.updateElements();
 
     });
+
 {% endjs %}
