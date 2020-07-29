@@ -35,6 +35,9 @@
     {% endif %}
 {% endset %}
 
+{% css '#footer {margin-top:0}' %}
+{% set footer = '&nbsp;' %}
+
 {% js %}
     new Craft.AdminTable({
         tableSelector: '#adgroups',
