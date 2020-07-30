@@ -13,7 +13,7 @@
         <p><strong>No groups exist yet.</strong> <a href="{{ cpUrl('ad-wizard/groups/new') }}">Create one to get started...</a></p>
     </div>
 
-    {% if groups|length %}
+    {% if groups %}
         <div class="tableview tablepane">
             <table id="adgroups" class="data fullwidth">
                 <thead>
@@ -35,8 +35,10 @@
     {% endif %}
 {% endset %}
 
-{% css '#footer {margin-top:0}' %}
-{% set footer = '&nbsp;' %}
+{% if groups %}
+    {% css '#footer {margin-top:0}' %}
+    {% set footer = '&nbsp;' %}
+{% endif %}
 
 {% js %}
     new Craft.AdminTable({
