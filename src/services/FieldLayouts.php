@@ -13,6 +13,9 @@ namespace doublesecretagency\adwizard\services;
 
 use Craft;
 use craft\base\Component;
+use craft\db\Query;
+use craft\db\Table;
+use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\FieldLayout;
 use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
 use Exception;
@@ -48,23 +51,37 @@ class FieldLayouts extends Component
      */
     public function getFieldLayouts(): array
     {
+        // If we've already fetched the layouts, return them
         if ($this->_fetchedAllFieldLayouts) {
             return array_values($this->_fieldLayoutsById);
         }
 
+        // Initialize field layouts
         $this->_fieldLayoutsById = [];
+
+        // Get all valid layout IDs
+        $layoutIds = (new Query())
+            ->select(['id'])
+            ->from([Table::FIELDLAYOUTS])
+            ->where(['type' => Ad::class])
+            ->andWhere(['dateDeleted' => null])
+            ->column();
 
         /** @var FieldLayoutRecord[] $fieldLayoutRecords */
         $fieldLayoutRecords = FieldLayoutRecord::find()
+            ->where(['in', 'id', $layoutIds])
             ->orderBy(['name' => SORT_ASC])
             ->all();
 
+        // Loop through records
         foreach ($fieldLayoutRecords as $layoutRecord) {
             $this->_fieldLayoutsById[$layoutRecord->id] = $this->_createFieldLayoutFromRecord($layoutRecord);
         }
 
+        // Mark as fetched
         $this->_fetchedAllFieldLayouts = true;
 
+        // Return layouts
         return array_values($this->_fieldLayoutsById);
     }
 
@@ -161,7 +178,7 @@ class FieldLayouts extends Component
         $transaction = Craft::$app->getDb()->beginTransaction();
         try {
             // Delete the field layout
-            Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
+            $success = Craft::$app->getFields()->deleteLayoutById($fieldLayoutId);
 
             $transaction->commit();
         } catch (Throwable $e) {
@@ -170,7 +187,7 @@ class FieldLayouts extends Component
             throw $e;
         }
 
-        return true;
+        return ($success ?? false);
     }
 
     // Private Methods
