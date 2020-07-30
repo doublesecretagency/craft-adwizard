@@ -46,7 +46,7 @@ class FieldLayout extends ActiveRecord
      */
     public function getFieldLayouts(): ActiveQueryInterface
     {
-            return $this->hasMany(FieldLayout::class, ['fieldLayoutId' => 'id']);
+        return $this->hasMany(FieldLayout::class, ['fieldLayoutId' => 'id']);
     }
 
 }

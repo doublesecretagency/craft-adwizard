@@ -12,10 +12,13 @@
 namespace doublesecretagency\adwizard\fields;
 
 use Craft;
-use craft\base\ElementInterface;
 use craft\fields\BaseRelationField;
 use doublesecretagency\adwizard\elements\Ad;
 
+/**
+ * Class Ads
+ * @since 3.1.0
+ */
 class Ads extends BaseRelationField
 {
     // Public Methods

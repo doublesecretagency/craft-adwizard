@@ -17,6 +17,10 @@ use craft\base\Field;
 use doublesecretagency\adwizard\AdWizard;
 use yii\db\Schema;
 
+/**
+ * Class AdGroups
+ * @since 3.1.0
+ */
 class AdGroups extends Field
 {
     // Public Methods
