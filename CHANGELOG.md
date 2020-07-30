@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.1.0 - 2020-07-30
+
+### Added
+- Compatible with the new Craft 3.5 field layout editor.
+- Added an [Ads field type](https://www.doublesecretagency.com/plugins/ad-wizard/docs/field-types), an elements field containing Ads. (thanks @engram-design)
+- Added an [Ad Group field type](https://www.doublesecretagency.com/plugins/ad-wizard/docs/field-types), a dropdown that stores the handle of a selected Ad Group. (thanks @engram-design)
+
+### Changed
+- Craft 3.5 is now required.
+- Renamed JS file as an ad blocker deterrent.
+- Pre-selects Ad Group when creating a new Ad.
+
+### Fixed
+- Properly validates the URL field.
+- Respects soft-deleted field layouts.
+
 ## 3.0.4 - 2020-03-04
 
 ### Fixed

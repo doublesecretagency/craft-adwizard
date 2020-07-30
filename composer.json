@@ -2,7 +2,7 @@
     "name": "doublesecretagency/craft-adwizard",
     "description": "Easily manage custom advertisements on your website.",
     "type": "craft-plugin",
-    "version": "3.0.4",
+    "version": "3.1.0",
     "keywords": [
         "craft",
         "cms",
@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0"
+        "craftcms/cms": "^3.5"
     },
     "autoload": {
         "psr-4": {
