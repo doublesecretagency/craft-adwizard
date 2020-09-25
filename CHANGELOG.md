@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1 - 2020-09-25
+
+### Fixed
+- Fixed redirect bug when installing from console. (thanks @juban)
+
 ## 3.1.0 - 2020-07-30
 
 ### Added
