@@ -140,7 +140,7 @@ class AdWizard extends Plugin
             Plugins::class,
             Plugins::EVENT_AFTER_INSTALL_PLUGIN,
             static function (Event $event) {
-                if ('ad-wizard' == $event->plugin->handle) {
+                if ('ad-wizard' == $event->plugin->handle && !Craft::$app->getRequest()->getIsConsoleRequest()) {
                     $url = UrlHelper::cpUrl('ad-wizard/welcome');
                     Craft::$app->getResponse()->redirect($url)->send();
                 }
