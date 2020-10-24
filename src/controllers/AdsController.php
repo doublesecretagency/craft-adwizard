@@ -23,6 +23,7 @@ use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\Ad;
+use doublesecretagency\adwizard\models\Settings;
 use doublesecretagency\adwizard\web\assets\AdGroupSwitcherAssets;
 use doublesecretagency\adwizard\web\assets\AdminAssets;
 use Exception;
@@ -89,12 +90,18 @@ class AdsController extends Controller
      */
     public function actionEditAd(string $groupHandle = null, int $adId = null, string $siteHandle = null, Ad $ad = null): Response
     {
+        /* @var Settings $settings */
+        $settings = AdWizard::$plugin->getSettings();
+
         $variables = [
             'groupHandle' => $groupHandle,
             'adId' => $adId,
             'ad' => $ad,
             'fullPageForm' => true,
-            'groupData' => []
+            'groupData' => [],
+
+            'enableAdUrls' => $settings->enableAdUrls,
+            'enableAdImages' => $settings->enableAdImages,
         ];
 
         $allGroups = AdWizard::$plugin->groups->getAllGroups();
