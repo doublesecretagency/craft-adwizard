@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.2 - 2021-02-04
+
+### Fixed
+- Query adjustments based on MySQL vs PostgreSQL. (thanks @pgrzyb)
+
 ## 3.1.1 - 2020-09-25
 
 ### Fixed

@@ -210,38 +210,30 @@ class Ads extends Component
         $current = new DateTime('now', new DateTimeZone('UTC'));
         $timestamp = $current->format('Y-m-d H:i:s');
 
-        $dbDriver = Craft::$app->db->getDriverName();
+        // Query for retrieving a valid ad ID
+        $adQuery = (new Query())
+            ->select(['ads.id'])
+            ->from(['{{%adwizard_ads}} ads'])
+            ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
+            ->where($conditions)
+            ->andWhere("([[ads.startDate]]  <= '{$timestamp}') OR ([[ads.startDate]] IS NULL)")
+            ->andWhere("([[ads.endDate]]    >= '{$timestamp}') OR ([[ads.endDate]]   IS NULL)")
+            ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0) OR ([[ads.maxViews]] IS NULL)')
+            ->andWhere('[[ads.assetId]] IS NOT NULL');
 
-        if ($dbDriver == 'pgsql') {
-            // Return valid ad ID when using PostgreSQL
-            return (new Query())
-                ->select(['ads.id'])
-                ->from(['{{%adwizard_ads}} ads'])
-                ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
-                ->where($conditions)
-                ->andWhere('[[elements.enabled]] = true')
-                ->andWhere('[[ads.assetId]] IS NOT NULL')
-                ->andWhere("([[ads.startDate]]  <= '{$timestamp}') OR ([[ads.startDate]] IS NULL)")
-                ->andWhere("([[ads.endDate]]    >= '{$timestamp}') OR ([[ads.endDate]]   IS NULL)")
-                ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0) OR ([[ads.maxViews]] IS NULL)')
-                ->orderBy('random()')
-                ->scalar();            
-        } else {
-
-            // Return valid ad ID
-            return (new Query())
-                ->select(['ads.id'])
-                ->from(['{{%adwizard_ads}} ads'])
-                ->innerJoin('{{%elements}} elements', '[[ads.id]] = [[elements.id]]')
-                ->where($conditions)
+        // Make adjustments based on MySQL vs PostgreSQL
+        if (Craft::$app->db->isMysql) {
+            $adQuery
                 ->andWhere('[[elements.enabled]] = 1')
-                ->andWhere('[[ads.assetId]] IS NOT NULL')
-                ->andWhere("([[ads.startDate]]  <= '{$timestamp}') OR ([[ads.startDate]] IS NULL)")
-                ->andWhere("([[ads.endDate]]    >= '{$timestamp}') OR ([[ads.endDate]]   IS NULL)")
-                ->andWhere('([[ads.totalViews]] < [[ads.maxViews]]) OR ([[ads.maxViews]] = 0) OR ([[ads.maxViews]] IS NULL)')
-                ->orderBy('RAND()')
-                ->scalar();
+                ->orderBy('RAND()');
+        } elseif (Craft::$app->db->isPgsql) {
+            $adQuery
+                ->andWhere('[[elements.enabled]] = true')
+                ->orderBy('random()');
         }
+
+        // Return valid ad ID
+        return $adQuery->scalar();
     }
 
     /**
