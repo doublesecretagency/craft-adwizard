@@ -2,7 +2,7 @@
     "name": "doublesecretagency/craft-adwizard",
     "description": "Easily manage custom advertisements on your website.",
     "type": "craft-plugin",
-    "version": "3.1.2",
+    "version": "3.1.3",
     "keywords": [
         "craft",
         "cms",

@@ -1,9 +1,9 @@
 # Changelog
 
-## 3.1.3 - Unreleased
+## 3.1.3 - 2021-04-15
 
 ### Fixed
-- Fixed minor spacing issue
+- Fixed minor spacing issue.
 
 ## 3.1.2 - 2021-02-04
 
