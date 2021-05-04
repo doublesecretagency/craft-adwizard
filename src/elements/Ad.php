@@ -30,6 +30,7 @@ use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
 use doublesecretagency\adwizard\elements\db\AdQuery;
 use doublesecretagency\adwizard\models\AdGroup;
+use doublesecretagency\adwizard\models\Settings;
 use doublesecretagency\adwizard\records\Ad as AdRecord;
 use Exception;
 use Throwable;
@@ -106,6 +107,9 @@ class Ad extends Element
      */
     protected static function defineSources(string $context = null): array
     {
+        /* @var Settings $settings */
+        $settings = AdWizard::$plugin->getSettings();
+
         // "All ads"
         $sources = [
             [
@@ -113,7 +117,7 @@ class Ad extends Element
                 'label'     => Craft::t('ad-wizard', 'All ads'),
                 'data'      => ['handle' => ''],
                 'criteria'  => ['status' => null],
-                'hasThumbs' => true
+                'hasThumbs' => $settings->enableAdImages,
             ]
         ];
 
@@ -124,7 +128,7 @@ class Ad extends Element
                 'label'     => Craft::t('site', $group->name),
                 'data'      => ['handle' => $group->handle],
                 'criteria'  => ['groupId' => $group->id],
-                'hasThumbs' => true
+                'hasThumbs' => $settings->enableAdImages,
             ];
         }
 
@@ -159,7 +163,13 @@ class Ad extends Element
      */
     protected static function defineSearchableAttributes(): array
     {
-        return ['title', 'url'];
+        $attributes = ['title'];
+
+        if (AdWizard::$plugin->getSettings()->enableAdUrls) {
+            $attributes[] = 'url';
+        }
+
+        return $attributes;
     }
 
     /**
@@ -167,15 +177,20 @@ class Ad extends Element
      */
     protected static function defineSortOptions(): array
     {
-        return [
+        $options = [
             'title'       => Craft::t('app', 'Title'),
-            'url'         => Craft::t('app', 'URL'),
             'startDate'   => Craft::t('ad-wizard', 'Start Date'),
             'endDate'     => Craft::t('ad-wizard', 'End Date'),
             'maxViews'    => Craft::t('ad-wizard', 'Max Views'),
             'totalClicks' => Craft::t('ad-wizard', 'Total Clicks'),
             'totalViews'  => Craft::t('ad-wizard', 'Total Views'),
         ];
+
+        if (AdWizard::$plugin->getSettings()->enableAdUrls) {
+            $options['url'] = Craft::t('app', 'URL');
+        }
+
+        return $options;
     }
 
     /**
@@ -185,7 +200,6 @@ class Ad extends Element
     {
         $attributes = [
             'title'       => ['label' => Craft::t('app', 'Title')],
-            'url'         => ['label' => Craft::t('app', 'URL')],
             'group'       => ['label' => Craft::t('ad-wizard', 'Group')],
             'startDate'   => ['label' => Craft::t('ad-wizard', 'Start Date')],
             'endDate'     => ['label' => Craft::t('ad-wizard', 'End Date')],
@@ -193,6 +207,10 @@ class Ad extends Element
             'totalClicks' => ['label' => Craft::t('ad-wizard', 'Total Clicks')],
             'totalViews'  => ['label' => Craft::t('ad-wizard', 'Total Views')],
         ];
+
+        if (AdWizard::$plugin->getSettings()->enableAdUrls) {
+            $attributes['url'] = ['label' => Craft::t('app', 'URL')];
+        }
 
         return $attributes;
     }
@@ -202,7 +220,7 @@ class Ad extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return [
+        $attributes = [
             'url',
             'group',
             'startDate',
@@ -211,6 +229,12 @@ class Ad extends Element
             'totalClicks',
             'totalViews',
         ];
+
+        if (AdWizard::$plugin->getSettings()->enableAdUrls) {
+            array_unshift($attributes, 'url');
+        }
+
+        return $attributes;
     }
 
     /**
@@ -220,7 +244,9 @@ class Ad extends Element
     {
         $rules = parent::defineRules();
 
-        $rules[] = [['url'], 'required'];
+        if (AdWizard::$plugin->getSettings()->enableAdUrls) {
+            $rules[] = [['url'], 'required'];
+        }
 
         return $rules;
     }
@@ -331,6 +357,10 @@ class Ad extends Element
      */
     public function getThumbUrl(int $size)
     {
+        if (!AdWizard::$plugin->getSettings()->enableAdImages) {
+            return null;
+        }
+
         // If no asset ID, bail
         if (!$this->assetId) {
             return $this->_defaultThumb();
@@ -528,6 +558,8 @@ class Ad extends Element
     {
         $view = Craft::$app->getView();
 
+        /* @var Settings $settings */
+        $settings = AdWizard::$plugin->getSettings();
 
         $html = $view->renderTemplateMacro('_includes/forms', 'textField', [
             [
@@ -543,17 +575,19 @@ class Ad extends Element
             ]
         ]);
 
-        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('app', 'URL'),
+        if ($settings->enableAdUrls) {
+            $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
+                [
+                    'label' => Craft::t('app', 'URL'),
 //                'siteId' => $this->siteId,
-                'id' => 'url',
-                'name' => 'url',
-                'value' => $this->url,
-                'errors' => $this->getErrors('url'),
-                'required' => true,
-            ]
-        ]);
+                    'id' => 'url',
+                    'name' => 'url',
+                    'value' => $this->url,
+                    'errors' => $this->getErrors('url'),
+                    'required' => true,
+                ]
+            ]);
+        }
 
         $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
             [

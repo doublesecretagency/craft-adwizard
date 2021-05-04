@@ -16,6 +16,7 @@ use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 use DateTime;
 use DateTimeZone;
+use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\models\AdGroup;
 
 /**
@@ -158,10 +159,13 @@ class AdQuery extends ElementQuery
 
             // Adjust subquery to filter out invalid ads
             $this->subQuery->andWhere('[[elements.enabled]] = 1');
-            $this->subQuery->andWhere('[[adwizard_ads.assetId]] IS NOT NULL');
             $this->subQuery->andWhere("([[adwizard_ads.startDate]]  <= '{$timestamp}') OR ([[adwizard_ads.startDate]] IS NULL)");
             $this->subQuery->andWhere("([[adwizard_ads.endDate]]    >= '{$timestamp}') OR ([[adwizard_ads.endDate]]   IS NULL)");
             $this->subQuery->andWhere('([[adwizard_ads.totalViews]] < [[adwizard_ads.maxViews]]) OR ([[adwizard_ads.maxViews]] = 0) OR ([[adwizard_ads.maxViews]] IS NULL)');
+
+            if (AdWizard::$plugin->getSettings()->enableAdImages) {
+                $this->subQuery->andWhere('[[adwizard_ads.assetId]] IS NOT NULL');
+            }
 
             // Reset flag
             $this->_excludeInvalid = false;
