@@ -1,17 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-Icons made by <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
--->
-<svg width="1637px" height="1637px" viewBox="0 0 1637 1637" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
-    <title>Ad Wizard</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="icon-mask" sketch:type="MSLayerGroup" fill="#000000">
-            <g id="g3003" transform="translate(818.059322, 818.669500) scale(1, -1) translate(-818.059322, -818.669500) translate(-0.440678, 0.169500)" sketch:type="MSShapeGroup">
-                <path d="M1163,1056 L1456,1349 L1349,1456 L1056,1163 L1163,1056 Z M1610,1349 C1610,1331 1604,1316 1592,1304 L306,18 C294,6 279,0 261,0 C243,0 228,6 216,18 L18,216 C6,228 0,243 0,261 C0,279 6,294 18,306 L1304,1592 C1316,1604 1331,1610 1349,1610 C1367,1610 1382,1604 1394,1592 L1592,1394 C1604,1382 1610,1367 1610,1349 L1610,1349 Z M259,1539 L357,1509 L259,1479 L229,1381 L199,1479 L101,1509 L199,1539 L229,1637 L259,1539 Z M609,1377 L805,1317 L609,1257 L549,1061 L489,1257 L293,1317 L489,1377 L549,1573 L609,1377 Z M1539,899 L1637,869 L1539,839 L1509,741 L1479,839 L1381,869 L1479,899 L1509,997 L1539,899 Z M899,1539 L997,1509 L899,1479 L869,1381 L839,1479 L741,1509 L839,1539 L869,1637 L899,1539 Z" id="path3005"></path>
-            </g>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="140" viewBox="0 0 160 140">
+    <path d="M138.95 140H21.05a21 21 0 0 1-14.899-6.151A21 21 0 0 1 0 118.95v-97.9A21 21 0 0 1 6.151 6.151 21 21 0 0 1 21.05 0h117.9a21 21 0 0 1 14.899 6.151A21 21 0 0 1 160 21.05v97.9A21 21 0 0 1 138.95 140zm-42.5-37.2h0a22.65 22.65 0 0 0 8.3-17.45 20 20 0 0 0-2.6-10 21.25 21.25 0 0 0-6.45-7.25 67.95 67.95 0 0 0-11.45-5.8c-6.85-2.95-10.3-6.25-10.3-10a6.7 6.7 0 0 1 2-5 6.25 6.25 0 0 1 4.75-2.1 28.5 28.5 0 0 1 11.7 5l10.3-11.3a29.3 29.3 0 0 0-14.45-7.3V16.9H71.7v15.5a22.5 22.5 0 0 0-7.9 5 21.95 21.95 0 0 0-6.65 16.65 20.8 20.8 0 0 0 2.05 9.05 17.8 17.8 0 0 0 5 6.75 40 40 0 0 0 10.3 5c8.45 3.05 12.7 6.6 12.7 10.6a7.7 7.7 0 0 1-2.75 5.6 8.35 8.35 0 0 1-5.75 2.65A20 20 0 0 1 65 86.15l-11.05 12.7a39 39 0 0 0 17.45 10.5v13.55h16.55v-14.75a27.35 27.35 0 0 0 8.5-5.35z"/>
 </svg>
