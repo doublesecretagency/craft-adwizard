@@ -11,47 +11,51 @@
     required: true,
 }) }}
 
-{{ forms.textField({
-    label: "URL"|t('app'),
-    type: 'url',
-    id: 'url',
-    name: 'url',
-    value: ad.url,
-    placeholder: 'http://',
-    errors: ad.getErrors('url'),
-    required: true,
-}) }}
+{% if enableAdUrls %}
+    {{ forms.textField({
+        label: "URL"|t('app'),
+        type: 'url',
+        id: 'url',
+        name: 'url',
+        value: ad.url,
+        placeholder: 'http://',
+        errors: ad.getErrors('url'),
+        required: true,
+    }) }}
+{% endif %}
 
-<div class="field" id="adGraphic-field">
-    <div class="heading">
-        <label for="adGraphic">Image</label>
-        <div class="instructions"><p>If no graphic is associated, the ad will not be displayed.</p></div>
+{% if enableAdImages %}
+    <div class="field" id="adGraphic-field">
+        <div class="heading">
+            <label for="adGraphic">Image</label>
+            <div class="instructions"><p>If no graphic is associated, the ad will not be displayed.</p></div>
+        </div>
+        <div class="input">
+            {% if assetsSourceExists %}
+                {{ forms.elementSelect({
+                    elements: elements,
+                    id: 'adGraphic',
+                    name: 'adGraphic',
+                    elementType: elementType,
+                    sources: '*',
+                    criteria: {
+                        'kind': [],
+                        'enabledForSite': null,
+                        'siteId': ad.siteId,
+                    },
+                    sourceElementId: ad.id,
+                    jsClass: 'Craft.AssetSelectInput',
+                    selectionLabel: 'Select Ad Graphic',
+                    viewMode: 'large',
+                    limit: 1,
+                    modalStorageKey: 'adWizard.adGraphic',
+                }) }}
+            {% else %}
+                <p class="error">No asset volumes currently exist. <a href="{{ cpUrl('settings/assets') }}">Create one now...</a></p>
+            {% endif %}
+        </div>
     </div>
-    <div class="input">
-        {% if assetsSourceExists %}
-            {{ forms.elementSelect({
-                elements: elements,
-                id: 'adGraphic',
-                name: 'adGraphic',
-                elementType: elementType,
-                sources: '*',
-                criteria: {
-                    'kind': [],
-                    'enabledForSite': null,
-                    'siteId': ad.siteId,
-                },
-                sourceElementId: ad.id,
-                jsClass: 'Craft.AssetSelectInput',
-                selectionLabel: 'Select Ad Graphic',
-                viewMode: 'large',
-                limit: 1,
-                modalStorageKey: 'adWizard.adGraphic',
-            }) }}
-        {% else %}
-            <p class="error">No asset volumes currently exist. <a href="{{ cpUrl('settings/assets') }}">Create one now...</a></p>
-        {% endif %}
-    </div>
-</div>
+{% endif %}
 
 <div id="fields">
     {{ fieldsHtml|raw }}

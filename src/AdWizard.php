@@ -23,6 +23,7 @@ use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 use doublesecretagency\adwizard\fields\Ads as AdsField;
 use doublesecretagency\adwizard\fields\AdGroups as AdGroupsField;
+use doublesecretagency\adwizard\models\Settings;
 use doublesecretagency\adwizard\services\AdGroups;
 use doublesecretagency\adwizard\services\Ads;
 use doublesecretagency\adwizard\services\FieldLayouts;
@@ -177,6 +178,14 @@ class AdWizard extends Plugin
         $item['subnav']['fieldlayouts'] = ['label' => 'Field Layouts', 'url' => 'ad-wizard/fieldlayouts'];
 
         return $item;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createSettingsModel()
+    {
+        return new Settings();
     }
 
 }
