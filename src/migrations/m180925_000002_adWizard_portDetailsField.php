@@ -18,7 +18,6 @@ use craft\fields\PlainText;
 use craft\models\FieldGroup;
 use Throwable;
 use yii\base\Exception;
-use yii\base\NotSupportedException;
 
 /**
  * Migration: Port the old "Details" field
@@ -28,13 +27,9 @@ class m180925_000002_adWizard_portDetailsField extends Migration
 {
 
     /**
-     * @inheritDoc
-     * @return bool|void
-     * @throws Exception
-     * @throws Throwable
-     * @throws NotSupportedException
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         // If field handle is taken, bail
         if ($this->db->columnExists('{{%content}}', 'field_adWizard_details')) {
@@ -51,7 +46,7 @@ class m180925_000002_adWizard_portDetailsField extends Migration
      * @throws Exception
      * @throws Throwable
      */
-    private function _createNewField()
+    private function _createNewField(): void
     {
         $fieldsService = Craft::$app->getFields();
 
@@ -83,7 +78,7 @@ class m180925_000002_adWizard_portDetailsField extends Migration
     /**
      * Copy existing field values
      */
-    private function _copyFieldValues()
+    private function _copyFieldValues(): void
     {
         // Get existing data
         $ads = (new Query())
@@ -104,13 +99,13 @@ class m180925_000002_adWizard_portDetailsField extends Migration
     /**
      * Delete old fixed "Details" field
      */
-    private function _deleteOldField()
+    private function _deleteOldField(): void
     {
         $this->dropColumn('{{%adwizard_ads}}', 'details');
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function safeDown(): bool
     {

@@ -19,13 +19,13 @@ use yii\db\ActiveQueryInterface;
  * Class AdGroup
  * @since 2.0.0
  *
- * @property int      $id
- * @property int      $fieldLayoutId
- * @property string   $name
- * @property string   $handle
+ * @property int $id
+ * @property int $fieldLayoutId
+ * @property string $name
+ * @property string $handle
  * @property DateTime $dateCreated
  * @property DateTime $dateUpdated
- * @property string   $uid
+ * @property string $uid
  *
  * @property ActiveQueryInterface $ads All ads in this group.
  */
@@ -33,8 +33,7 @@ class AdGroup extends ActiveRecord
 {
 
     /**
-     * @inheritDoc
-     * @return string
+     * @inheritdoc
      */
     public static function tableName(): string
     {

@@ -48,21 +48,21 @@ class AdWizardVariable
     /**
      * Display specified ad.
      *
-     * @param $id
+     * @param int $id
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws DeprecationException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      * @throws Exception
      */
-    public function displayAd($id, $options = [], $retinaDeprecated = false)
+    public function displayAd(int $id, array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsUrl = 'https://plugins.doublesecretagency.com/ad-wizard/the-options-parameter/';
             $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
             $message = "The parameters of `craft.adWizard.displayAd` have changed. {$docsLink}";
             Craft::$app->getDeprecator()->log('craft.adWizard.displayAd', $message);
@@ -74,21 +74,21 @@ class AdWizardVariable
     /**
      * Display random ad from specified ad group.
      *
-     * @param $group
+     * @param string $group
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws DeprecationException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      * @throws Exception
      */
-    public function randomizeAdGroup($group, $options = [], $retinaDeprecated = false)
+    public function randomizeAdGroup(string $group, array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsUrl = 'https://plugins.doublesecretagency.com/ad-wizard/the-options-parameter/';
             $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
             $message = "The parameters of `craft.adWizard.randomizeAdGroup` have changed. {$docsLink}";
             Craft::$app->getDeprecator()->log('craft.adWizard.randomizeAdGroup', $message);
@@ -112,10 +112,10 @@ class AdWizardVariable
     /**
      * Get group by id.
      *
-     * @param $groupId
+     * @param int $groupId
      * @return AdGroup|null
      */
-    public function getGroupById($groupId)
+    public function getGroupById(int $groupId): ?AdGroup
     {
         return AdWizard::$plugin->groups->getGroupById($groupId);
     }
@@ -125,7 +125,7 @@ class AdWizardVariable
      *
      * @return array
      */
-    public function getLayouts()
+    public function getLayouts(): array
     {
         return AdWizard::$plugin->fieldLayouts->getFieldLayouts();
     }
@@ -135,12 +135,12 @@ class AdWizardVariable
     /**
      * Get month total of views.
      *
-     * @param $id
-     * @param $year
-     * @param $month
+     * @param int $id
+     * @param int $year
+     * @param int $month
      * @return int
      */
-    public function monthTotalViews($id, $year, $month): int
+    public function monthTotalViews(int $id, int $year, int $month): int
     {
         return AdWizard::$plugin->tracking->monthTotalViews($id, $year, $month);
     }
@@ -148,12 +148,12 @@ class AdWizardVariable
     /**
      * Get month total of clicks.
      *
-     * @param $id
-     * @param $year
-     * @param $month
+     * @param int $id
+     * @param int $year
+     * @param int $month
      * @return int
      */
-    public function monthTotalClicks($id, $year, $month): int
+    public function monthTotalClicks(int $id, int $year, int $month): int
     {
         return AdWizard::$plugin->tracking->monthTotalClicks($id, $year, $month);
     }

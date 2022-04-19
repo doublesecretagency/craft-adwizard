@@ -1,11 +1,12 @@
-Ad Wizard plugin for Craft CMS
-==============================
+<img align="left" src="https://plugins.doublesecretagency.com/ad-wizard/images/icon.svg" alt="Plugin icon">
 
-Easily manage custom advertisements on your website.
+# Ad Wizard plugin for Craft CMS
 
-***
+**Easily manage custom advertisements on your website.**
 
-**For complete documentation, see [doublesecretagency.com/plugins/ad-wizard](https://www.doublesecretagency.com/plugins/ad-wizard)**
+---
+
+**For complete documentation, see [plugins.doublesecretagency.com/ad-wizard](https://plugins.doublesecretagency.com/ad-wizard/)**
 
 ## Create Ads
 
@@ -36,7 +37,7 @@ Both methods can display an ad until:
  - The ad reaches the maximum allowed impressions, or
  - The ad is manually disabled.
  
-Read more about [embedding ads...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/embedding-your-ads)
+Read more about [embedding ads...](https://plugins.doublesecretagency.com/ad-wizard/embedding-your-ads/)
 
 ## Track Views & Clicks
 
@@ -49,7 +50,7 @@ Two new widget types will be available to you:
 ![](src/resources/img/example-ad-timeline.png)
 ![](src/resources/img/example-group-totals.png)
 
-Read more about [seeing your ad statistics...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/seeing-your-ad-statistics)
+Read more about [seeing your ad statistics...](https://plugins.doublesecretagency.com/ad-wizard/seeing-your-ad-statistics/)
 
 ## Use Image Transforms (supports Retina display)
 
@@ -64,12 +65,18 @@ You can easily apply an image transform to your ads...
 }) }}
 ```
 
-Read more about [image transforms...](https://www.doublesecretagency.com/plugins/ad-wizard/docs/image-transforms)
+Read more about [image transforms...](https://plugins.doublesecretagency.com/ad-wizard/image-transforms/)
 
-***
+---
 
-## Anything else?
+## Further Reading
 
-We've got other plugins too!
+If you haven't already, flip through the [complete plugin documentation](https://plugins.doublesecretagency.com/ad-wizard/).
 
-Check out the full catalog at [doublesecretagency.com/plugins](https://www.doublesecretagency.com/plugins)
+And if you have any remaining questions, feel free to [reach out to us](https://www.doublesecretagency.com/contact) (via Discord is preferred).
+
+**On behalf of Double Secret Agency, thanks for checking out our plugin!** 🍺
+
+<p align="center">
+    <img width="130" src="https://www.doublesecretagency.com/resources/images/dsa-transparent.png" alt="Logo for Double Secret Agency">
+</p>

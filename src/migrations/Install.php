@@ -24,9 +24,9 @@ class Install extends Migration
 {
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->createTables();
         $this->createIndexes();
@@ -34,9 +34,9 @@ class Install extends Migration
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function safeDown()
+    public function safeDown(): void
     {
         $this->dropTableIfExists('{{%adwizard_ads}}');
         $this->dropTableIfExists('{{%adwizard_groups}}');
@@ -49,7 +49,7 @@ class Install extends Migration
     /**
      * Creates the tables.
      */
-    protected function createTables()
+    protected function createTables(): void
     {
         $this->createTable('{{%adwizard_ads}}', [
             'id'          => $this->integer()->notNull(),
@@ -140,7 +140,7 @@ class Install extends Migration
     /**
      * Creates the indexes.
      */
-    protected function createIndexes()
+    protected function createIndexes(): void
     {
         $this->createIndex(null, '{{%adwizard_ads}}', ['groupId']);
         $this->createIndex(null, '{{%adwizard_ads}}', ['assetId']);
@@ -153,7 +153,7 @@ class Install extends Migration
     /**
      * Adds the foreign keys.
      */
-    protected function addForeignKeys()
+    protected function addForeignKeys(): void
     {
         $this->addForeignKey(null, '{{%adwizard_ads}}', ['id'],      '{{%elements}}',        ['id'], 'CASCADE');
         $this->addForeignKey(null, '{{%adwizard_ads}}', ['groupId'], '{{%adwizard_groups}}', ['id'], 'CASCADE');
@@ -167,7 +167,7 @@ class Install extends Migration
     /**
      * Delete existing Ad data.
      */
-    protected function deleteElementData()
+    protected function deleteElementData(): void
     {
         // Delete Ad field layouts
         $this->delete(

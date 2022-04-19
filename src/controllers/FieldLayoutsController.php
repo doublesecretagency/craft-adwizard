@@ -58,7 +58,7 @@ class FieldLayoutsController extends Controller
      * @return Response
      * @throws HttpException if the requested field layout cannot be found
      */
-    public function actionEditFieldLayout(int $fieldLayoutId = null, FieldLayout $fieldLayout = null): Response
+    public function actionEditFieldLayout(?int $fieldLayoutId = null, ?FieldLayout $fieldLayout = null): Response
     {
         $this->requireLogin();
 
@@ -108,7 +108,7 @@ class FieldLayoutsController extends Controller
      * @throws MissingComponentException
      * @throws Exception
      */
-    public function actionSaveFieldLayout()
+    public function actionSaveFieldLayout(): ?Response
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -116,37 +116,29 @@ class FieldLayoutsController extends Controller
         // Set the field layout
         $fieldLayout = Craft::$app->getFields()->assembleLayoutFromPost();
         $fieldLayout->type = Ad::class;
+        $fieldLayout->reservedFieldHandles = [
+            'url',
+            'adGraphic'
+        ];
 
         if (!Craft::$app->getFields()->saveLayout($fieldLayout)) {
-            Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t save field layout.'));
-
-            return null;
-        }
-
-        $layout = new FieldLayout();
-
-        // Get request
-        $request = Craft::$app->getRequest();
-
-        // Get POST values
-        $layout->id   = $fieldLayout->id;
-        $layout->name = $request->getBodyParam('name');
-
-        // Save it
-        if (!AdWizard::$plugin->fieldLayouts->saveFieldLayout($layout)) {
-            Craft::$app->getSession()->setError(Craft::t('ad-wizard', 'Couldn’t save field layout.'));
-
-            // Send the field layout back to the template
             Craft::$app->getUrlManager()->setRouteParams([
-                'fieldLayout' => $layout
+                'variables' => [
+                    'fieldLayout' => $fieldLayout,
+                ],
             ]);
-
+            $this->setFailFlash(Craft::t('ad-wizard', 'Couldn’t save field layout.'));
             return null;
         }
 
-        Craft::$app->getSession()->setNotice(Craft::t('ad-wizard', 'Field layout saved.'));
+        // Get specified layout name
+        $name = Craft::$app->getRequest()->getBodyParam('name');
 
-        return $this->redirectToPostedUrl($layout);
+        // Create relationship to Ad Wizard
+        AdWizard::$plugin->fieldLayouts->saveLayout($fieldLayout, $name);
+
+        $this->setSuccessFlash(Craft::t('ad-wizard', 'Field layout saved.'));
+        return $this->redirectToPostedUrl();
     }
 
     /**
@@ -169,8 +161,7 @@ class FieldLayoutsController extends Controller
         return $this->asJson(['success' => true]);
     }
 
-    // Private Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * Breadcrumbs for field layout pages.

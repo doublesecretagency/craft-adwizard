@@ -25,62 +25,53 @@ use doublesecretagency\adwizard\models\AdGroup;
 class AdQuery extends ElementQuery
 {
 
-    // Properties
-    // =========================================================================
-
-    // General parameters
-    // -------------------------------------------------------------------------
-
     /**
      * @var int|int[]|null The ad group ID(s) that the resulting ads must be in.
      */
-    public $groupId;
+    public int|array|null $groupId = null;
 
     /**
      * @var int|null ID of ad image asset.
      */
-    public $assetId;
+    public ?int $assetId = null;
 
     /**
-     * @var mixed|null Datetime of beginning of ad run.
+     * @var DateTime|string|null Datetime of beginning of ad run.
      */
-    public $startDate;
+    public DateTime|string|null $startDate = null;
 
     /**
-     * @var mixed|null Datetime of end of ad run.
+     * @var DateTime|string|null Datetime of end of ad run.
      */
-    public $endDate;
+    public DateTime|string|null $endDate = null;
 
     /**
-     * @var int|null Total number of views the ad is allowed to received.
+     * @var int|null Total number of views the ad is allowed to receive.
      */
-    public $maxViews;
+    public ?int $maxViews = null;
 
     /**
      * @var int|null Total number of views the ad has received.
      */
-    public $totalViews;
+    public ?int $totalViews = null;
 
     /**
      * @var int|null Total number of clicks the ad has received.
      */
-    public $totalClicks;
+    public ?int $totalClicks = null;
 
     /**
      * @var bool Whether to exclude invalid ads.
      */
-    protected $_excludeInvalid = false;
-
-    // Public Methods
-    // =========================================================================
+    protected bool $_excludeInvalid = false;
 
     /**
      * Sets the [[groupId]] property based on a given group(s)’s handle(s).
      *
-     * @param string|string[]|AdGroup|null $value The property value
-     * @return static self reference
+     * @param AdGroup|string|string[]|null $value
+     * @return $this
      */
-    public function group($value)
+    public function group(AdGroup|string|array|null $value): ?AdQuery
     {
         if ($value instanceof AdGroup) {
             $this->groupId = $value->id;
@@ -100,10 +91,10 @@ class AdQuery extends ElementQuery
     /**
      * Sets the [[groupId]] property.
      *
-     * @param int|int[]|null $value The property value
-     * @return static self reference
+     * @param int|int[]|null $value
+     * @return $this
      */
-    public function groupId($value)
+    public function groupId(int|array|null $value): ?AdQuery
     {
         $this->groupId = $value;
         return $this;
@@ -112,19 +103,18 @@ class AdQuery extends ElementQuery
     /**
      * Ensures that only valid ads will be included in the query.
      *
-     * @return AdQuery $this
+     * @return $this
      */
-    public function onlyValid()
+    public function onlyValid(): ?AdQuery
     {
         $this->_excludeInvalid = true;
         return $this;
     }
 
-    // Protected Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function beforePrepare(): bool
     {

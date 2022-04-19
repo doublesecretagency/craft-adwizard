@@ -24,9 +24,6 @@ use yii\web\Response;
 class ChartsController extends Controller
 {
 
-    // Public Methods
-    // =========================================================================
-
     /**
      * Returns the data needed to display an Ad Timeline chart.
      *

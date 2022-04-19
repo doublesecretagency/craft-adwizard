@@ -14,9 +14,10 @@ namespace doublesecretagency\adwizard\services;
 use Craft;
 use craft\base\Component;
 use craft\base\ElementInterface;
-use craft\base\Volume;
+use craft\base\FsInterface;
 use craft\db\Query;
 use craft\helpers\Template;
+use craft\models\Volume;
 use DateTime;
 use DateTimeZone;
 use doublesecretagency\adwizard\AdWizard;
@@ -42,7 +43,7 @@ class Ads extends Component
     /**
      * @var bool Whether the CSRF token has already been set via JavaScript.
      */
-    private $_csrfIncluded = false;
+    private bool $_csrfIncluded = false;
 
     /**
      * Returns an ad by its ID.
@@ -51,7 +52,7 @@ class Ads extends Component
      * @param int|null $siteId
      * @return ElementInterface|null
      */
-    public function getAdById(int $adId, int $siteId = null)
+    public function getAdById(int $adId, ?int $siteId = null): ?ElementInterface
     {
         return Craft::$app->getElements()->getElementById($adId, Ad::class, $siteId);
     }
@@ -64,7 +65,7 @@ class Ads extends Component
      * @param array $adIds
      * @param int $groupId
      */
-    public function updateAdsGroup(array $adIds, int $groupId)
+    public function updateAdsGroup(array $adIds, int $groupId): void
     {
         try {
             Craft::$app->getDb()->createCommand()
@@ -93,7 +94,7 @@ class Ads extends Component
      * @param int|null $fieldLayoutId
      * @param int $groupId
      */
-    public function updateAdsLayout($fieldLayoutId, int $groupId)
+    public function updateAdsLayout(?int $fieldLayoutId, int $groupId): void
     {
         // Get ads in group
         $adIds = (new Query())
@@ -126,13 +127,13 @@ class Ads extends Component
      * @param int $id
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      */
-    public function renderAd(int $id, $options = [], bool $retinaDeprecated = false)
+    public function renderAd(int $id, array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         $ad = $this->_getSingleAd($id);
         return $this->_renderIndividualAd($ad, $options, $retinaDeprecated);
@@ -144,13 +145,13 @@ class Ads extends Component
      * @param string $group
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      */
-    public function renderRandomAdFromGroup(string $group, $options = [], bool $retinaDeprecated = false)
+    public function renderRandomAdFromGroup(string $group, array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         $ad = $this->_getRandomAdFromGroup($group);
         return $this->_renderIndividualAd($ad, $options, $retinaDeprecated);
@@ -159,20 +160,20 @@ class Ads extends Component
     /**
      * Render an individual ad.
      *
-     * @param $ad
+     * @param Ad|null $ad
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      */
-    private function _renderIndividualAd($ad, $options = [], bool $retinaDeprecated = false)
+    private function _renderIndividualAd(?Ad $ad, array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         // If no ad is specified, bail
         if (!$ad) {
-            return false;
+            return null;
         }
 
 //        // If the ad is already a string, bail
@@ -185,7 +186,7 @@ class Ads extends Component
 
         // If ad can't be displayed, bail
         if (!$html) {
-            return false;
+            return null;
         }
 
         // Track ad
@@ -201,10 +202,10 @@ class Ads extends Component
      * Get ID of valid ad.
      *
      * @param array $conditions
-     * @return bool|false|string|null
+     * @return int|null
      * @throws Exception
      */
-    public function getValidAdId(array $conditions)
+    public function getValidAdId(array $conditions): ?int
     {
         // Current timestamp (in UTC)
         $current = new DateTime('now', new DateTimeZone('UTC'));
@@ -232,23 +233,26 @@ class Ads extends Component
                 ->orderBy('random()');
         }
 
+        // Get ad ID
+        $id = $adQuery->scalar();
+
         // Return valid ad ID
-        return $adQuery->scalar();
+        return ($id ? (int) $id : null);
     }
 
     /**
      * Get a single specific ad.
      *
-     * @param int $id
-     * @return ElementInterface|bool|null
+     * @param int|null $id
+     * @return ElementInterface|null
      * @throws Exception
      */
-    private function _getSingleAd($id)
+    private function _getSingleAd(?int $id): ?ElementInterface
     {
-        // If invalid ad ID, bail
-        if (!$id || !is_int($id)) {
-            $this->err('Invalid ad ID specified.');
-            return false;
+        // If no ad ID, bail
+        if (!$id) {
+            $this->err('No ad ID specified.');
+            return null;
         }
 
         // Ensure ad ID is valid (not disabled/expired/maxed)
@@ -257,7 +261,7 @@ class Ads extends Component
         // If ad isn't available, bail
         if (!$adId) {
             $this->err('Ad with ID of '.$id.' is not valid.');
-            return false;
+            return null;
         }
 
         // Return ad
@@ -267,16 +271,16 @@ class Ads extends Component
     /**
      * Get individual ad via group.
      *
-     * @param string $groupHandle
-     * @return ElementInterface|bool|null
+     * @param string|null $groupHandle
+     * @return ElementInterface|null
      * @throws Exception
      */
-    private function _getRandomAdFromGroup(string $groupHandle)
+    private function _getRandomAdFromGroup(?string $groupHandle): ?ElementInterface
     {
         // If no group handle is specified, bail
         if (!$groupHandle) {
             $this->err('Please specify an ad group.');
-            return false;
+            return null;
         }
 
         // Get group record
@@ -287,7 +291,7 @@ class Ads extends Component
         // If no group record exists, bail
         if (!$groupRecord) {
             $this->err('"'.$groupHandle.'" is not a valid group handle.');
-            return false;
+            return null;
         }
 
         // Get a random ad ID from specified ad group
@@ -296,7 +300,7 @@ class Ads extends Component
         // If no ads are available, bail
         if (!$adId) {
             $this->err('No ads are available in the "'.$groupRecord->name.'" group.');
-            return false;
+            return null;
         }
 
         // Return ad
@@ -306,10 +310,10 @@ class Ads extends Component
     /**
      * Whether the code is using a deprecated method.
      *
-     * @param $options
+     * @param array|string $options
      * @return bool
      */
-    public function oldParams($options): bool
+    public function oldParams(array|string $options): bool
     {
         // No options defined, not using old parameters
         if (empty($options)) {
@@ -334,7 +338,7 @@ class Ads extends Component
      *
      * @throws InvalidConfigException
      */
-    private function _loadCsrf()
+    private function _loadCsrf(): void
     {
         // Get services
         $view = Craft::$app->getView();
@@ -363,24 +367,24 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
      * @param Ad $ad
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|string
+     * @return string|null
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      * @throws BaseException
      */
-    private function _getAdHtml(Ad $ad, $options = [], bool $retinaDeprecated = false)
+    private function _getAdHtml(Ad $ad, array $options = [], bool $retinaDeprecated = false): ?string
     {
         // If no URL, bail
         if (!$ad->url) {
             $this->err('No URL specified for ad "'.$ad->title.'".');
-            return false;
+            return null;
         }
 
         // If no asset ID, bail
         if (!$ad->assetId) {
             $this->err('No image specified for ad "'.$ad->title.'".');
-            return false;
+            return null;
         }
 
         // Get asset
@@ -389,17 +393,19 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
         // If no asset, bail
         if (!$asset) {
             $this->err('No image specified for ad "'.$ad->title.'".');
-            return false;
+            return null;
         }
 
-        // Get asset volume
         /** @var Volume $volume */
         $volume = $asset->getVolume();
 
+        /** @var FsInterface $filesystem */
+        $filesystem = $volume->getFs();
+
         // If asset lacks a public URL, bail
-        if (!$volume->hasUrls) {
+        if (!$filesystem->hasUrls) {
             $this->err('Asset image for ad "'.$ad->title.'" belongs to a volume with no public URL.');
-            return false;
+            return null;
         }
 
         // If using the old parameter structure
@@ -430,7 +436,7 @@ window.csrfTokenValue = "'.Craft::$app->request->getCsrfToken().'";
      *
      * @param string $error
      */
-    private function err(string $error)
+    private function err(string $error): void
     {
         // Get view
         $view = Craft::$app->getView();

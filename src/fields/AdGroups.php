@@ -14,6 +14,7 @@ namespace doublesecretagency\adwizard\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\helpers\Html;
 use doublesecretagency\adwizard\AdWizard;
 use yii\db\Schema;
 
@@ -23,9 +24,6 @@ use yii\db\Schema;
  */
 class AdGroups extends Field
 {
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -34,29 +32,26 @@ class AdGroups extends Field
         return Craft::t('ad-wizard', 'Ad Group');
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function defaultSelectionLabel(): string
-    {
-        return Craft::t('ad-wizard', 'Select an ad group');
-    }
+//    /**
+//     * @inheritdoc
+//     */
+//    public static function defaultSelectionLabel(): string
+//    {
+//        return Craft::t('ad-wizard', 'Select an ad group');
+//    }
 
     /**
      * @inheritdoc
      */
-    public function getContentColumnType(): string
+    public function getContentColumnType(): array|string
     {
         return Schema::TYPE_TEXT;
     }
 
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         $groups = AdWizard::$plugin->groups->getAllGroups();
 
@@ -68,8 +63,8 @@ class AdGroups extends Field
             $options[$group->handle] = $group->name;
         }
 
-        $id = Craft::$app->getView()->formatInputId($this->handle);
-        $nameSpacedId = Craft::$app->getView()->namespaceInputId($id);
+        $id = Html::id($this->handle);
+//        $nameSpacedId = Craft::$app->getView()->namespaceInputId($id);
 
         return Craft::$app->getView()->renderTemplate('ad-wizard/_field/input', [
             'id' => $id,

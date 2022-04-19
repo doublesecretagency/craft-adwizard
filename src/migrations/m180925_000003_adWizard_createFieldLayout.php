@@ -18,6 +18,7 @@ use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
 use Throwable;
 use yii\base\Exception;
+use yii\db\Transaction;
 
 /**
  * Migration: Create a new field layout
@@ -27,12 +28,9 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
 {
 
     /**
-     * @inheritDoc
-     * @return bool|void
-     * @throws Exception
-     * @throws Throwable
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         $layoutId = $this->_createFieldLayout();
 
@@ -48,11 +46,11 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
     /**
      * Create a new field layout
      *
-     * @return int|false
+     * @return int|null
      * @throws Exception
      * @throws Throwable
      */
-    private function _createFieldLayout()
+    private function _createFieldLayout(): ?int
     {
         // Get new "Details" field
         /** @var PlainText $detailsField */
@@ -60,7 +58,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
 
         // If field not found, bail
         if (!$detailsField) {
-            return false;
+            return null;
         }
 
         // Configure field layout
@@ -82,6 +80,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
         $layoutRecord->id = $fieldLayout->id;
         $layoutRecord->name = 'Custom Ad Fields';
 
+        /** @var Transaction $transaction */
         $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
@@ -104,7 +103,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
      *
      * @param int $layoutId
      */
-    private function _attachLayoutToGroups(int $layoutId)
+    private function _attachLayoutToGroups(int $layoutId): void
     {
         $this->update(
             '{{%adwizard_groups}}',
@@ -117,7 +116,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
      *
      * @param int $layoutId
      */
-    private function _attachLayoutToAds(int $layoutId)
+    private function _attachLayoutToAds(int $layoutId): void
     {
         $this->update(
             '{{%elements}}',
@@ -127,7 +126,7 @@ class m180925_000003_adWizard_createFieldLayout extends Migration
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function safeDown(): bool
     {

@@ -14,10 +14,11 @@ namespace doublesecretagency\adwizard\models;
 use Craft;
 use craft\base\Model;
 use craft\elements\Asset;
-use craft\models\AssetTransform;
+use craft\models\ImageTransform;
 use doublesecretagency\adwizard\elements\Ad;
 use Throwable;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -32,17 +33,17 @@ class Config extends Model
     /**
      * @var Ad|null
      */
-    public $ad;
+    public ?Ad $ad = null;
 
     /**
      * @var Asset|null
      */
-    public $asset;
+    public ?Asset $asset = null;
 
     /**
      * @var array Image manipulation options.
      */
-    public $image = [
+    public array $image = [
         'transform' => null,
         'retina' => false,
     ];
@@ -50,7 +51,7 @@ class Config extends Model
     /**
      * @var array HTML attribute options.
      */
-    public $attr = [
+    public array $attr = [
         'class' => 'adWizard-ad',
         'style' => 'cursor:pointer',
     ];
@@ -58,7 +59,7 @@ class Config extends Model
     /**
      * @var array JavaScript trigger options.
      */
-    public $js = [
+    public array $js = [
         'click' => 'adWizard.click({id}, \'{url}\')',
     ];
 
@@ -66,11 +67,11 @@ class Config extends Model
      * Config constructor.
      *
      * @param Ad $ad
-     * @param $asset
+     * @param Asset $asset
      * @param array $options
      * @param array $config
      */
-    public function __construct(Ad $ad, $asset, $options = [], array $config = [])
+    public function __construct(Ad $ad, Asset $asset, array $options = [], array $config = [])
     {
         // Set ad & asset
         $this->ad = $ad;
@@ -128,7 +129,7 @@ class Config extends Model
     /**
      * Parse JS tags into HTML attributes.
      */
-    private function _parseJs()
+    private function _parseJs(): void
     {
         foreach ($this->js as $trigger => $code) {
             $this->attr["on{$trigger}"] = $code;
@@ -139,8 +140,9 @@ class Config extends Model
      * Process transform
      *
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
-    private function _parseTransform()
+    private function _parseTransform(): void
     {
         if (is_string($this->image['transform'])) {
 
@@ -154,7 +156,7 @@ class Config extends Model
         } else if (is_array($this->image['transform']) && !empty($this->image['transform'])) {
 
             // Get dynamic transform
-            $transform = new AssetTransform($this->image['transform']);
+            $transform = new ImageTransform($this->image['transform']);
 
         } else {
 

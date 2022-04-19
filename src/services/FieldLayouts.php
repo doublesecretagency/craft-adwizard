@@ -15,11 +15,13 @@ use Craft;
 use craft\base\Component;
 use craft\db\Query;
 use craft\db\Table;
+use craft\models\FieldLayout as CraftFieldLayout;
 use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\FieldLayout;
 use doublesecretagency\adwizard\records\FieldLayout as FieldLayoutRecord;
 use Exception;
 use Throwable;
+use yii\db\Transaction;
 
 /**
  * Class FieldLayouts
@@ -28,21 +30,15 @@ use Throwable;
 class FieldLayouts extends Component
 {
 
-    // Properties
-    // =========================================================================
+    /**
+     * @var FieldLayout[]|null All field layouts of Ads, indexed by ID.
+     */
+    private ?array $_fieldLayoutsById = null;
 
     /**
-     * @var FieldLayout[]|null
+     * @var bool Whether the field layouts have already been fetched.
      */
-    private $_fieldLayoutsById;
-
-    /**
-     * @var bool
-     */
-    private $_fetchedAllFieldLayouts = false;
-
-    // Public Methods
-    // =========================================================================
+    private bool $_fetchedAllFieldLayouts = false;
 
     /**
      * Returns all field layouts.
@@ -91,7 +87,7 @@ class FieldLayouts extends Component
      * @param int $layoutId
      * @return FieldLayout|null
      */
-    public function getLayoutById(int $layoutId)
+    public function getLayoutById(int $layoutId): ?FieldLayout
     {
         if ($this->_fieldLayoutsById !== null && isset($this->_fieldLayoutsById[$layoutId])) {
             return $this->_fieldLayoutsById[$layoutId];
@@ -116,12 +112,12 @@ class FieldLayouts extends Component
     /**
      * Saves a field layout.
      *
-     * @param FieldLayout $layout
+     * @param CraftFieldLayout $layout
      * @return bool
      * @throws Throwable
      * @throws Exception
      */
-    public function saveFieldLayout(FieldLayout $layout): bool
+    public function saveLayout(CraftFieldLayout $layout, $name): bool
     {
         if (!$layout->validate()) {
             Craft::info('Field layout not saved due to validation error.', __METHOD__);
@@ -136,8 +132,9 @@ class FieldLayouts extends Component
             $layoutRecord->id = $layout->id;
         }
 
-        $layoutRecord->name = $layout->name;
+        $layoutRecord->name = $name;
 
+        /** @var Transaction $transaction */
         $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
@@ -175,6 +172,7 @@ class FieldLayouts extends Component
             return false;
         }
 
+        /** @var Transaction $transaction */
         $transaction = Craft::$app->getDb()->beginTransaction();
         try {
             // Delete the field layout
@@ -190,8 +188,7 @@ class FieldLayouts extends Component
         return ($success ?? false);
     }
 
-    // Private Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * Creates a FieldLayout with attributes from an FieldLayoutRecord.
@@ -199,7 +196,7 @@ class FieldLayouts extends Component
      * @param FieldLayoutRecord|null $layoutRecord
      * @return FieldLayout|null
      */
-    private function _createFieldLayoutFromRecord(FieldLayoutRecord $layoutRecord = null)
+    private function _createFieldLayoutFromRecord(?FieldLayoutRecord $layoutRecord): ?FieldLayout
     {
         if (!$layoutRecord) {
             return null;

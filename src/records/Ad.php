@@ -21,18 +21,18 @@ use yii\db\ActiveQueryInterface;
  * Class Ad
  * @since 2.0.0
  *
- * @property int      $id
- * @property int      $groupId
- * @property int      $assetId
- * @property string   $url
+ * @property int $id
+ * @property int $groupId
+ * @property int $assetId
+ * @property string $url
  * @property DateTime $startDate
  * @property DateTime $endDate
- * @property int      $maxViews
- * @property int      $totalViews
- * @property int      $totalClicks
+ * @property int $maxViews
+ * @property int $totalViews
+ * @property int $totalClicks
  * @property DateTime $dateCreated
  * @property DateTime $dateUpdated
- * @property string   $uid
+ * @property string $uid
  *
  * @property ActiveQueryInterface $element Ad element.
  * @property ActiveQueryInterface $group Group ad belongs to.
@@ -42,8 +42,7 @@ class Ad extends ActiveRecord
 {
 
     /**
-     * @inheritDoc
-     * @return string
+     * @inheritdoc
      */
     public static function tableName(): string
     {

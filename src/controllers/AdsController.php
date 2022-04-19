@@ -27,9 +27,6 @@ use doublesecretagency\adwizard\web\assets\AdGroupSwitcherAssets;
 use doublesecretagency\adwizard\web\assets\AdminAssets;
 use Exception;
 use Throwable;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use yii\base\Exception as YiiException;
 use yii\base\InvalidConfigException;
 use yii\web\Response;
@@ -87,7 +84,7 @@ class AdsController extends Controller
      * @throws NotFoundHttpException
      * @throws YiiException
      */
-    public function actionEditAd(string $groupHandle = null, int $adId = null, string $siteHandle = null, Ad $ad = null): Response
+    public function actionEditAd(?string $groupHandle = null, ?int $adId = null, ?string $siteHandle = null, ?Ad $ad = null): Response
     {
         $variables = [
             'groupHandle' => $groupHandle,
@@ -166,7 +163,7 @@ class AdsController extends Controller
         // Whether this is a new ad
         $newAd = ($variables['ad']->id === null);
 
-        // Whether any assets sources exist
+        // Whether any asset sources exist
         $sources = Craft::$app->getAssets()->findFolders();
         $variables['assetsSourceExists'] = count($sources);
 
@@ -250,7 +247,7 @@ class AdsController extends Controller
      * @throws ElementNotFoundException
      * @throws YiiException
      */
-    public function actionSaveAd()
+    public function actionSaveAd(): ?Response
     {
         $this->requirePostRequest();
 
@@ -382,11 +379,10 @@ class AdsController extends Controller
     /**
      * Switches between two ad groups.
      *
+     * @return Response
      * @throws BadRequestHttpException
+     * @throws InvalidConfigException
      * @throws NotFoundHttpException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      * @throws Exception
      */
     public function actionSwitchAdGroup(): Response
@@ -422,7 +418,7 @@ class AdsController extends Controller
     }
 
     /**
-     * Fetches or creates a Ad.
+     * Fetches or creates an Ad.
      *
      * @return Ad
      * @throws BadRequestHttpException if the requested ad group doesn't exist
@@ -459,7 +455,7 @@ class AdsController extends Controller
      * @param Ad $ad
      * @throws Exception
      */
-    private function _populateAdModel(Ad $ad)
+    private function _populateAdModel(Ad $ad): void
     {
         $request = Craft::$app->getRequest();
 

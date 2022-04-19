@@ -37,39 +37,39 @@ use yii\base\Event;
  * Class AdWizard
  * @since 2.0.0
  *
- * @property Ads          $ads
- * @property AdGroups     $groups
+ * @property Ads $ads
+ * @property AdGroups $groups
  * @property FieldLayouts $fieldLayouts
- * @property Tracking     $tracking
- * @property Widgets      $widgets
+ * @property Tracking $tracking
+ * @property Widgets $widgets
  */
 class AdWizard extends Plugin
 {
 
     /**
-     * @const string Root URL for documentation.
+     * @const Root URL for documentation.
      */
-    const DOCS_URL = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs';
+    public const DOCS_URL = 'https://plugins.doublesecretagency.com/ad-wizard/';
 
     /**
      * @var AdWizard $plugin Self-referential plugin property.
      */
-    public static $plugin;
+    public static AdWizard $plugin;
 
     /**
      * @var bool $hasCpSection The plugin has a section with subpages.
      */
-    public $hasCpSection = true;
+    public bool $hasCpSection = true;
 
     /**
      * @var bool $schemaVersion Current schema version of the plugin.
      */
-    public $schemaVersion = '2.1.0';
+    public string $schemaVersion = '2.1.0';
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -147,7 +147,7 @@ class AdWizard extends Plugin
                 }
 
                 // If not Ad Wizard, bail
-                if ('ad-wizard' != $event->plugin->handle) {
+                if ('ad-wizard' !== $event->plugin->handle) {
                     return;
                 }
 
@@ -160,9 +160,9 @@ class AdWizard extends Plugin
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function getCpNavItem()
+    public function getCpNavItem(): ?array
     {
         $item = parent::getCpNavItem();
         $item['subnav'] = [];

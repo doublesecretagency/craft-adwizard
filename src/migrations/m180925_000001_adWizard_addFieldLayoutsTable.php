@@ -22,10 +22,9 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
 {
 
     /**
-     * @inheritDoc
-     * @throws NotSupportedException
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->_createTable();
         $this->_addColumn();
@@ -35,7 +34,7 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
     /**
      * Create table
      */
-    private function _createTable()
+    private function _createTable(): void
     {
         // If table already exists, bail
         if ($this->db->tableExists('{{%adwizard_fieldlayouts}}')) {
@@ -58,7 +57,7 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
      *
      * @throws NotSupportedException
      */
-    private function _addColumn()
+    private function _addColumn(): void
     {
         // If column already exists, bail
         if ($this->db->columnExists('{{%adwizard_groups}}', 'fieldLayoutId')) {
@@ -72,14 +71,14 @@ class m180925_000001_adWizard_addFieldLayoutsTable extends Migration
     /**
      * Add foreign keys
      */
-    protected function _addForeignKeys()
+    protected function _addForeignKeys(): void
     {
         $this->addForeignKey(null, '{{%adwizard_fieldlayouts}}', ['id'],            '{{%fieldlayouts}}', ['id'], 'CASCADE');
         $this->addForeignKey(null, '{{%adwizard_groups}}',       ['fieldLayoutId'], '{{%fieldlayouts}}', ['id'], 'SET NULL');
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function safeDown(): bool
     {

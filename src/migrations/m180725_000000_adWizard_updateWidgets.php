@@ -23,9 +23,9 @@ class m180725_000000_adWizard_updateWidgets extends Migration
 {
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         // Auto-update Ad Timeline widgets
         $this->update('{{%widgets}}', [
@@ -43,7 +43,7 @@ class m180725_000000_adWizard_updateWidgets extends Migration
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function safeDown(): bool
     {

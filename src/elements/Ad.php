@@ -13,7 +13,6 @@ namespace doublesecretagency\adwizard\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\base\Field;
 use craft\base\FieldInterface;
 use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
@@ -33,13 +32,9 @@ use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\records\Ad as AdRecord;
 use Exception;
 use Throwable;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Markup;
 use yii\base\Exception as BaseException;
 use yii\base\InvalidConfigException;
-use yii\base\NotSupportedException;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -49,11 +44,68 @@ use yii\web\NotFoundHttpException;
 class Ad extends Element
 {
 
-    // Static
-    // =========================================================================
+    /**
+     * @var int|null $groupId ID of group which contains the ad.
+     */
+    public ?int $groupId = null;
 
     /**
-     * @inheritDoc
+     * @var int|null $assetId ID of asset which ad contains.
+     */
+    public ?int $assetId = null;
+
+    /**
+     * @var string $url URL of ad target.
+     */
+    public string $url = '';
+
+    /**
+     * @var DateTime|null $startDate Date ad will begin its run.
+     */
+    public ?DateTime $startDate = null;
+
+    /**
+     * @var DateTime|null $endDate Date ad will end its run.
+     */
+    public ?DateTime $endDate = null;
+
+    /**
+     * @var int $maxViews Maximum number of ad views allowed.
+     */
+    public int $maxViews = 0;
+
+    /**
+     * @var int $totalViews Total number of times the ad has been viewed.
+     */
+    public int $totalViews = 0;
+
+    /**
+     * @var int $totalClicks Total number of times the ad has been clicked.
+     */
+    public int $totalClicks = 0;
+
+    /**
+     * @var string $filepath Path to asset file.
+     */
+    public string $filepath = '';
+
+    /**
+     * @var int $width Width of asset file.
+     */
+    public int $width = 0;
+
+    /**
+     * @var int $height Height of asset file.
+     */
+    public int $height = 0;
+
+    /**
+     * @var string $html Fully prepared ad HTML.
+     */
+    public string $html = '';
+
+    /**
+     * @inheritdoc
      */
     public static function displayName(): string
     {
@@ -61,15 +113,15 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public static function refHandle()
+    public static function refHandle(): ?string
     {
         return 'ad';
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public static function hasContent(): bool
     {
@@ -77,7 +129,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public static function hasTitles(): bool
     {
@@ -85,7 +137,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public static function hasStatuses(): bool
     {
@@ -93,7 +145,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      * @return AdQuery The newly created [[AdQuery]] instance.
      */
     public static function find(): ElementQueryInterface
@@ -102,9 +154,9 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    protected static function defineSources(string $context = null): array
+    protected static function defineSources(string $context): array
     {
         // "All ads"
         $sources = [
@@ -132,9 +184,9 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    protected static function defineActions(string $source = null): array
+    protected static function defineActions(string $source): array
     {
         $actions = [];
 
@@ -155,7 +207,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineSearchableAttributes(): array
     {
@@ -163,7 +215,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineSortOptions(): array
     {
@@ -179,7 +231,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineTableAttributes(): array
     {
@@ -198,7 +250,7 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
@@ -225,95 +277,10 @@ class Ad extends Element
         return $rules;
     }
 
-    // Properties
-    // =========================================================================
-
     /**
-     * @var int $groupId ID of group which contains the ad.
+     * @inheritdoc
      */
-    public $groupId;
-
-    /**
-     * @var int|null $assetId ID of asset which ad contains.
-     */
-    public $assetId;
-
-    /**
-     * @var string $url URL of ad target.
-     */
-    public $url = '';
-
-    /**
-     * @var DateTime $startDate Date ad will begin its run.
-     */
-    public $startDate;
-
-    /**
-     * @var DateTime $endDate Date ad will end its run.
-     */
-    public $endDate;
-
-    /**
-     * @var int $maxViews Maximum number of ad views allowed.
-     */
-    public $maxViews = 0;
-
-    /**
-     * @var int $totalViews Total number of times the ad has been viewed.
-     */
-    public $totalViews = 0;
-
-    /**
-     * @var int $totalClicks Total number of times the ad has been clicked.
-     */
-    public $totalClicks = 0;
-
-    /**
-     * @var string $filepath Path to asset file.
-     */
-    public $filepath = '';
-
-    /**
-     * @var int $width Width of asset file.
-     */
-    public $width = 0;
-
-    /**
-     * @var int $height Height of asset file.
-     */
-    public $height = 0;
-
-    /**
-     * @var string $html Fully prepared ad HTML.
-     */
-    public $html = '';
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritDoc
-     */
-    public function datetimeAttributes(): array
-    {
-        $attributes = parent::datetimeAttributes();
-        $attributes[] = 'startDate';
-        $attributes[] = 'endDate';
-        return $attributes;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIsEditable(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCpEditUrl(): string
+    public function getCpEditUrl(): ?string
     {
         // Get ad group
         /** @var AdGroup $group */
@@ -324,12 +291,9 @@ class Ad extends Element
     }
 
     /**
-     * @inheritDoc
-     * @param int $size
-     * @return string|null
-     * @throws NotSupportedException
+     * @inheritdoc
      */
-    public function getThumbUrl(int $size)
+    public function getThumbUrl(int $size): ?string
     {
         // If no asset ID, bail
         if (!$this->assetId) {
@@ -374,18 +338,18 @@ class Ad extends Element
      *
      * @param array $options
      * @param bool $retinaDeprecated
-     * @return bool|Markup
+     * @return Markup|null
      * @throws DeprecationException
      * @throws BaseException
      * @throws InvalidConfigException
      * @throws NotFoundHttpException
      * @throws Throwable
      */
-    public function displayAd($options = [], $retinaDeprecated = false)
+    public function displayAd(array $options = [], bool $retinaDeprecated = false): ?Markup
     {
         // If using the old parameter structure
         if (AdWizard::$plugin->ads->oldParams($options)) {
-            $docsUrl = 'https://www.doublesecretagency.com/plugins/ad-wizard/docs/the-options-parameter';
+            $docsUrl = 'https://plugins.doublesecretagency.com/ad-wizard/the-options-parameter/';
             $docsLink = "<a href=\"{$docsUrl}\" target=\"_blank\">Please consult the docs.</a>";
             $message = "The parameters of `ad.displayAd` have changed. {$docsLink}";
             Craft::$app->getDeprecator()->log('ad.displayAd', $message);
@@ -399,20 +363,20 @@ class Ad extends Element
      *
      * @return Asset|null
      */
-    public function image()
+    public function image(): ?Asset
     {
         return Craft::$app->getAssets()->getAssetById($this->assetId);
     }
 
-    // -------------------------------------------------------------------------
+    // ========================================================================= //
 
     /**
      * Returns the field with a given handle.
      *
      * @param string $handle
-     * @return Field|FieldInterface|null
+     * @return FieldInterface|null
      */
-    protected function fieldByHandle(string $handle)
+    protected function fieldByHandle(string $handle): ?FieldInterface
     {
         return Craft::$app->getFields()->getFieldByHandle($handle);
     }
@@ -421,30 +385,22 @@ class Ad extends Element
      * Gets field layout of ad (based on group).
      *
      * @inheritdoc
-     * @return FieldLayout|null
-     * @throws InvalidConfigException
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return parent::getFieldLayout() ?? $this->getGroup()->getFieldLayout();
     }
 
-    // Indexes, etc.
-    // -------------------------------------------------------------------------
+    // ========================================================================= //
 
     /**
-     * @inheritDoc
-     * @param string $attribute
-     * @return string
-     * @throws InvalidConfigException
-     * @throws Exception
+     * @inheritdoc
      */
     protected function tableAttributeHtml(string $attribute): string
     {
         switch ($attribute) {
 
             case 'group':
-
                 $group = $this->getGroup();
 
                 // If no group, bail
@@ -507,8 +463,8 @@ class Ad extends Element
 
         // If layout exists, return the value of matching field
         if ($layout = $this->getFieldLayout()) {
-            foreach ($layout->getFields() as $field) {
-                if ("field:{$field->id}" == $attribute) {
+            foreach ($layout->getCustomFields() as $field) {
+                if ("field:{$field->id}" === $attribute) {
                     return parent::tableAttributeHtml($attribute);
                 }
             }
@@ -517,91 +473,84 @@ class Ad extends Element
         return false;
     }
 
+//    /**
+//     * @inheritdoc
+//     */
+//    public function getEditorHtml(): string
+//    {
+//        $view = Craft::$app->getView();
+//
+//
+//        $html = $view->renderTemplateMacro('_includes/forms', 'textField', [
+//            [
+//                'label' => Craft::t('app', 'Title'),
+////                'siteId' => $this->siteId,
+//                'id' => 'title',
+//                'name' => 'title',
+//                'value' => $this->title,
+//                'errors' => $this->getErrors('title'),
+//                'first' => true,
+//                'autofocus' => true,
+//                'required' => true,
+//            ]
+//        ]);
+//
+//        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
+//            [
+//                'label' => Craft::t('app', 'URL'),
+////                'siteId' => $this->siteId,
+//                'id' => 'url',
+//                'name' => 'url',
+//                'value' => $this->url,
+//                'errors' => $this->getErrors('url'),
+//                'required' => true,
+//            ]
+//        ]);
+//
+//        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
+//            [
+//                'label' => Craft::t('ad-wizard', 'Beginning of Run'),
+//                'id' => 'startDate',
+//                'name' => 'startDate',
+//                'value' => $this->startDate,
+//                'errors' => $this->getErrors('startDate'),
+//            ]
+//        ]);
+//
+//        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
+//            [
+//                'label' => Craft::t('ad-wizard', 'End of Run'),
+//                'id' => 'endDate',
+//                'name' => 'endDate',
+//                'value' => $this->endDate,
+//                'errors' => $this->getErrors('endDate'),
+//            ]
+//        ]);
+//
+//        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
+//            [
+//                'label' => Craft::t('ad-wizard', 'Max Views Allowed'),
+//                'instructions' => Craft::t('ad-wizard', '(0 = unlimited)'),
+//                'id' => 'maxViews',
+//                'name' => 'maxViews',
+//                'value' => $this->maxViews,
+//                'errors' => $this->getErrors('maxViews'),
+//                'size' => 3,
+//            ]
+//        ]);
+//
+//        // Render the custom fields
+//        $html .= parent::getEditorHtml();
+//
+//        return $html;
+//    }
+
+    // ========================================================================= //
+
     /**
      * @inheritdoc
-     * @return string
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
-    public function getEditorHtml(): string
-    {
-        $view = Craft::$app->getView();
-
-
-        $html = $view->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('app', 'Title'),
-//                'siteId' => $this->siteId,
-                'id' => 'title',
-                'name' => 'title',
-                'value' => $this->title,
-                'errors' => $this->getErrors('title'),
-                'first' => true,
-                'autofocus' => true,
-                'required' => true,
-            ]
-        ]);
-
-        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('app', 'URL'),
-//                'siteId' => $this->siteId,
-                'id' => 'url',
-                'name' => 'url',
-                'value' => $this->url,
-                'errors' => $this->getErrors('url'),
-                'required' => true,
-            ]
-        ]);
-
-        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
-            [
-                'label' => Craft::t('ad-wizard', 'Beginning of Run'),
-                'id' => 'startDate',
-                'name' => 'startDate',
-                'value' => $this->startDate,
-                'errors' => $this->getErrors('startDate'),
-            ]
-        ]);
-
-        $html .= $view->renderTemplateMacro('_includes/forms', 'dateTimeField', [
-            [
-                'label' => Craft::t('ad-wizard', 'End of Run'),
-                'id' => 'endDate',
-                'name' => 'endDate',
-                'value' => $this->endDate,
-                'errors' => $this->getErrors('endDate'),
-            ]
-        ]);
-
-        $html .= $view->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('ad-wizard', 'Max Views Allowed'),
-                'instructions' => Craft::t('ad-wizard', '(0 = unlimited)'),
-                'id' => 'maxViews',
-                'name' => 'maxViews',
-                'value' => $this->maxViews,
-                'errors' => $this->getErrors('maxViews'),
-                'size' => 3,
-            ]
-        ]);
-
-        // Render the custom fields
-        $html .= parent::getEditorHtml();
-
-        return $html;
-    }
-
-    // Events
-    // -------------------------------------------------------------------------
-
-    /**
-     * @inheritDoc
-     * @throws BaseException
-     * @throws Exception
-     */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         // Get the ad record
         if (!$isNew) {
@@ -627,41 +576,29 @@ class Ad extends Element
         parent::afterSave($isNew);
     }
 
-    // Private Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * Properly format datetime for database.
      *
-     * @param $date
-     * @return DateTime|mixed
+     * @param DateTime|string|null $date
+     * @return string|null
      * @throws Exception
      */
-    private function _normalizeDate($date)
+    private function _normalizeDate(DateTime|string|null $date): ?string
     {
-        // If it's an array, create a DateTime object
-        if (is_array($date) && isset($date['timezone'])) {
-
-            // If no date or time, bail
-            if (!$date['date'] && !$date['time']) {
-                return null;
-            }
-
-            // Get datetime
-            $datetime = new DateTime(
-                $date['date'].' '.$date['time'],
-                new DateTimeZone($date['timezone'])
-            );
-
-            // If datetime was determined, return formatted string
-            if ($datetime) {
-                return DateTimeHelper::toIso8601($datetime);
-            }
-
+        // If no date, return null
+        if (!$date) {
+            return null;
         }
 
-        // Return unchanged value
-        return $date;
+        // If date is already a string, return unchanged value
+        if (is_string($date)) {
+            return $date;
+        }
+
+        // Return formatted string or null
+        return (DateTimeHelper::toIso8601($date) ?: null);
     }
 
     /**

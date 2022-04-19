@@ -19,6 +19,7 @@ use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\records\AdGroup as AdGroupRecord;
 use yii\base\Exception;
+use yii\db\Transaction;
 
 /**
  * Class AdGroups
@@ -27,29 +28,23 @@ use yii\base\Exception;
 class AdGroups extends Component
 {
 
-    // Properties
-    // =========================================================================
-
     /**
      * @var int[]|null
      */
-    private $_allGroupIds;
+    private ?array $_allGroupIds = null;
 
     /**
      * @var AdGroup[]|null
      */
-    private $_adGroupsById;
+    private ?array $_adGroupsById = null;
 
     /**
      * @var bool
      */
-    private $_fetchedAllAdGroups = false;
-
-    // Public Methods
-    // =========================================================================
+    private bool $_fetchedAllAdGroups = false;
 
     /**
-     * Returns all of the group IDs.
+     * Returns all group IDs.
      *
      * @return int[]
      */
@@ -112,7 +107,7 @@ class AdGroups extends Component
      * @param int $groupId
      * @return AdGroup|null
      */
-    public function getGroupById(int $groupId)
+    public function getGroupById(int $groupId): ?AdGroup
     {
         if ($this->_adGroupsById !== null && isset($this->_adGroupsById[$groupId])) {
             return $this->_adGroupsById[$groupId];
@@ -140,7 +135,7 @@ class AdGroups extends Component
      * @param string $groupHandle
      * @return AdGroup|null
      */
-    public function getGroupByHandle(string $groupHandle)
+    public function getGroupByHandle(string $groupHandle): ?AdGroup
     {
         $groupRecord = AdGroupRecord::findOne([
             'handle' => $groupHandle
@@ -200,6 +195,7 @@ class AdGroups extends Component
         $groupRecord->name          = $group->name;
         $groupRecord->handle        = $group->handle;
 
+        /** @var Transaction $transaction */
         $transaction = Craft::$app->getDb()->beginTransaction();
 
         try {
@@ -235,11 +231,11 @@ class AdGroups extends Component
     /**
      * Deletes an ad group by its ID.
      *
-     * @param int $groupId
+     * @param int|null $groupId
      * @return bool Whether the group was deleted successfully
      * @throws Throwable if reasons
      */
-    public function deleteGroupById(int $groupId): bool
+    public function deleteGroupById(?int $groupId): bool
     {
         if (!$groupId) {
             return false;
@@ -258,6 +254,7 @@ class AdGroups extends Component
 //            ]));
 //        }
 
+        /** @var Transaction $transaction */
         $transaction = Craft::$app->getDb()->beginTransaction();
         try {
             // Delete the ads
@@ -293,8 +290,7 @@ class AdGroups extends Component
         return true;
     }
 
-    // Private Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * Creates an AdGroup with attributes from an AdGroupRecord.
@@ -302,7 +298,7 @@ class AdGroups extends Component
      * @param AdGroupRecord|null $groupRecord
      * @return AdGroup|null
      */
-    private function _createAdGroupFromRecord(AdGroupRecord $groupRecord = null)
+    private function _createAdGroupFromRecord(?AdGroupRecord $groupRecord): ?AdGroup
     {
         if (!$groupRecord) {
             return null;

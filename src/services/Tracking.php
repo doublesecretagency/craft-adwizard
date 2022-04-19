@@ -149,10 +149,12 @@ class Tracking extends Component
         // Get tracking info
         $record = $this->_recordNamespace($recordName);
         $tracking = $this->_getTracking($record, $id, $year, $month);
+
         // If no tracking exists, bail
         if (!$tracking) {
             return 0;
         }
+
         // Return current total
         return $tracking->total;
     }
@@ -179,7 +181,7 @@ class Tracking extends Component
      * @param int $month
      * @return View|Click|null
      */
-    public function _getTracking(string $record, int $id, int $year, int $month)
+    public function _getTracking(string $record, int $id, int $year, int $month): View|Click|null
     {
         /** @var View|Click $record */
         return $record::findOne([

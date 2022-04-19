@@ -16,9 +16,6 @@ use craft\base\Element;
 use craft\base\ElementAction;
 use craft\elements\db\ElementQueryInterface;
 use doublesecretagency\adwizard\AdWizard;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * Class ChangeAdGroup
@@ -27,48 +24,23 @@ use Twig\Error\SyntaxError;
 class ChangeAdGroup extends ElementAction
 {
 
-    // Properties
-    // =========================================================================
-
     /**
      * @var int|null The group ads should be set to.
      */
-    public $groupId;
-
-    // Public Methods
-    // =========================================================================
+    public ?int $groupId = null;
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function getTriggerLabel(): string
     {
         return Craft::t('ad-wizard', 'Change Ad Group');
     }
 
-    // Public Methods
-    // =========================================================================
-
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function rules(): array
-    {
-        $rules = parent::rules();
-        $rules[] = [['groupId'], 'required'];
-        $rules[] = [['groupId'], 'number', 'integerOnly' => true];
-
-        return $rules;
-    }
-
-    /**
-     * @inheritDoc
-     * @return string|null
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     */
-    public function getTriggerHtml()
+    public function getTriggerHtml(): ?string
     {
         // Render the trigger menu template with all the available groups
         $groups = AdWizard::$plugin->groups->getAllGroups();
@@ -80,7 +52,7 @@ class ChangeAdGroup extends ElementAction
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function performAction(ElementQueryInterface $query): bool
     {
@@ -105,6 +77,18 @@ class ChangeAdGroup extends ElementAction
         ]));
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules(): array
+    {
+        $rules = parent::rules();
+        $rules[] = [['groupId'], 'required'];
+        $rules[] = [['groupId'], 'number', 'integerOnly' => true];
+
+        return $rules;
     }
 
 }

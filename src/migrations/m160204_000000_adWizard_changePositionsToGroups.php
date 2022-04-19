@@ -24,10 +24,9 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
 {
 
     /**
-     * @inheritDoc
-     * @throws NotSupportedException
+     * @inheritdoc
      */
-    public function safeUp()
+    public function safeUp(): void
     {
         $this->_renameTable();
         $this->_renameForeignKey();
@@ -37,7 +36,7 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
     /**
      * Rename table
      */
-    private function _renameTable()
+    private function _renameTable(): void
     {
         MigrationHelper::dropIndexIfExists('{{%adwizard_positions}}', ['name'], true, $this);
         MigrationHelper::dropIndexIfExists('{{%adwizard_positions}}', ['handle'], true, $this);
@@ -51,7 +50,7 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
      *
      * @throws NotSupportedException
      */
-    private function _renameForeignKey()
+    private function _renameForeignKey(): void
     {
         // If column already exists, bail
         if ($this->db->columnExists('{{%adwizard_ads}}', 'groupId')) {
@@ -84,7 +83,7 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
     /**
      * Rename widget
      */
-    private function _renameWidgets()
+    private function _renameWidgets(): void
     {
         // Get existing data
         $widgets = (new Query())
@@ -113,7 +112,7 @@ class m160204_000000_adWizard_changePositionsToGroups extends Migration
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public function safeDown(): bool
     {

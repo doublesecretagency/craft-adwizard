@@ -23,24 +23,24 @@ class AdGroup extends Model
 {
 
     /**
-     * @var int $id ID of ad group.
+     * @var int|null $id ID of ad group.
      */
-    public $id;
+    public ?int $id = null;
 
     /**
-     * @var int $fieldLayoutId ID of group's field layout.
+     * @var int|null $fieldLayoutId ID of group's field layout.
      */
-    public $fieldLayoutId;
+    public ?int $fieldLayoutId = null;
 
     /**
-     * @var string $name Name of ad group.
+     * @var string|null $name Name of ad group.
      */
-    public $name;
+    public ?string $name = null;
 
     /**
-     * @var string $handle Handle of ad group.
+     * @var string|null $handle Handle of ad group.
      */
-    public $handle;
+    public ?string $handle = null;
 
     /**
      * Use the translated group name as the string representation.
@@ -49,17 +49,23 @@ class AdGroup extends Model
      */
     public function __toString(): string
     {
-        return (string) Craft::t('site', $this->name);
+        return Craft::t('site', $this->name);
     }
 
     /**
+     * Get the field layout of this Ad Group.
+     *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
+        // If no field layout ID
         if (!$this->fieldLayoutId) {
+            // Return a new field layout
             return new FieldLayout();
         }
+
+        // Return the specified field layout
         return Craft::$app->getFields()->getLayoutById($this->fieldLayoutId);
     }
 

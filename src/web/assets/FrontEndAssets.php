@@ -21,9 +21,9 @@ class FrontEndAssets extends AssetBundle
 {
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         $this->sourcePath = '@doublesecretagency/adwizard/resources';
 

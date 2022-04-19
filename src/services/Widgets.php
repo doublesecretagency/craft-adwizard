@@ -25,10 +25,12 @@ class Widgets extends Component
 {
 
     /**
-     * @param $adId
+     * Get data for the Ad Timeline widget.
+     *
+     * @param int|null $adId
      * @return array|string
      */
-    public function adTimelineData($adId)
+    public function adTimelineData(?int $adId): array|string
     {
         // If no ID, bail
         if (!$adId) {
@@ -75,14 +77,15 @@ class Widgets extends Component
             array_merge(['Views'], $columns['Views']),
             array_merge(['Clicks'], $columns['Clicks'])
         ];
-
     }
 
     /**
-     * @param null $groupId
+     * Get data for the Group Totals widget.
+     *
+     * @param int|null $groupId
      * @return array|string
      */
-    public function groupTotalsData($groupId = null)
+    public function groupTotalsData(?int $groupId = null): array|string
     {
         // If no group ID, bail
         if (!$groupId) {
@@ -132,7 +135,6 @@ class Widgets extends Component
             array_merge(['Views'], $columns['Views']),
             array_merge(['Clicks'], $columns['Clicks'])
         ];
-
     }
 
     // ========================================================================= //
@@ -141,12 +143,14 @@ class Widgets extends Component
      * Get tracking total for views/clicks.
      *
      * @param string $record
-     * @param $ad
+     * @param Ad $ad
      * @return int
      */
-    private function _getTrackingTotal(string $record, $ad): int
+    private function _getTrackingTotal(string $record, Ad $ad): int
     {
+        // Get tracking history for specified record (View/Click)
         $tracking = $this->_getTrackingHistory($record, $ad);
+
         // Count tracking
         $total = 0;
         if ($tracking) {
@@ -155,6 +159,8 @@ class Widgets extends Component
                 $total += $tracking->$day;
             }
         }
+
+        // Return the cumulative total
         return $total;
     }
 
@@ -162,11 +168,12 @@ class Widgets extends Component
      * Get tracking history for views/clicks.
      *
      * @param string $record
-     * @param $ad
-     * @return mixed
+     * @param Ad $ad
+     * @return View|Click
      */
-    private function _getTrackingHistory(string $record, $ad)
+    private function _getTrackingHistory(string $record, Ad $ad): View|Click
     {
+        // Get current year and month
         $year  = date('Y');
         $month = date('n');
 
@@ -177,10 +184,12 @@ class Widgets extends Component
             'month' => $month,
         ]);
 
-        // Get existing
+        // If no results, create new record
         if (!$results) {
             $results = new $record;
         }
+
+        // Return a View/Click object
         return $results;
     }
 

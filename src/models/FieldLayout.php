@@ -25,14 +25,14 @@ class FieldLayout extends Model
 {
 
     /**
-     * @var int $id ID of field layout.
+     * @var int|null $id ID of field layout.
      */
-    public $id;
+    public ?int $id = null;
 
     /**
-     * @var string $name Name of field layout.
+     * @var string|null $name Name of field layout.
      */
-    public $name;
+    public ?string $name = null;
 
     /**
      * Use the translated layout name as the string representation.
@@ -41,17 +41,23 @@ class FieldLayout extends Model
      */
     public function __toString(): string
     {
-        return (string) Craft::t('site', $this->name);
+        return Craft::t('site', $this->name);
     }
 
     /**
+     * Get the field layout.
+     *
      * @return FieldLayoutModel|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayoutModel
     {
+        // If no field layout ID
         if (!$this->id) {
+            // Return a new field layout
             return new FieldLayoutModel();
         }
+
+        // Return the specified field layout
         return Craft::$app->getFields()->getLayoutById($this->id);
     }
 

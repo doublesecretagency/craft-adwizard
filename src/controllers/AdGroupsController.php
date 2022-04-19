@@ -56,7 +56,7 @@ class AdGroupsController extends Controller
      * @return Response
      * @throws HttpException if the requested group cannot be found
      */
-    public function actionEditAdGroup(int $groupId = null, AdGroup $group = null): Response
+    public function actionEditAdGroup(?int $groupId = null, ?AdGroup $group = null): Response
     {
         $this->requireLogin();
 
@@ -127,7 +127,7 @@ class AdGroupsController extends Controller
      * @throws Throwable
      * @throws MissingComponentException
      */
-    public function actionSaveGroup()
+    public function actionSaveGroup(): ?Response
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -183,8 +183,7 @@ class AdGroupsController extends Controller
         return $this->asJson(['success' => true]);
     }
 
-    // Private Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * Breadcrumbs for ad group pages.

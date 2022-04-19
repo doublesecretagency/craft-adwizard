@@ -21,9 +21,6 @@ use doublesecretagency\adwizard\elements\Ad;
  */
 class Ads extends BaseRelationField
 {
-    // Public Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
@@ -40,13 +37,12 @@ class Ads extends BaseRelationField
         return Craft::t('ad-wizard', 'Add an ad');
     }
 
-    // Protected Methods
-    // =========================================================================
+    // ========================================================================= //
 
     /**
      * @inheritdoc
      */
-    protected static function elementType(): string
+    public static function elementType(): string
     {
         return Ad::class;
     }

@@ -18,10 +18,6 @@ use doublesecretagency\adwizard\elements\Ad;
 use doublesecretagency\adwizard\web\assets\AdTimelineAssets;
 use doublesecretagency\adwizard\web\assets\AdTimelineSettingsAssets;
 use doublesecretagency\adwizard\web\assets\WidgetAssets;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use yii\base\InvalidConfigException;
 
 /**
  * Class AdTimeline
@@ -29,11 +25,19 @@ use yii\base\InvalidConfigException;
  */
 class AdTimeline extends Widget
 {
-    // Static
-    // =========================================================================
 
     /**
-     * @inheritDoc
+     * @var int|null ID of the ad.
+     */
+    public ?int $adId = null;
+
+    /**
+     * @var int|null ID of the ad group.
+     */
+    public ?int $groupId = null;
+
+    /**
+     * @inheritdoc
      */
     public static function displayName(): string
     {
@@ -41,34 +45,17 @@ class AdTimeline extends Widget
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public static function iconPath()
+    public static function icon(): ?string
     {
         return Craft::getAlias('@doublesecretagency/adwizard/ad-timeline.svg');
     }
 
-    // Properties
-    // =========================================================================
-
     /**
-     * @var int|null The ID of the ad group
+     * @inheritdoc
      */
-    public $groupId;
-
-    /**
-     * @var int|null The ID of the ad
-     */
-    public $adId;
-
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritDoc
-     */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         // Set default title
         $title = Craft::t('ad-wizard', 'New ad timeline');
@@ -78,25 +65,17 @@ class AdTimeline extends Widget
             return $title;
         }
 
-        // Get ad
         /** @var Ad $ad */
         $ad = AdWizard::$plugin->ads->getAdById($this->adId);
 
-        // No ad, bail with default title
-        if (!$ad) {
-            return $title;
-        }
-
-        // Return title of ad
-        return $ad->title;
+        // Return title of ad or default title
+        return ($ad->title ?? $title);
     }
 
     /**
-     * @inheritDoc
-     * @return false|string
-     * @throws InvalidConfigException
+     * @inheritdoc
      */
-    public function getBodyHtml()
+    public function getBodyHtml(): ?string
     {
         $view = Craft::$app->getView();
         $view->registerAssetBundle(WidgetAssets::class);
@@ -106,14 +85,9 @@ class AdTimeline extends Widget
     }
 
     /**
-     * @inheritDoc
-     * @return string|null
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws InvalidConfigException
+     * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         $view = Craft::$app->getView();
         $view->registerAssetBundle(AdTimelineSettingsAssets::class);
@@ -121,4 +95,5 @@ class AdTimeline extends Widget
             'widget' => $this,
         ]);
     }
+
 }

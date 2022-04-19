@@ -14,12 +14,9 @@ namespace doublesecretagency\adwizard\widgets;
 use Craft;
 use craft\base\Widget;
 use doublesecretagency\adwizard\AdWizard;
+use doublesecretagency\adwizard\models\AdGroup;
 use doublesecretagency\adwizard\web\assets\GroupTotalsAssets;
 use doublesecretagency\adwizard\web\assets\WidgetAssets;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use yii\base\InvalidConfigException;
 
 /**
  * Class GroupTotals
@@ -28,11 +25,13 @@ use yii\base\InvalidConfigException;
 class GroupTotals extends Widget
 {
 
-    // Static
-    // =========================================================================
+    /**
+     * @var int|null ID of the ad group.
+     */
+    public ?int $groupId = null;
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     public static function displayName(): string
     {
@@ -40,29 +39,17 @@ class GroupTotals extends Widget
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public static function iconPath()
+    public static function icon(): ?string
     {
         return Craft::getAlias('@doublesecretagency/adwizard/ad-totals.svg');
     }
 
-    // Properties
-    // =========================================================================
-
     /**
-     * @var int|null The ID of the ad group
+     * @inheritdoc
      */
-    public $groupId;
-
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritDoc
-     */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         // Set default title
         $title = Craft::t('ad-wizard', 'New group chart');
@@ -72,23 +59,17 @@ class GroupTotals extends Widget
             return $title;
         }
 
-        // Get group
+        /** @var AdGroup $group */
         $group = AdWizard::$plugin->groups->getGroupById($this->groupId);
 
-        // No group, bail with default title
-        if (!$group) {
-            return $title;
-        }
-
-        // Return name of group
-        return $group->name;
+        // Return name of group or default title
+        return ($group->name ?? $title);
     }
 
     /**
-     * @inheritDoc
-     * @throws InvalidConfigException
+     * @inheritdoc
      */
-    public function getBodyHtml()
+    public function getBodyHtml(): ?string
     {
         $view = Craft::$app->getView();
         $view->registerAssetBundle(WidgetAssets::class);
@@ -98,13 +79,9 @@ class GroupTotals extends Widget
     }
 
     /**
-     * @inheritDoc
-     * @return string|null
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('ad-wizard/widgets/settings/ad-totals', [
             'widget' => $this,
