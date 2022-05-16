@@ -169,12 +169,12 @@ class AdWizard extends Plugin
 
         $groupsExist = $this->groups->getAllGroups();
 
-        $item['subnav']['stats'] = ['label' => 'Stats', 'url' => 'ad-wizard/stats'];
+        $item['subnav']['stats'] = ['label' => Craft::t('ad-wizard', 'Stats'), 'url' => 'ad-wizard/stats'];
         if ($groupsExist) {
-            $item['subnav']['ads'] = ['label' => 'Ads', 'url' => 'ad-wizard/ads'];
+            $item['subnav']['ads'] = ['label' => Craft::t('ad-wizard', 'Ads'), 'url' => 'ad-wizard/ads'];
         }
-        $item['subnav']['groups'] = ['label' => 'Groups', 'url' => 'ad-wizard/groups'];
-        $item['subnav']['fieldlayouts'] = ['label' => 'Field Layouts', 'url' => 'ad-wizard/fieldlayouts'];
+        $item['subnav']['groups'] = ['label' => Craft::t('ad-wizard', 'Groups'), 'url' => 'ad-wizard/groups'];
+        $item['subnav']['fieldlayouts'] = ['label' => Craft::t('ad-wizard', 'Field Layouts'), 'url' => 'ad-wizard/fieldlayouts'];
 
         return $item;
     }
