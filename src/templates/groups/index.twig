@@ -7,10 +7,10 @@
 
 {% set content %}
     <div id="noadgroups"{% if groups %} class="hidden"{% endif %}>
-        <h2>What is a Group?</h2>
-        <p>When you create an Ad, you will place it into a specific Group. The relationship between an Ad &amp; Group is similar to the relationship between an Entry &amp; Section. It's not possible for an ad to exist in more than one group.</p>
+        <h2>{{ "What is a Group?"|t('ad-wizard') }}</h2>
+        <p>{{ "When you create an Ad, you will place it into a specific Group. The relationship between an Ad &amp; Group is similar to the relationship between an Entry &amp; Section. It's not possible for an ad to exist in more than one group."|t('ad-ziard') }}</p>
         <hr/>
-        <p><strong>No groups exist yet.</strong> <a href="{{ cpUrl('ad-wizard/groups/new') }}">Create one to get started...</a></p>
+        <p><strong>{{ "No groups exist yet."|t('ad-wizard') }}</strong> <a href="{{ cpUrl('ad-wizard/groups/new') }}">{{ "Create one to get started..."|t('ad-wizard') }}</a></p>
     </div>
 
     {% if groups %}

@@ -7,10 +7,10 @@
 
 {% set content %}
     <div id="nofieldlayouts"{% if fieldLayouts %} class="hidden"{% endif %}>
-        <h2>What is a Field Layout?</h2>
-        <p>As a custom element type, it's possible to assign custom fields to ads in each Group. Each field layout can be assigned to one or more Ad Group.</p>
+        <h2>{{ "What is a Field Layout?"|t('ad-wizard') }}</h2>
+        <p>{{ "As a custom element type, it's possible to assign custom fields to ads in each Group. Each field layout can be assigned to one or more Ad Group."|t('ad-wizard') }}</p>
         <hr/>
-        <p><strong>No field layouts exist yet.</strong> <a href="{{ cpUrl('ad-wizard/fieldlayouts/new') }}">Create one to get started...</a></p>
+        <p><strong>{{ "No field layouts exist yet."|t('ad-wizard') }}</strong> <a href="{{ cpUrl('ad-wizard/fieldlayouts/new') }}">{{ "Create one to get started..."|t('ad-wizard') }}</a></p>
     </div>
 
     {% if fieldLayouts %}

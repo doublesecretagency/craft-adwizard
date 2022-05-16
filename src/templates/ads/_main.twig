@@ -24,8 +24,8 @@
 
 <div class="field" id="adGraphic-field">
     <div class="heading">
-        <label for="adGraphic">Image</label>
-        <div class="instructions"><p>If no graphic is associated, the ad will not be displayed.</p></div>
+        <label for="adGraphic">{{ "Image"|t('app') }}</label>
+        <div class="instructions"><p>{{ "If no graphic is associated, the ad will not be displayed."|t('ad-wizard') }}</p></div>
     </div>
     <div class="input">
         {% if assetsSourceExists %}
@@ -41,13 +41,13 @@
                 },
                 sourceElementId: ad.id,
                 jsClass: 'Craft.AssetSelectInput',
-                selectionLabel: 'Select Ad Graphic',
+                selectionLabel: 'Select Ad Graphic'|t('ad-wizard'),
                 viewMode: 'large',
                 limit: 1,
                 modalStorageKey: 'adWizard.adGraphic',
             }) }}
         {% else %}
-            <p class="error">No asset volumes currently exist. <a href="{{ cpUrl('settings/assets') }}">Create one now...</a></p>
+            <p class="error">{{ "No asset volumes currently exist."|t('ad-wizard') }} <a href="{{ cpUrl('settings/assets') }}">{{ "Create one now..."|t('ad-wizard') }}</a></p>
         {% endif %}
     </div>
 </div>
