@@ -34,19 +34,23 @@
             <tr>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-                <th colspan="2" class="aw-total col-divider">This Month ({{ month[thisMonth] }})</th>
-                <th colspan="2" class="aw-total col-divider">Last Month ({{ month[lastMonth] }})</th>
-                <th colspan="2" class="aw-total col-divider">Lifetime Total</th>
+                <th colspan="2" class="aw-total col-divider">{{ "This Month"|t('ad-wizard') }} ({{ '{m,date,LLLL}'|t('ad-wizard', params = {
+                    m:date().setDate(thisYear, thisMonth, 1).timestamp
+                }) }})</th>
+                <th colspan="2" class="aw-total col-divider">{{ "Last Month"|t('ad-wizard') }} ({{ '{m,date,LLLL}'|t('ad-wizard', params = {
+                    m:date().setDate(lastYear, lastMonth, 1).timestamp
+                }) }})</th>
+                <th colspan="2" class="aw-total col-divider">{{ "Lifetime Total"|t('ad-wizard') }}</th>
             </tr>
             <tr>
-                <th>Group</th>
-                <th>Ad</th>
-                <th class="aw-total aw-views col-divider">Views</th>
-                <th class="aw-total aw-clicks">Clicks</th>
-                <th class="aw-total aw-views col-divider">Views</th>
-                <th class="aw-total aw-clicks">Clicks</th>
-                <th class="aw-total aw-views col-divider">Views</th>
-                <th class="aw-total aw-clicks">Clicks</th>
+                <th>{{ "Group"|t('ad-wizard') }}</th>
+                <th>{{ "Ad"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-views col-divider">{{ "Views"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-clicks">{{ "Clicks"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-views col-divider">{{ "Views"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-clicks">{{ "Clicks"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-views col-divider">{{ "Views"|t('ad-wizard') }}</th>
+                <th class="aw-total aw-clicks">{{ "Clicks"|t('ad-wizard') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -66,13 +70,13 @@
                 {% set groupsExist = craft.adWizard.getAllGroups() %}
                 {% if groupsExist %}
                     {% set href  = cpUrl('ad-wizard/ads') %}
-                    {% set label = 'Create an ad...' %}
+                    {% set label = 'Create an ad...'|t('ad-wizard') %}
                 {% else %}
                     {% set href  = cpUrl('ad-wizard/groups') %}
-                    {% set label = 'Create an ad group...' %}
+                    {% set label = 'Create an ad group...'|t('ad-wizard') %}
                 {% endif %}
                 <tr>
-                    <td colspan="8" class="no-stats">You currently have no ads. <a href="{{ href }}">{{ label }}</a></td>
+                    <td colspan="8" class="no-stats">{{ 'You currently have no ads.'|t('ad-wizard') }} <a href="{{ href }}">{{ label }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
