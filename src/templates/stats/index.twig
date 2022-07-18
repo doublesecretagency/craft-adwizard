@@ -9,13 +9,6 @@
 
 {% do view.registerAssetBundle("doublesecretagency\\adwizard\\web\\assets\\AdminAssets") %}
 
-{% set month = [null,
-    'January', 'February', 'March',
-    'April',   'May',      'June',
-    'July',    'August',   'September',
-    'October', 'November', 'December',
-] %}
-
 {% set thisMonth = now|date('n') %}
 {% set thisYear  = now|date('Y') %}
 
@@ -27,6 +20,14 @@
     {% set lastYear  = thisYear - 1 %}
 {% endif %}
 
+{# Get translatable month names #}
+{% set displayThisMonth = '{m,date,LLLL}'|t('ad-wizard', params = {
+    m:date().setDate(thisYear, thisMonth, 1).timestamp
+}) %}
+{% set displayLastMonth = '{m,date,LLLL}'|t('ad-wizard', params = {
+    m:date().setDate(lastYear, lastMonth, 1).timestamp
+}) %}
+
 {% set content %}
     <div class="tableview tablepane">
         <table class="data fullwidth">
@@ -34,12 +35,8 @@
             <tr>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-                <th colspan="2" class="aw-total col-divider">{{ "This Month"|t('ad-wizard') }} ({{ '{m,date,LLLL}'|t('ad-wizard', params = {
-                    m:date().setDate(thisYear, thisMonth, 1).timestamp
-                }) }})</th>
-                <th colspan="2" class="aw-total col-divider">{{ "Last Month"|t('ad-wizard') }} ({{ '{m,date,LLLL}'|t('ad-wizard', params = {
-                    m:date().setDate(lastYear, lastMonth, 1).timestamp
-                }) }})</th>
+                <th colspan="2" class="aw-total col-divider">{{ "This Month"|t('ad-wizard') }} ({{ displayThisMonth }})</th>
+                <th colspan="2" class="aw-total col-divider">{{ "Last Month"|t('ad-wizard') }} ({{ displayLastMonth }})</th>
                 <th colspan="2" class="aw-total col-divider">{{ "Lifetime Total"|t('ad-wizard') }}</th>
             </tr>
             <tr>
