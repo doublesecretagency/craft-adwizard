@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.2.1 - 2022-07-18
+
+### Added
+- Made plugin translatable. (thanks @davidwebca)
+
 ## 3.2.0 - 2022-04-28
 
 ### Added
