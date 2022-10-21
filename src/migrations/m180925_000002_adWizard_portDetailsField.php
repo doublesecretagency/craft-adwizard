@@ -15,6 +15,8 @@ use Craft;
 use craft\db\Migration;
 use craft\db\Query;
 use craft\fields\PlainText;
+use craft\helpers\ElementHelper;
+use craft\helpers\Json;
 use craft\models\FieldGroup;
 use Throwable;
 use yii\base\Exception;
@@ -36,10 +38,13 @@ class m180925_000002_adWizard_portDetailsField extends Migration
      */
     public function safeUp()
     {
+        $field = Craft::$app->getFields()->getFieldByHandle('adWizard_details');
+
         // If field handle is taken, bail
-        if ($this->db->columnExists('{{%content}}', 'field_adWizard_details')) {
+        if ($field) {
             return;
         }
+
         $this->_createNewField();
         $this->_copyFieldValues();
         $this->_deleteOldField();
@@ -59,7 +64,7 @@ class m180925_000002_adWizard_portDetailsField extends Migration
         $fieldGroup = new FieldGroup([
             'name' => 'Ad Wizard',
         ]);
-        Craft::$app->getFields()->saveGroup($fieldGroup);
+        $fieldsService->saveGroup($fieldGroup);
 
         // Create field
         $field = $fieldsService->createField([
@@ -76,7 +81,7 @@ class m180925_000002_adWizard_portDetailsField extends Migration
 
         // Save field
         if (!$fieldsService->saveField($field)) {
-            throw new Exception('Ad Wizard migration error: Unable to create "Details" field.');
+            throw new Exception('Ad Wizard migration error: Unable to create "Details" field ' . Json::encode($field->getErrors()) . ' .');
         }
     }
 
@@ -91,11 +96,14 @@ class m180925_000002_adWizard_portDetailsField extends Migration
             ->from(['{{%adwizard_ads}}'])
             ->all($this->db);
 
+        $field = Craft::$app->getFields()->getFieldByHandle('adWizard_details');
+        $column = ElementHelper::fieldColumnFromField($field);
+
         // Port data to new column
         foreach ($ads as $row) {
             $this->update(
                 '{{%content}}',
-                ['field_adWizard_details' => $row['details']],
+                [$column => $row['details']],
                 ['elementId' => $row['id']]
             );
         }
