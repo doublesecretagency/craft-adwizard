@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed migration bug when updating from Craft 2 to Craft 3.7. (thanks @engram-design)
+
 ## 3.2.1 - 2022-07-18
 
 ### Added
