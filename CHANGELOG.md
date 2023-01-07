@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.1.5 - 2023-01-06
+
+### Changed
+- Craft 3.7 is now required.
+
+### Fixed
+- Fixed migration bug when updating from Craft 2 to Craft 3.7. (thanks @engram-design)
+
 ## 3.1.4 - 2022-01-15
 
 ### Changed
