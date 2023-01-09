@@ -18,13 +18,13 @@ use craft\elements\actions\Delete;
 use craft\elements\actions\SetStatus;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\errors\DeprecationException;
 use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\i18n\Locale;
 use craft\models\FieldLayout;
 use DateTime;
-use DateTimeZone;
 use doublesecretagency\adwizard\AdWizard;
 use doublesecretagency\adwizard\elements\actions\ChangeAdGroup;
 use doublesecretagency\adwizard\elements\db\AdQuery;
@@ -275,6 +275,30 @@ class Ad extends Element
         $rules[] = [['url'], 'required'];
 
         return $rules;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canView(User $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canSave(User $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canDelete(User $user): bool
+    {
+        return true;
     }
 
     /**
