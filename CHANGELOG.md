@@ -7,6 +7,7 @@
 - Added action to “Restore” a deleted Ad.
 
 ### Fixed
+- Clears Ad queries cache when an Ad is moved from one group to another.
 - Fixed a permissions issue with element actions.
 - Fixed migration bug when updating from Craft 2 to Craft 3.7. (thanks @engram-design)
 

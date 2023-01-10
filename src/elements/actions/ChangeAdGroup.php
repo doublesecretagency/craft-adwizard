@@ -16,6 +16,7 @@ use craft\base\Element;
 use craft\base\ElementAction;
 use craft\elements\db\ElementQueryInterface;
 use doublesecretagency\adwizard\AdWizard;
+use doublesecretagency\adwizard\elements\Ad;
 
 /**
  * Class ChangeAdGroup
@@ -70,6 +71,9 @@ class ChangeAdGroup extends ElementAction
 
         // Set group of the selected ads
         AdWizard::$plugin->ads->updateAdsGroup($adIds, $this->groupId);
+
+        // Invalidate ad caches
+        Craft::$app->getElements()->invalidateCachesForElementType(Ad::class);
 
         // Success!
         $this->setMessage(Craft::t('ad-wizard', 'Moved to "{groupName}".', [
