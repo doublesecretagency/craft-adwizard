@@ -15,6 +15,8 @@ use Craft;
 use craft\base\Element;
 use craft\base\FieldInterface;
 use craft\elements\actions\Delete;
+use craft\elements\actions\Duplicate;
+use craft\elements\actions\Restore;
 use craft\elements\actions\SetStatus;
 use craft\elements\Asset;
 use craft\elements\db\ElementQueryInterface;
@@ -196,12 +198,18 @@ class Ad extends Element
         // Change Ad Group
         $actions[] = ChangeAdGroup::class;
 
+        // Duplicate
+        $actions[] = Duplicate::class;
+
         // Delete
         $actions[] = Craft::$app->getElements()->createAction([
             'type' => Delete::class,
             'confirmationMessage' => Craft::t('ad-wizard', 'Are you sure you want to delete the selected ads?'),
             'successMessage' => Craft::t('ad-wizard', 'Ads deleted.'),
         ]);
+
+        // Restore
+        $actions[] = Restore::class;
 
         return $actions;
     }

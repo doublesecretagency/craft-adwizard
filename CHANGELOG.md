@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+- Added action to “Duplicate” an Ad.
+- Added action to “Restore” a deleted Ad.
+
 ### Fixed
 - Fixed a permissions issue with element actions.
 - Fixed migration bug when updating from Craft 2 to Craft 3.7. (thanks @engram-design)
