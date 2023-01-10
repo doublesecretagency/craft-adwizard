@@ -1,14 +1,14 @@
 # Changelog
 
-## Unreleased
+## 3.3.0 - 2023-01-09
 
 ### Added
 - Added action to “Duplicate” an Ad.
 - Added action to “Restore” a deleted Ad.
 
 ### Fixed
-- Clears Ad queries cache when an Ad is moved from one group to another.
 - Fixed a permissions issue with element actions.
+- Now clears Ad queries cache when an Ad is moved from one group to another.
 - Fixed migration bug when updating from Craft 2 to Craft 3.7. (thanks @engram-design)
 
 ## 3.2.1 - 2022-07-18
