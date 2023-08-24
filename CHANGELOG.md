@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Now shows values of custom fields on Ads index page.
+
 ## 3.3.0 - 2023-01-09
 
 ### Added

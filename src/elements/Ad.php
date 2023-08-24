@@ -496,7 +496,7 @@ class Ad extends Element
         // If layout exists, return the value of matching field
         if ($layout = $this->getFieldLayout()) {
             foreach ($layout->getCustomFields() as $field) {
-                if ("field:{$field->id}" === $attribute) {
+                if ("field:{$field->uid}" === $attribute) {
                     return parent::tableAttributeHtml($attribute);
                 }
             }
