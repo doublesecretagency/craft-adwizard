@@ -181,12 +181,6 @@ class Install extends Migration
             ['type' => Ad::class]
         );
 
-        // Delete Ad element index settings
-        $this->delete(
-            '{{%elementindexsettings}}',
-            ['type' => Ad::class]
-        );
-
         // Delete Ad widgets
         $this->delete(
             '{{%widgets}}',
