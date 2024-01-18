@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.3.2 - 2024-01-18
 
 ### Fixed
 - Fixed bug encountered when uninstalling. ([#44](https://github.com/doublesecretagency/craft-adwizard/issues/44))
