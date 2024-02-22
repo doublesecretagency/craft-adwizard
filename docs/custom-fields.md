@@ -25,14 +25,14 @@ Which produces the following HTML...
 
 ```twig
 <img
-  src="http://example.com/assets/ads/coca-cola.png"
+  src="https://example.com/assets/ads/coca-cola.png"
   width="200"
   height="90"
-  class="adWizard-ad"
+  class="adWizard"
   style="cursor:pointer"
   alt="Pause and refresh! Coca-Cola"
   title="Vintage Coca-Cola advertisement"
-  onclick="adWizard.click(99, 'http://www.coca-cola.com/')"
+  onclick="adWizard.click(99, 'https://www.coca-cola.com/')"
 />
 ```
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Craft 5 compatibility.
+- Changed CSS class `adWizard-ad` to `adWizard` for improved handling of ad blockers.
+
 ## 3.3.2 - 2024-01-18
 
 ### Fixed

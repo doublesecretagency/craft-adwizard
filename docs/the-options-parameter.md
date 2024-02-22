@@ -30,7 +30,7 @@ Unless you manually override them, these are the default options for every Ad th
         'retina': false
     },
     'attr': {
-        'class': 'adWizard-ad',
+        'class': 'adWizard',
         'style': 'cursor:pointer'
     },
     'js': {

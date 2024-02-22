@@ -3,9 +3,24 @@
 
 {% set iconUrl = view.getAssetManager().getPublishedUrl('@doublesecretagency/adwizard/icon.svg', true) %}
 
+{% css %}
+.welcome {
+    text-align: center;
+    margin: 0 auto;
+    min-height: 250px;
+}
+.welcome img {
+    margin: 12px;
+    float: left;
+}
+.welcome h2 {
+    padding-top: 50px;
+}
+{% endcss %}
+
 {% set content %}
-    <div style="text-align:center; margin:0 auto;">
-        <img src="{{ iconUrl }}" width="200" style="margin:12px;">
+    <div class="welcome">
+        <img src="{{ iconUrl }}" width="200">
         <h2>{{ 'Thanks for using Ad Wizard!'|t('ad-wizard') }}</h2>
         <p>{{ 'Feel free to contact us with any feature requests, bug reports, or suggestions.'|t('ad-wizard') }}</p>
         <div>

@@ -325,7 +325,7 @@ class Ad extends Element
     /**
      * @inheritdoc
      */
-    public function getThumbUrl(int $size): ?string
+    protected function thumbUrl(int $size): ?string
     {
         // If no asset ID, bail
         if (!$this->assetId) {
@@ -428,7 +428,7 @@ class Ad extends Element
     /**
      * @inheritdoc
      */
-    protected function tableAttributeHtml(string $attribute): string
+    protected function attributeHtml(string $attribute): string
     {
         switch ($attribute) {
 
