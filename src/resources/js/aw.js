@@ -21,5 +21,23 @@ var adWizard = {
             })
         ;
 
+    view: function(id) {
+
+        // Set data
+        var data = { 'id': id };
+        data[window.csrfTokenName] = window.csrfTokenValue; // Append CSRF Token
+
+        // Tally view
+        window.superagent
+            .post('/actions/ad-wizard/tracking/view')
+            .send(data)
+            .type('form')
+            .set('X-Requested-With', 'XMLHttpRequest')
+            .end(function(response) {
+                var message = JSON.parse(response.text);
+                console.log(message);
+            })
+            ;
+
     }
 };
