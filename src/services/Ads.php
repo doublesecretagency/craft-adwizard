@@ -16,6 +16,7 @@ use craft\base\Component;
 use craft\base\ElementInterface;
 use craft\base\FsInterface;
 use craft\db\Query;
+use craft\helpers\App;
 use craft\helpers\Template;
 use craft\models\Volume;
 use DateTime;
@@ -190,7 +191,9 @@ class Ads extends Component
         }
 
         // Track ad
-        AdWizard::$plugin->tracking->trackView($ad->id);
+        if (!App::env('AW_TRACK_VIA_JS')) {
+            AdWizard::$plugin->tracking->trackView($ad->id);
+        }
 
         // Render ad
         return Template::raw($html);
