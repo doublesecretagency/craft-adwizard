@@ -20,6 +20,7 @@ var adWizard = {
                 console.log(message);
             })
         ;
+    },
 
     view: function(id) {
 
@@ -37,7 +38,7 @@ var adWizard = {
                 var message = JSON.parse(response.text);
                 console.log(message);
             })
-            ;
+        ;
 
     }
 };
