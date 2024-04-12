@@ -63,6 +63,11 @@ class Config extends Model
         'click' => 'adWizard.click({id}, \'{url}\')',
     ];
 
+    // Track ad view via js if enabled
+    if (!App::env('AW_TRACK_VIA_JS')) {
+        $js['load'] = 'window.addEventListener(\'load\', function(){ adWizard.view({id}) })';
+    }
+
     /**
      * Config constructor.
      *
