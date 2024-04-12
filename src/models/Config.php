@@ -14,6 +14,7 @@ namespace doublesecretagency\adwizard\models;
 use Craft;
 use craft\base\Model;
 use craft\elements\Asset;
+use craft\helpers\App;
 use craft\models\ImageTransform;
 use doublesecretagency\adwizard\elements\Ad;
 use Throwable;
@@ -63,11 +64,6 @@ class Config extends Model
         'click' => 'adWizard.click({id}, \'{url}\')',
     ];
 
-    // Track ad view via js if enabled
-    if (!App::env('AW_TRACK_VIA_JS')) {
-        $js['load'] = 'window.addEventListener(\'load\', function(){ adWizard.view({id}) })';
-    }
-
     /**
      * Config constructor.
      *
@@ -81,6 +77,11 @@ class Config extends Model
         // Set ad & asset
         $this->ad = $ad;
         $this->asset = $asset;
+
+        // Track ad view via js if enabled
+        if (App::env('AW_TRACK_VIA_JS')) {
+            $this->js['load'] = 'window.addEventListener(\'load\', function(){ adWizard.view({id}) })';
+        }
 
         // Merge options over default configuration
         $properties = ['image','attr','js'];
