@@ -25,7 +25,7 @@ var adWizard = {
         ;
     },
 
-    view: function(id) {
+    view: function(id, oncePerPage=true) {
 
         // Set data
         var data = { 'id': id };
@@ -49,10 +49,28 @@ var adWizard = {
                 })
             ;
         } else {
-            // Track in page but don't send to server
+
+            // If allowed, track more than oncePerPage
             // Could be useful to track ads that enter the viewport
-            windov.adWizardTracker.viewed[id] += 1;
-            console.log(`[AdWizard] Already viewed ${window.adWizardTracker.viewed[id]}.`)
+            if (!oncePerPage) {
+
+                // Tally view
+                window.superagent
+                    .post('/actions/ad-wizard/tracking/view')
+                    .send(data)
+                    .type('form')
+                    .set('X-Requested-With', 'XMLHttpRequest')
+                    .end(function(response) {
+                        var message = JSON.parse(response.text);
+                        console.log(message);
+                    })
+                ;
+            }
+
+            // Track in page
+            window.adWizardTracker.viewed[id] += 1;
+            console.log(`[Ad Wizard] Ad ${id} viewed ${window.adWizardTracker.viewed[id]}.`)
         }
     }
 };
+
