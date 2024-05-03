@@ -17,9 +17,20 @@ Tracking ads via js adds a `load` parameter to each ad with instructions to trac
 />
 ```
 
-The `adWizard.view()` function will track views once per page. If you need to track multiple times per page view, this can be enabled by passing a second parameter.
+## Options
+
+The `adWizard.view()` function allows passing an `options` object that allow you to control:
+
+### Track Once per Page (`oncePerPage: true`)
+Defaults to true. Enable if you need to track each ad multiple times per page. This can be enabled by passing a second parameter.
+
+### Debug (`debug: false`)
+Defaults to false. Allows the function to log a message to the console every time an ad is viewed.
 
 ```js
-adWizard.view({id}, false)
+adWizard.view({id}, {
+    oncePerPage: true,
+    debug: false,
+});
 ```
 
