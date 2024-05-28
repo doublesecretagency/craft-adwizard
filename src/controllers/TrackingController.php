@@ -57,4 +57,31 @@ class TrackingController extends Controller
         return $this->asJson('[Ad Wizard] Clicked: '.$ad->title);
     }
 
+    /**
+     * Track view of ad.
+     *
+     * @return Response
+     * @throws BadRequestHttpException
+     */
+    public function actionView(): Response
+    {
+        $this->requirePostRequest();
+
+        // Get ad ID
+        $id = Craft::$app->getRequest()->getBodyParam('id');
+
+        // Track view
+        $success = AdWizard::$plugin->tracking->trackView($id);
+
+        // If unsuccessful, return message
+        if (!$success) {
+            return $this->asJson('[Ad Wizard] View tracking failed.');
+        }
+
+        // Return title of ad viewed
+        /** @var Ad $ad */
+        $ad = AdWizard::$plugin->ads->getAdById($id);
+        return $this->asJson('[Ad Wizard] Viewed: '.$ad->title);
+    }
+
 }
