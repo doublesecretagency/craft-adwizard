@@ -5,6 +5,9 @@
 ### Added
 - Added ability to [track views](https://plugins.doublesecretagency.com/ad-wizard/tracking-views/) via JavaScript. ([#50](https://github.com/doublesecretagency/craft-adwizard/pull/50), thanks @cballenar)
 
+### Fixed
+- Fixed bug encountered when saving an Ad Group without a field layout. ([#51](https://github.com/doublesecretagency/craft-adwizard/issues/51))
+
 ## 4.0.0 - 2024-02-22
 
 ### Changed

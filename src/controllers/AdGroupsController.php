@@ -139,7 +139,7 @@ class AdGroupsController extends Controller
 
         // Get POST values
         $group->id            = $request->getBodyParam('groupId');
-        $group->fieldLayoutId = $request->getBodyParam('fieldLayoutId');
+        $group->fieldLayoutId = $request->getBodyParam('fieldLayoutId') ?: null;
         $group->name          = $request->getBodyParam('name');
         $group->handle        = $request->getBodyParam('handle');
 
