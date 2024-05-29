@@ -1,36 +1,57 @@
 ---
-description: There are a couple of ways to track Ad views.
+description: By default, Ad views are tracked via PHP when the page is rendered. Alternatively, you can track views via JavaScript instead.
 ---
 
 # Tracking Views
 
-By default, ad views are tracked when the ad is rendered.
+By default, Ad views are tracked via PHP when the page is _rendered on the server_. Alternatively, you can track views via JavaScript when the window is _loaded in the browser_.
 
-If you're caching content this will not happen every time the ad is displayed. In those cases you may want to rely on JavaScript to track the view. This can be enabled by setting the .env variable `AW_TRACK_VIA_JS` to `true`.
+This trick is especially handy **if your Twig code is being cached**.
 
-Tracking ads via js adds a `load` parameter to each ad with instructions to track the view when the window loads.
+To use JS tracking instead of PHP, enable the `AW_TRACK_VIA_JS` setting in your `.env` file...
 
-```twig
-<img
-  ...
-  onload="window.addEventListener('load', function(){ adWizard.view({99}) })"
-/>
+```dotenv
+# Add to your .env file
+AW_TRACK_VIA_JS=true
 ```
 
-## Options
+An event listener will **automatically** be added to each Ad to track a view when the window is loaded.
 
-The `adWizard.view()` function allows passing an `options` object that allow you to control:
+```html
+<!-- Example of a rendered Ad -->
+<img ... onload="window.addEventListener('load', function(){ adWizard.view(99) })"/>
+```
 
-### Track Once per Page (`oncePerPage: true`)
-Defaults to true. Enable if you need to track each ad multiple times per page. This can be enabled by passing a second parameter.
+---
+---
 
-### Debug (`debug: false`)
-Defaults to false. Allows the function to log a message to the console every time an ad is viewed.
+:::warning Runs Automatically
+You should not need to manually call `adWizard.view` in a typical setup.
+:::
+
+### `adWizard.view`
 
 ```js
-adWizard.view({id}, {
-    oncePerPage: true,
-    debug: false,
-});
+adWizard.view(id, options = {})
 ```
 
+In addition to the Ad's `id`, the function allows an optional `options` object:
+
+```js
+var options = {
+  oncePerPage: true,
+  debug: false
+};
+```
+
+#### `oncePerPage`
+
+- Defaults to `true`
+
+By default, the Ad is only tracked once per page load. To track Ads multiple times per page, set to `false`.
+
+#### `debug`
+
+- Defaults to `false`
+
+When enabled, the function will log a message to the console each time an Ad is viewed.
