@@ -8,19 +8,29 @@ You have two Twig tags available to you...
 
 ## Show a single, specific Ad
 
+### `displayAd(id, options = {})`
+
+- `id` - ID of specified Ad.
+- `options` - See [options](/the-options-parameter/).
+
 Specify the Ad by its ID number:
 
 ```twig
 {{ craft.adWizard.displayAd(99) }}
 ```
 
-Or if you're already working with an existing AdModel:
+Or if you're already working with an existing AdModel, you can skip the `id` parameter:
 
 ```twig
 {{ ad.displayAd() }}
 ```
 
 ## Random Ad from a specific group
+
+### `randomizeAdGroup(handle, options = {})`
+
+- `handle` - Handle of specified Ad Group.
+- `options` - See [options](/the-options-parameter/).
 
 Specify the group by its handle:
 

@@ -34,6 +34,7 @@ module.exports = {
                 items: [
                     {text: 'Creating your Ads', link: '/creating-your-ads/'},
                     {text: 'Embedding your Ads', link: '/embedding-your-ads/'},
+                    {text: 'Tracking Views', link: '/tracking-views/'},
                     {text: 'Get Ads with an Element Query', link: '/get-ads-with-an-element-query/'},
                     {text: 'Field Types', link: '/field-types/'},
                     {text: 'Seeing your Ad statistics', link: '/seeing-your-ad-statistics/'},
@@ -57,6 +58,7 @@ module.exports = {
                 'getting-started',
                 'creating-your-ads',
                 'embedding-your-ads',
+                'tracking-views',
                 'get-ads-with-an-element-query',
                 'field-types',
                 'seeing-your-ad-statistics',
