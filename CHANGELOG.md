@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Added ability to [track views](https://plugins.doublesecretagency.com/ad-wizard/tracking-views/) via JavaScript. ([#50](https://github.com/doublesecretagency/craft-adwizard/pull/50), thanks @cballenar)
+
 ## 3.3.2 - 2024-01-18
 
 ### Fixed

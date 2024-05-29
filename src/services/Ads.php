@@ -190,8 +190,9 @@ class Ads extends Component
             return null;
         }
 
-        // Track ad
+        // If not tracking via JavaScript
         if (!App::env('AW_TRACK_VIA_JS')) {
+            // Track ad via PHP
             AdWizard::$plugin->tracking->trackView($ad->id);
         }
 

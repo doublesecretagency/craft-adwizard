@@ -71,6 +71,7 @@ class Config extends Model
      * @param Asset $asset
      * @param array $options
      * @param array $config
+     * @throws Exception
      */
     public function __construct(Ad $ad, Asset $asset, array $options = [], array $config = [])
     {
@@ -78,8 +79,9 @@ class Config extends Model
         $this->ad = $ad;
         $this->asset = $asset;
 
-        // Track ad view via js if enabled
+        // If tracking via JavaScript
         if (App::env('AW_TRACK_VIA_JS')) {
+            // Track view via JavaScript
             $this->js['load'] = 'window.addEventListener(\'load\', function(){ adWizard.view({id}) })';
         }
 
