@@ -36,51 +36,38 @@ var adWizard = {
         var data = { 'id': id };
         data[window.csrfTokenName] = window.csrfTokenValue; // Append CSRF Token
 
-        // Check if the ad has been tracked in this visit
-        if (id in window.adWizardTracker.viewed === false) {
-
-            // Track in page
-            window.adWizardTracker.viewed[id] = 1;
-
-            // Tally view
-            window.superagent
-                .post('/actions/ad-wizard/tracking/view')
-                .send(data)
-                .type('form')
-                .set('X-Requested-With', 'XMLHttpRequest')
-                .end(function(response) {
-                    if (opts.debug) {
-                        var message = JSON.parse(response.text);
-                        console.log(message);
-                    }
-                })
-            ;
-        } else {
-
-            // If false, allows tracking views multiple times
-            if (!opts.oncePerPage) {
-
-                // Tally view
-                window.superagent
-                    .post('/actions/ad-wizard/tracking/view')
-                    .send(data)
-                    .type('form')
-                    .set('X-Requested-With', 'XMLHttpRequest')
-                    .end(function(response) {
-                        if (opts.debug) {
-                            var message = JSON.parse(response.text);
-                            console.log(message);
-                        }
-                    })
-                ;
-            }
-
-            // Track in page
-            window.adWizardTracker.viewed[id] += 1;
-            if (opts.debug) {
-                console.log(`[Ad Wizard] Ad ${id} viewed ${window.adWizardTracker.viewed[id]}.`)
-            }
+        // If not yet tracking views, begin tracking
+        if (!(id in window.adWizardTracker.viewed)) {
+            window.adWizardTracker.viewed[id] = 0;
         }
+
+        // If already viewed and limited to once per page, bail
+        if (window.adWizardTracker.viewed[id] && opts.oncePerPage) {
+            return;
+        }
+
+        // Increment tracker
+        window.adWizardTracker.viewed[id] += 1;
+
+        // Tally view
+        window.superagent
+            .post('/actions/ad-wizard/tracking/view')
+            .send(data)
+            .type('form')
+            .set('X-Requested-With', 'XMLHttpRequest')
+            .end(function(response) {
+                if (opts.debug) {
+                    var message = JSON.parse(response.text);
+                    console.log(message);
+                }
+            })
+        ;
+
+        // If debugging, show console message
+        if (opts.debug) {
+            console.log(`[Ad Wizard] Ad ${id} viewed ${window.adWizardTracker.viewed[id]}.`)
+        }
+
     }
 };
 
