@@ -1,4 +1,4 @@
-<img align="left" src="https://plugins.doublesecretagency.com/ad-wizard/images/icon.svg" alt="Plugin icon">
+<img align="left" width="66" src="https://plugins.doublesecretagency.com/ad-wizard/images/icon.svg" alt="Plugin icon">
 
 # Ad Wizard plugin for Craft CMS
 
