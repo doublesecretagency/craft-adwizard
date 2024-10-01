@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed bug encountered when using pre-defined image transforms. ([#43](https://github.com/doublesecretagency/craft-adwizard/issues/43))
+
 ## 3.4.0 - 2024-05-29
 
 ### Added
