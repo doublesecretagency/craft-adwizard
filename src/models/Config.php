@@ -147,34 +147,26 @@ class Config extends Model
     /**
      * Process transform
      *
-     * @throws NotFoundHttpException
      * @throws InvalidConfigException
+     * @throws NotFoundHttpException
      */
     private function _parseTransform(): void
     {
-        if (is_string($this->image['transform'])) {
+        // If a transform was specified
+        if ($this->image['transform']) {
 
-            // Get pre-defined transform
-            $transform = clone Craft::$app->getAssetTransforms()->getTransformByHandle($this->image['transform']);
-
-            if (!$transform) {
-                throw new NotFoundHttpException('Transform not found');
+            // If transform is a string
+            if (is_string($this->image['transform'])) {
+                // Get pre-defined transform
+                $transform = $this->image['transform'];
+            // Else if transform is an array
+            } else if (is_array($this->image['transform'])) {
+                // Get dynamic transform
+                $transform = new ImageTransform($this->image['transform']);
+            } else {
+                // Invalid transform
+                throw new NotFoundHttpException('Invalid transform format, please use a string or array.');
             }
-
-        } else if (is_array($this->image['transform']) && !empty($this->image['transform'])) {
-
-            // Get dynamic transform
-            $transform = new ImageTransform($this->image['transform']);
-
-        } else {
-
-            // No transform
-            $transform = false;
-
-        }
-
-        // If transform exists
-        if ($transform) {
 
             // Apply transform
             $url    = $this->asset->getUrl($transform);
