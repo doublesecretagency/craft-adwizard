@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.1.2 - 2025-10-21
 
 ### Fixed
 - Fixed a field layout bug which occurred after plugin was first installed. ([#55](https://github.com/doublesecretagency/craft-adwizard/issues/55))
