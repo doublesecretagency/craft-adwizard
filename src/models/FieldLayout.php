@@ -14,6 +14,7 @@ namespace doublesecretagency\adwizard\models;
 use Craft;
 use craft\base\Model;
 use craft\models\FieldLayout as FieldLayoutModel;
+use doublesecretagency\adwizard\elements\Ad;
 
 /**
  * Class FieldLayout
@@ -54,7 +55,9 @@ class FieldLayout extends Model
         // If no field layout ID
         if (!$this->id) {
             // Return a new field layout
-            return new FieldLayoutModel();
+            return new FieldLayoutModel([
+                'type' => Ad::class,
+            ]);
         }
 
         // Return the specified field layout
